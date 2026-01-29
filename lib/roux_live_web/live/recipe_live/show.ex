@@ -8,11 +8,16 @@ defmodule RouxLiveWeb.RecipeLive.Show do
      socket
      |> assign(:recipe, recipe)
      |> assign(:active_step_id, List.first(recipe.steps).id)
+     |> assign(:show_mobile_ingredients, false)
      |> assign(:page_title, recipe.title)}
   end
 
   def handle_event("select_step", %{"id" => id}, socket) do
     {:noreply, assign(socket, :active_step_id, id)}
+  end
+
+  def handle_event("toggle_mobile_ingredients", _params, socket) do
+    {:noreply, update(socket, :show_mobile_ingredients, &(!&1))}
   end
 
   def render(assigns) do
@@ -80,12 +85,57 @@ defmodule RouxLiveWeb.RecipeLive.Show do
         </section>
 
         <%!-- Content Section (White Background) --%>
-        <section class="bg-white py-24 px-4">
-          <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <section class="bg-white py-12 px-4">
+          <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            
+            <%!-- Mobile Ingredients Toggle (Visible on Mobile Only) --%>
+            <div class="lg:hidden w-full space-y-4">
+              <button 
+                phx-click="toggle_mobile_ingredients"
+                class="w-full flex items-center justify-between p-6 bg-cream border border-parchment rounded-[32px] font-display text-2xl text-gray-900"
+              >
+                <span>Ingredients</span>
+                <span class={[
+                  "transition-transform duration-300",
+                  @show_mobile_ingredients && "rotate-180"
+                ]}>
+                  <.icon name="hero-chevron-down" class="size-6" />
+                </span>
+              </button>
+              
+              <div class={[
+                "overflow-hidden transition-all duration-500",
+                if(@show_mobile_ingredients, do: "max-h-[2000px] opacity-100 mb-8", else: "max-h-0 opacity-0")
+              ]}>
+                <div class="bg-cream p-8 px-10 rounded-[32px] border border-parchment space-y-8">
+                  <.render_ingredients recipe={@recipe} highlighted_ids={@highlighted_ids} />
+                </div>
+              </div>
+            </div>
+
             <%!-- Steps Section (Left) --%>
-            <div class="lg:col-span-7 space-y-12">
-              <h2 class="text-5xl font-display text-gray-900">Instructions</h2>
-              <div class="space-y-16">
+            <div class="lg:col-span-7 h-full lg:overflow-y-auto no-scrollbar space-y-12 lg:pr-4">
+              <div class="lg:sticky lg:top-0 lg:bg-white lg:py-4 lg:z-10 space-y-4">
+                <div class="flex flex-wrap gap-2">
+                  <%= for tag <- @recipe.tags do %>
+                    <span class="px-3 py-1 bg-linen text-gray-500 text-[9px] font-bold uppercase tracking-widest rounded-full border border-parchment">
+                      {tag}
+                    </span>
+                  <% end %>
+                </div>
+                <h1 class="text-5xl font-display text-gray-900 leading-tight">
+                  {@recipe.title}
+                </h1>
+                <div class="flex flex-wrap gap-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] border-t border-linen pt-4">
+                  <span>Prep: {@recipe.time.prep_minutes}m</span>
+                  <span>Cook: {@recipe.time.cook_minutes}m</span>
+                  <span>Total: {@recipe.time.total_minutes}m</span>
+                  <span>Yield: {@recipe.yield.quantity} {@recipe.yield.unit}</span>
+                </div>
+              </div>
+
+              <div class="space-y-16 pb-12">
+
                 <%= if @recipe.step_groups != [] do %>
                   <%= for group <- @recipe.step_groups do %>
                     <div class="space-y-8">
@@ -114,38 +164,18 @@ defmodule RouxLiveWeb.RecipeLive.Show do
               </div>
             </div>
 
-            <%!-- Ingredients Section (Right) --%>
-            <div class="lg:col-span-5 space-y-10 sticky top-32">
-              <div class="bg-cream p-10 rounded-[48px] border border-parchment space-y-10">
-                <h2 class="text-4xl font-display text-gray-900">Ingredients</h2>
-                
-                <div class="space-y-10">
-                  <%= if @recipe.ingredient_groups != [] do %>
-                    <%= for group <- @recipe.ingredient_groups do %>
-                      <div class="space-y-6">
-                        <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{group.title}</h3>
-                        <ul class="space-y-4">
-                          <%= for ingredient_id <- group.ingredient_ids do %>
-                            <% ingredient = Enum.find(@recipe.ingredients, &(&1.id == ingredient_id)) %>
-                            <.ingredient_item ingredient={ingredient} highlighted={ingredient.id in @highlighted_ids} />
-                          <% end %>
-                        </ul>
-                      </div>
-                    <% end %>
-                  <% else %>
-                    <ul class="space-y-4">
-                      <%= for ingredient <- @recipe.ingredients do %>
-                        <.ingredient_item ingredient={ingredient} highlighted={ingredient.id in @highlighted_ids} />
-                      <% end %>
-                    </ul>
-                  <% end %>
+            <%!-- Ingredients Section (Right - Hidden on Mobile) --%>
+            <div class="hidden lg:flex lg:col-span-5 h-full flex-col gap-6 overflow-hidden">
+              <div class="bg-cream p-10 px-2 rounded-[48px] border border-parchment flex flex-col min-h-0 flex-1">
+                <div class="overflow-y-auto no-scrollbar space-y-10 flex-1 px-8 py-4">
+                  <.render_ingredients recipe={@recipe} highlighted_ids={@highlighted_ids} />
                 </div>
               </div>
 
               <%= if @recipe.notes != [] do %>
-                <div class="bg-gray-900 p-10 rounded-[40px] text-white space-y-6 shadow-2xl">
-                  <h3 class="text-2xl font-display text-coral italic">Baker's Notes</h3>
-                  <ul class="space-y-4">
+                <div class="bg-gray-900 p-8 rounded-[40px] text-white space-y-4 shadow-2xl shrink-0">
+                  <h3 class="text-xl font-display text-coral italic">Baker's Notes</h3>
+                  <ul class="space-y-3">
                     <%= for note <- @recipe.notes do %>
                       <li class="text-sm text-gray-300 leading-relaxed flex gap-4">
                         <span class="text-coral flex-none pt-1.5">•</span> {note}
@@ -157,8 +187,49 @@ defmodule RouxLiveWeb.RecipeLive.Show do
             </div>
           </div>
         </section>
+
+
+        <%!-- Mobile Notes (Visible on Mobile Only) --%>
+        <section :if={@recipe.notes != []} class="lg:hidden bg-white pb-20 px-4">
+          <div class="max-w-7xl mx-auto">
+            <div class="bg-gray-900 p-8 rounded-[40px] text-white space-y-4 shadow-2xl">
+              <h3 class="text-xl font-display text-coral italic">Baker's Notes</h3>
+              <ul class="space-y-3">
+                <%= for note <- @recipe.notes do %>
+                  <li class="text-sm text-gray-300 leading-relaxed flex gap-4">
+                    <span class="text-coral flex-none pt-1.5">•</span> {note}
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </section>
       </div>
     </RouxLiveWeb.Layouts.app>
+    """
+  end
+
+  defp render_ingredients(assigns) do
+    ~H"""
+    <%= if @recipe.ingredient_groups != [] do %>
+      <%= for group <- @recipe.ingredient_groups do %>
+        <div class="space-y-6">
+          <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{group.title}</h3>
+          <ul class="space-y-4">
+            <%= for ingredient_id <- group.ingredient_ids do %>
+              <% ingredient = Enum.find(@recipe.ingredients, &(&1.id == ingredient_id)) %>
+              <.ingredient_item ingredient={ingredient} highlighted={ingredient.id in @highlighted_ids} />
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    <% else %>
+      <ul class="space-y-4">
+        <%= for ingredient <- @recipe.ingredients do %>
+          <.ingredient_item ingredient={ingredient} highlighted={ingredient.id in @highlighted_ids} />
+        <% end %>
+      </ul>
+    <% end %>
     """
   end
 

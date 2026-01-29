@@ -84,10 +84,10 @@ defmodule RouxLiveWeb.Layouts do
             <div class="flex flex-wrap gap-2 transition-all duration-500">
               <%= for ingredient <- @active_ingredients do %>
                 <div class="bg-gray-900 px-3 py-1.5 rounded-full flex items-center gap-2 animate-in fade-in zoom-in delay-500 duration-500 fill-mode-both">
-                  <span class="text-[10px] font-bold text-white uppercase tracking-tighter">
+                  <span class="text-xs font-bold text-white uppercase tracking-tighter">
                     {ingredient.name}
                   </span>
-                  <span class="text-[9px] text-gray-400 font-bold border-l border-white/20 pl-2">
+                  <span class="text-[10px] text-gray-400 font-bold border-l border-white/20 pl-2">
                     {ingredient.amount} {ingredient.unit}
                   </span>
                 </div>
@@ -101,6 +101,30 @@ defmodule RouxLiveWeb.Layouts do
     <main class="min-h-screen bg-canvas">
       {render_slot(@inner_block)}
     </main>
+
+    <footer class="bg-cream border-t border-parchment py-20 px-4">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="space-y-4 text-center md:text-left">
+          <a href="/" class="text-3xl font-display font-bold text-gray-900 tracking-tight">
+            roux
+          </a>
+          <p class="text-gray-500 font-body max-w-xs text-sm leading-relaxed">
+            Recipes that aren't annoying to use. Built for the modern chef who values clarity and speed.
+          </p>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-8 text-sm font-bold font-body text-gray-400 uppercase tracking-widest">
+          <.link navigate={~p"/"} class="hover:text-coral transition-colors">Home</.link>
+          <.link navigate={~p"/recipes"} class="hover:text-coral transition-colors">Recipes</.link>
+          <a href="#" class="hover:text-coral transition-colors">About</a>
+          <a href="#" class="hover:text-coral transition-colors">Privacy</a>
+        </div>
+
+        <div class="text-gray-400 text-xs font-body">
+          &copy; 2026 Newark Digital. All rights reserved.
+        </div>
+      </div>
+    </footer>
 
     <.flash_group flash={@flash} />
     """

@@ -70,7 +70,7 @@ defmodule RouxLiveWeb.RecipeLive.Index do
             </p>
           </div>
 
-          <div class="flex flex-col lg:flex-row gap-6 items-center">
+          <div class="flex flex-col lg:flex-row gap-6 items-center w-full">
             <div class="relative flex-1 w-full group">
               <form phx-change="search" phx-submit="search" class="relative">
                 <input
@@ -78,7 +78,7 @@ defmodule RouxLiveWeb.RecipeLive.Index do
                   name="query"
                   value={@search_query}
                   placeholder="Search recipes..."
-                  class="w-full h-16 pl-14 pr-4 rounded-3xl border border-parchment bg-white shadow-sm group-focus-within:shadow-xl group-focus-within:border-coral transition-all outline-none text-lg"
+                  class="w-full h-16 pl-14 pr-4 rounded-3xl border border-parchment bg-white shadow-sm group-focus-within:shadow-xl group-focus-within:border-coral transition-all outline-none text-lg text-gray-900"
                   phx-debounce="300"
                 />
                 <div class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-coral transition-colors">

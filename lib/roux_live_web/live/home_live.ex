@@ -44,13 +44,13 @@ defmodule RouxLiveWeb.HomeLive do
                   The fastest and easiest way to browse, cook, and share your most cherished flavors—all in one place.
                 </p>
                 
-                <div class="max-w-xl mx-auto pt-4">
+                <div class="w-full pt-4">
                   <.form for={%{}} phx-submit="search" class="relative group">
                     <input
                       type="text"
                       name="query"
                       placeholder="Search for a recipe..."
-                      class="w-full h-16 pl-6 pr-32 rounded-full border border-parchment bg-white font-body text-lg shadow-xl shadow-gray-200/50 focus:outline-none focus:border-coral transition-colors"
+                      class="w-full h-16 pl-6 pr-32 rounded-full border border-parchment bg-white font-body text-lg text-gray-900 shadow-xl shadow-gray-200/50 focus:outline-none focus:border-coral transition-colors"
                     />
                     <button class="absolute right-2 top-2 bottom-2 px-6 bg-gray-900 text-white font-bold rounded-full hover:bg-coral transition-all active:scale-95">
                       Search
