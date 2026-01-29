@@ -1,0 +1,152 @@
+schema: "recipe/simple-v2"
+id: "guajillo-chuck-roast-tacos"
+slug: "guajillo-chuck-roast-tacos"
+title: "Guajillo-Braised Chuck Roast Tacos"
+summary: "Instant Pot adaptation of guajillo-braised tacos using chuck roast, finished with a rich chile sauce."
+tags: ["Dinner", "Mexican", "Beef", "Instant Pot"]
+yield:
+  quantity: 16
+  unit: "tacos"
+time:
+  prep_minutes: 30
+  cook_minutes: 80
+  total_minutes: 110
+ingredient_groups:
+  - id: "chiles-sauce"
+    title: "Chile Sauce Base"
+    ingredient_ids: ["guajillo-chiles", "chipotle-chiles", "onion", "garlic", "dark-beer", "cumin", "black-pepper", "mexican-oregano", "kosher-salt", "water"]
+  - id: "meat"
+    title: "The Meat"
+    ingredient_ids: ["chuck-roast", "vegetable-oil"]
+  - id: "serving"
+    title: "Serving"
+    ingredient_ids: ["tortillas", "cilantro", "lime"]
+ingredients:
+  - id: "guajillo-chiles"
+    name: "Guajillo chiles"
+    amount: 8
+    unit: null
+    note: "stemmed and seeded"
+    optional: false
+  - id: "chipotle-chiles"
+    name: "Dried chipotle chiles"
+    amount: 3
+    unit: null
+    note: "stemmed and seeded"
+    optional: false
+  - id: "vegetable-oil"
+    name: "Vegetable oil"
+    amount: 2
+    unit: "tablespoons"
+    note: "plus more as needed"
+    optional: false
+  - id: "chuck-roast"
+    name: "Beef chuck roast"
+    amount: "3.5"
+    unit: "pounds"
+    note: "cut into large 3–4 inch chunks"
+    optional: false
+  - id: "onion"
+    name: "Yellow onion"
+    amount: 1
+    unit: "large"
+    note: "coarsely chopped"
+    optional: false
+  - id: "garlic"
+    name: "Garlic cloves"
+    amount: 2
+    unit: "cloves"
+    note: "coarsely chopped"
+    optional: false
+  - id: "dark-beer"
+    name: "Dark Mexican beer"
+    amount: "0.75"
+    unit: "cup"
+    note: "reduced to prevent thin sauce"
+    optional: false
+  - id: "cumin"
+    name: "Ground cumin"
+    amount: 2
+    unit: "teaspoons"
+    note: null
+    optional: false
+  - id: "black-pepper"
+    name: "Black pepper"
+    amount: 1
+    unit: "teaspoon"
+    note: "freshly ground"
+    optional: false
+  - id: "mexican-oregano"
+    name: "Dried Mexican oregano"
+    amount: "1.5"
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "kosher-salt"
+    name: "Kosher salt"
+    amount: "1.5"
+    unit: "tablespoons"
+    note: "divided"
+    optional: false
+  - id: "water"
+    name: "Water"
+    amount: "0.25"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "tortillas"
+    name: "Corn tortillas"
+    amount: null
+    unit: null
+    note: "warmed"
+    optional: true
+  - id: "cilantro"
+    name: "Fresh cilantro"
+    amount: null
+    unit: null
+    note: "chopped"
+    optional: true
+  - id: "lime"
+    name: "Lime wedges"
+    amount: null
+    unit: null
+    note: null
+    optional: true
+step_groups:
+  - id: "prep-sauce"
+    title: "Prep Chile Sauce"
+    step_ids: ["toast-chiles", "saute-aromatics", "deglaze", "blend-sauce"]
+  - id: "cook-meat"
+    title: "Sear & Cook Meat"
+    step_ids: ["sear-chuck", "pressure-cook"]
+  - id: "finish"
+    title: "Reduction & Serving"
+    step_ids: ["reduce-sauce", "finish-and-serve"]
+steps:
+  - id: "toast-chiles"
+    text: "Set the Instant Pot to Sauté (Normal). Toast the guajillo and chipotle chiles in batches for 30 seconds per side. Remove and set aside."
+    uses: ["guajillo-chiles", "chipotle-chiles"]
+  - id: "sear-chuck"
+    text: "Add oil to the Instant Pot. Season chuck roast chunks with salt and sear in batches until deeply browned."
+    uses: ["vegetable-oil", "chuck-roast", "kosher-salt"]
+  - id: "saute-aromatics"
+    text: "Add onion and cook until lightly browned. Add garlic and cook 1-2 minutes more."
+    uses: ["onion", "garlic"]
+  - id: "deglaze"
+    text: "Pour in beer to deglaze, scraping up browned bits. Add toasted chiles and simmer on Sauté (Low) for 5 minutes until softened."
+    uses: ["dark-beer", "guajillo-chiles", "chipotle-chiles"]
+  - id: "blend-sauce"
+    text: "Transfer chile mixture to a blender. Add cumin, black pepper, oregano, remaining salt, and water. Blend until very smooth."
+    uses: ["cumin", "black-pepper", "mexican-oregano", "kosher-salt", "water"]
+  - id: "pressure-cook"
+    text: "Return roast to pot and pour sauce over it. Cook on High Pressure for 60 minutes, with a 15-minute natural release."
+    uses: ["chuck-roast"]
+  - id: "reduce-sauce"
+    text: "Remove roast and shred. Switch to Sauté (Low) and simmer sauce uncovered for 10-20 minutes until thick and glossy. Return meat to sauce."
+    uses: []
+  - id: "finish-and-serve"
+    text: "Taste and adjust seasoning. Serve in warm tortillas with cilantro and lime."
+    uses: ["tortillas", "cilantro", "lime"]
+notes:
+  - "Chuck roast needs a long pressure cook to become fully shreddable."
+  - "Reducing the sauce is key to a rich, glossy finish."

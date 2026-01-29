@@ -1,0 +1,164 @@
+schema: "recipe/simple-v2"
+id: "shepherds-pie"
+slug: "shepherds-pie"
+title: "The Best Shepherd's Pie"
+summary: "Hearty and easy shepherd’s pie packed full of seasoned beef and vegetables, topped with creamy mashed potatoes and parmesan cheese."
+tags: ["Dinner", "Comfort Food", "Beef", "Classic"]
+yield:
+  quantity: 8
+  unit: "servings"
+time:
+  prep_minutes: 35
+  cook_minutes: 30
+  total_minutes: 65
+ingredient_groups:
+  - id: "filling"
+    title: "Beef & Vegetable Filling"
+    ingredient_ids: ["f-butter", "f-onion", "f-carrot", "f-garlic", "f-beef", "f-tomato-paste", "f-flour", "f-worcestershire", "f-italian-seasoning", "f-broth", "f-salt", "f-pepper", "f-peas"]
+  - id: "mash"
+    title: "Creamy Potato Mash"
+    ingredient_ids: ["m-potatoes", "m-butter", "m-cream", "m-salt", "m-parmesan"]
+ingredients:
+  - id: "f-butter"
+    name: "Butter or olive oil"
+    amount: 2
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "f-onion"
+    name: "Medium onion"
+    amount: 1
+    unit: null
+    note: "finely diced"
+    optional: false
+  - id: "f-carrot"
+    name: "Large carrot"
+    amount: 1
+    unit: null
+    note: "finely diced"
+    optional: false
+  - id: "f-garlic"
+    name: "Garlic"
+    amount: 2
+    unit: "cloves"
+    note: "minced"
+    optional: false
+  - id: "f-beef"
+    name: "Ground beef"
+    amount: 1
+    unit: "lb"
+    note: "lean preferred"
+    optional: false
+  - id: "f-tomato-paste"
+    name: "Tomato paste"
+    amount: 2
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "f-flour"
+    name: "All-purpose flour"
+    amount: 2
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "f-worcestershire"
+    name: "Worcestershire sauce"
+    amount: 2
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "f-italian-seasoning"
+    name: "Italian seasoning"
+    amount: 3
+    unit: "teaspoons"
+    note: null
+    optional: false
+  - id: "f-broth"
+    name: "Beef broth"
+    amount: 1
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "f-salt"
+    name: "Salt"
+    amount: "1/2"
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "f-pepper"
+    name: "Black pepper"
+    amount: "1/2"
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "f-peas"
+    name: "Frozen peas"
+    amount: 1
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "m-potatoes"
+    name: "Russet potatoes"
+    amount: 2
+    unit: "lbs"
+    note: "peeled and halved"
+    optional: false
+  - id: "m-butter"
+    name: "Salted butter"
+    amount: "1/2"
+    unit: "cup"
+    note: "4 tablespoons"
+    optional: false
+  - id: "m-cream"
+    name: "Heavy cream"
+    amount: "1/3"
+    unit: "cup"
+    note: "or milk"
+    optional: false
+  - id: "m-salt"
+    name: "Salt"
+    amount: "1/2"
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "m-parmesan"
+    name: "Parmesan cheese"
+    amount: "1/2"
+    unit: "cup"
+    note: "freshly grated"
+    optional: false
+step_groups:
+  - id: "meat-filling"
+    title: "Meat Filling"
+    step_ids: ["saute-veg", "brown-beef", "season-simmer"]
+  - id: "potato-mash"
+    title: "Potato Mash"
+    step_ids: ["boil-potatoes", "mash-potatoes"]
+  - id: "assemble-bake"
+    title: "Assembly & Baking"
+    step_ids: ["assemble", "bake"]
+steps:
+  - id: "saute-veg"
+    text: "Preheat oven to 350°F. Melt butter in a pan over medium heat. Add onion, carrot, and garlic; cook 5-7 minutes until softened."
+    uses: ["f-butter", "f-onion", "f-carrot", "f-garlic"]
+  - id: "brown-beef"
+    text: "Add beef and cook until no longer pink. Drain excess fat."
+    uses: ["f-beef"]
+  - id: "season-simmer"
+    text: "Stir in tomato paste, flour, Worcestershire sauce, Italian seasoning, beef stock, salt, pepper, and peas. Simmer for a few minutes until thickened. Transfer to an 8x11 dish."
+    uses: ["f-tomato-paste", "f-flour", "f-worcestershire", "f-italian-seasoning", "f-broth", "f-salt", "f-pepper", "f-peas"]
+  - id: "boil-potatoes"
+    text: "Add potatoes to heavily salted cold water and bring to a boil. Cook until fork tender (10-20 mins)."
+    uses: ["m-potatoes"]
+  - id: "mash-potatoes"
+    text: "Drain and add potatoes back to the pot. Add butter, cream, and salt; mash until smooth."
+    uses: ["m-butter", "m-cream", "m-salt"]
+  - id: "assemble"
+    text: "Spread mashed potatoes over the filling. Fluff with a fork to create peaks and sprinkle with parmesan."
+    uses: ["m-parmesan"]
+  - id: "bake"
+    text: "Bake for 20 minutes until golden brown. Use the broiler for extra browning if needed."
+    uses: []
+notes:
+  - "Taste the filling and the mash separately to ensure they are properly seasoned."
+  - "This is a great use for leftover mashed potatoes."

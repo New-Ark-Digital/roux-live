@@ -1,0 +1,165 @@
+schema: "recipe/simple-v2"
+id: "sourdough-cinnamon-rolls"
+slug: "sourdough-cinnamon-rolls"
+title: "Sourdough Cinnamon Rolls"
+summary: "Soft, fluffy sourdough rolls with layers of cinnamon sugar, topped with decadent cream cheese icing."
+tags: ["Breakfast", "Dessert", "Sourdough", "Baking"]
+yield:
+  quantity: 12
+  unit: "rolls"
+time:
+  prep_minutes: 20
+  cook_minutes: 25
+  total_minutes: 1485 # 1 day + 45 mins
+ingredient_groups:
+  - id: "dough"
+    title: "The Dough"
+    ingredient_ids: ["starter", "water", "flour", "coconut-oil", "honey", "eggs", "baking-soda", "baking-powder", "salt"]
+  - id: "filling"
+    title: "Cinnamon Sugar Filling"
+    ingredient_ids: ["f-butter", "f-brown-sugar", "f-cinnamon"]
+  - id: "frosting"
+    title: "Cream Cheese Topping"
+    ingredient_ids: ["t-cream-cheese", "t-heavy-cream", "t-maple-syrup", "t-vanilla"]
+ingredients:
+  - id: "starter"
+    name: "Sourdough starter"
+    amount: "1/2"
+    unit: "cup"
+    note: "bubbly and active"
+    optional: false
+  - id: "water"
+    name: "Water"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "flour"
+    name: "All-purpose flour"
+    amount: 4
+    unit: "cups"
+    note: null
+    optional: false
+  - id: "coconut-oil"
+    name: "Melted coconut oil"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "honey"
+    name: "Honey"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "eggs"
+    name: "Eggs"
+    amount: 2
+    unit: null
+    note: null
+    optional: false
+  - id: "baking-soda"
+    name: "Baking soda"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "baking-powder"
+    name: "Baking powder"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "salt"
+    name: "Salt"
+    amount: "1/2"
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "f-butter"
+    name: "Softened butter"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "f-brown-sugar"
+    name: "Brown sugar"
+    amount: 1
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "f-cinnamon"
+    name: "Cinnamon"
+    amount: 2
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "t-cream-cheese"
+    name: "Cream cheese"
+    amount: 6
+    unit: "ounces"
+    note: null
+    optional: false
+  - id: "t-heavy-cream"
+    name: "Heavy cream"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "t-maple-syrup"
+    name: "Maple syrup or honey"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "t-vanilla"
+    name: "Vanilla extract"
+    amount: 2
+    unit: "teaspoons"
+    note: null
+    optional: false
+step_groups:
+  - id: "dough-prep"
+    title: "Dough & Fermentation"
+    step_ids: ["mix-knead", "ferment-overnight", "add-leaveners"]
+  - id: "shaping"
+    title: "Filling & Shaping"
+    step_ids: ["roll-dough", "add-filling", "roll-up", "slice"]
+  - id: "baking"
+    title: "Baking & Icing"
+    step_ids: ["bake-rolls", "make-frosting", "ice-rolls"]
+steps:
+  - id: "mix-knead"
+    text: "Combine active sourdough starter, flour, honey, water, eggs, and melted coconut oil. Knead until smooth, glossy, and passes the windowpane test."
+    uses: ["starter", "water", "flour", "coconut-oil", "honey", "eggs"]
+  - id: "ferment-overnight"
+    text: "Place in a greased bowl, cover tightly, and allow to rest in a warm place overnight (up to 12 hours)."
+    uses: []
+  - id: "add-leaveners"
+    text: "Add baking soda, baking powder, and salt. Knead for 5 minutes until well incorporated."
+    uses: ["baking-soda", "baking-powder", "salt"]
+  - id: "roll-dough"
+    text: "Lightly dust the counter with flour and roll out the dough into a 1/4 inch thick rectangle."
+    uses: ["flour"]
+  - id: "add-filling"
+    text: "Combine softened butter, brown sugar, and cinnamon. Spread evenly over the dough."
+    uses: ["f-butter", "f-brown-sugar", "f-cinnamon"]
+  - id: "roll-up"
+    text: "Roll the dough up as tightly as you can and pinch the edge to create a seam."
+    uses: []
+  - id: "slice"
+    text: "Slice to make 12 even rolls and place into a seasoned 14\" cast iron skillet or baking dish."
+    uses: []
+  - id: "bake-rolls"
+    text: "Bake at 375°F for 20-25 minutes until lightly browned."
+    uses: []
+  - id: "make-frosting"
+    text: "Combine cream cheese, heavy cream, maple syrup, and vanilla in a saucepan over medium heat. Stir until combined (use an immersion blender for extra smoothness)."
+    uses: ["t-cream-cheese", "t-heavy-cream", "t-maple-syrup", "t-vanilla"]
+  - id: "ice-rolls"
+    text: "Pour frosting over warm cinnamon rolls and enjoy."
+    uses: []
+notes:
+  - "Start 24 hours ahead to allow for fermentation."
+  - "Use string or dental floss to cut the rolls without squishing them."
+  - "If the dough is too stiff, warm it slightly in a low oven (150°F) for a few minutes."

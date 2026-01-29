@@ -1,0 +1,116 @@
+schema: "recipe/simple-v2"
+id: "chocolate-chip-cookies"
+slug: "chocolate-chip-cookies"
+title: "Chocolate Chip Cookies"
+summary: "The classic chewy and soft chocolate chip cookies that everyone loves."
+tags: ["Baking", "Classic", "Dessert"]
+yield:
+  quantity: 24
+  unit: "cookies"
+time:
+  prep_minutes: 15
+  cook_minutes: 10
+  total_minutes: 25
+ingredient_groups:
+  - id: "dry-ingredients"
+    title: "Dry Ingredients"
+    ingredient_ids: ["flour", "baking-soda", "salt"]
+  - id: "wet-ingredients"
+    title: "Wet Ingredients"
+    ingredient_ids: ["butter", "sugar", "brown-sugar", "vanilla", "egg"]
+  - id: "mix-ins"
+    title: "Mix-ins"
+    ingredient_ids: ["chocolate-chips"]
+ingredients:
+  - id: "flour"
+    name: "All-purpose flour"
+    amount: "2 1/4"
+    unit: "cups"
+    note: null
+    optional: false
+  - id: "baking-soda"
+    name: "Baking soda"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "salt"
+    name: "Salt"
+    amount: "1/2"
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "butter"
+    name: "Unsalted butter"
+    amount: 1
+    unit: "cup"
+    note: "softened"
+    optional: false
+  - id: "sugar"
+    name: "Granulated sugar"
+    amount: "3/4"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "brown-sugar"
+    name: "Packed brown sugar"
+    amount: "3/4"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "vanilla"
+    name: "Vanilla extract"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "egg"
+    name: "Large egg"
+    amount: 1
+    unit: null
+    note: null
+    optional: false
+  - id: "chocolate-chips"
+    name: "Semi-sweet chocolate chips"
+    amount: 2
+    unit: "cups"
+    note: null
+    optional: false
+step_groups:
+  - id: "preparation"
+    title: "Preparation"
+    step_ids: ["preheat-oven", "combine-dry", "cream-butter", "add-egg", "mix-in-dry", "stir-in-chips"]
+  - id: "baking"
+    title: "Baking & Cooling"
+    step_ids: ["drop-dough", "bake", "cool"]
+steps:
+  - id: "preheat-oven"
+    text: "Preheat oven to 375°F (190°C)."
+    uses: []
+  - id: "combine-dry"
+    text: "In a small bowl, whisk together flour, baking soda, and salt."
+    uses: ["flour", "baking-soda", "salt"]
+  - id: "cream-butter"
+    text: "In a large bowl, beat softened butter, granulated sugar, brown sugar, and vanilla extract until creamy."
+    uses: ["butter", "sugar", "brown-sugar", "vanilla"]
+  - id: "add-egg"
+    text: "Add egg and beat well."
+    uses: ["egg"]
+  - id: "mix-in-dry"
+    text: "Gradually beat in flour mixture."
+    uses: ["flour", "baking-soda", "salt"]
+  - id: "stir-in-chips"
+    text: "Stir in chocolate chips."
+    uses: ["chocolate-chips"]
+  - id: "drop-dough"
+    text: "Drop by rounded tablespoon onto ungreased baking sheets."
+    uses: []
+  - id: "bake"
+    text: "Bake for 9 to 11 minutes or until golden brown."
+    uses: []
+  - id: "cool"
+    text: "Cool on baking sheets for 2 minutes; remove to wire racks to cool completely."
+    uses: []
+notes:
+  - "For a softer cookie, do not overbake."
+  - "You can use milk chocolate or dark chocolate chips if preferred."

@@ -1,0 +1,122 @@
+schema: "recipe/simple-v2"
+id: "chocolate-protein-muffins"
+slug: "chocolate-protein-muffins"
+title: "Chocolate Einkorn Protein Muffins"
+summary: "Moist, fluffy, and chocolaty muffins packed with extra protein from collagen and yogurt."
+tags: ["Breakfast", "Snack", "Protein", "Chocolate"]
+yield:
+  quantity: 15
+  unit: "muffins"
+time:
+  prep_minutes: 15
+  cook_minutes: 20
+  total_minutes: 35
+ingredient_groups:
+  - id: "dry"
+    title: "Dry Ingredients"
+    ingredient_ids: ["flour", "sugar", "baking-soda", "collagen", "cocoa", "salt", "chips"]
+  - id: "wet"
+    title: "Wet Ingredients"
+    ingredient_ids: ["eggs", "yogurt", "oil", "milk", "vanilla"]
+ingredients:
+  - id: "flour"
+    name: "Einkorn flour"
+    amount: 2
+    unit: "cups"
+    note: "all-purpose or fresh ground"
+    optional: false
+  - id: "sugar"
+    name: "Granulated sugar"
+    amount: "3/4"
+    unit: "cup"
+    note: "or date sugar"
+    optional: false
+  - id: "baking-soda"
+    name: "Baking soda"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "collagen"
+    name: "Collagen peptides"
+    amount: "1/3"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "cocoa"
+    name: "Cocoa powder"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "salt"
+    name: "Sea salt"
+    amount: "1/2"
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "chips"
+    name: "Chocolate chips"
+    amount: "1.5"
+    unit: "cups"
+    note: null
+    optional: false
+  - id: "eggs"
+    name: "Large eggs"
+    amount: 2
+    unit: null
+    note: null
+    optional: false
+  - id: "yogurt"
+    name: "Plain yogurt"
+    amount: "3/4"
+    unit: "cup"
+    note: "185g"
+    optional: false
+  - id: "oil"
+    name: "Oil"
+    amount: "1/2"
+    unit: "cup"
+    note: "avocado, coconut, or melted butter"
+    optional: false
+  - id: "milk"
+    name: "Milk"
+    amount: "1/2"
+    unit: "cup"
+    note: "120ml"
+    optional: false
+  - id: "vanilla"
+    name: "Vanilla extract"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+step_groups:
+  - id: "prep"
+    title: "Preparation"
+    step_ids: ["preheat", "mix-dry", "mix-wet", "combine"]
+  - id: "baking"
+    title: "Baking"
+    step_ids: ["fill-tins", "bake"]
+steps:
+  - id: "preheat"
+    text: "Preheat oven to 375°F (190°C) and add liners to a muffin tin."
+    uses: []
+  - id: "mix-dry"
+    text: "In a large bowl, mix einkorn flour, sugar, baking soda, collagen, cocoa powder, and salt."
+    uses: ["flour", "sugar", "baking-soda", "collagen", "cocoa", "salt"]
+  - id: "mix-wet"
+    text: "In a separate bowl, whisk together eggs, yogurt, oil, milk, and vanilla."
+    uses: ["eggs", "yogurt", "oil", "milk", "vanilla"]
+  - id: "combine"
+    text: "Add wet ingredients to the dry mixture along with chocolate chips. Mix until just incorporated."
+    uses: ["chips"]
+  - id: "fill-tins"
+    text: "Fill each muffin liner almost to the top. (Recipe makes 15 muffins)."
+    uses: []
+  - id: "bake"
+    text: "Bake for 15-20 minutes until a toothpick comes out clean. Serve fresh with cold milk."
+    uses: []
+notes:
+  - "Einkorn flour is higher in protein than modern wheat."
+  - "Don't over-mix the batter to keep muffins light and fluffy."

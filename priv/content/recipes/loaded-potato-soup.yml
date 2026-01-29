@@ -1,0 +1,137 @@
+schema: "recipe/simple-v2"
+id: "loaded-potato-soup"
+slug: "loaded-potato-soup"
+title: "Loaded Potato Soup"
+summary: "Creamy and hearty soup with starchy potatoes, fresh onion and garlic, cheddar cheese, and crispy bacon bits."
+tags: ["Dinner", "Soup", "Comfort Food", "Bacon"]
+yield:
+  quantity: 6
+  unit: "servings"
+time:
+  prep_minutes: 10
+  cook_minutes: 40
+  total_minutes: 50
+ingredient_groups:
+  - id: "base"
+    title: "Soup Base"
+    ingredient_ids: ["potatoes", "bacon", "onion", "garlic", "butter", "flour", "broth"]
+  - id: "finish"
+    title: "Finishers & Toppings"
+    ingredient_ids: ["cream", "cheese", "sour-cream", "salt", "pepper", "green-onions"]
+ingredients:
+  - id: "potatoes"
+    name: "Russet potatoes"
+    amount: 3
+    unit: "pounds"
+    note: "peeled and cubed"
+    optional: false
+  - id: "bacon"
+    name: "Bacon"
+    amount: 10
+    unit: "ounces"
+    note: "diced"
+    optional: false
+  - id: "onion"
+    name: "Onion"
+    amount: 1
+    unit: null
+    note: "diced"
+    optional: false
+  - id: "garlic"
+    name: "Garlic cloves"
+    amount: 2
+    unit: null
+    note: "minced"
+    optional: false
+  - id: "butter"
+    name: "Butter"
+    amount: 4
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "flour"
+    name: "All-purpose flour"
+    amount: "1/4"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "broth"
+    name: "Chicken broth"
+    amount: 5
+    unit: "cups"
+    note: null
+    optional: false
+  - id: "cream"
+    name: "Heavy cream"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "cheese"
+    name: "Cheddar cheese"
+    amount: 1
+    unit: "cup"
+    note: "shredded, plus more to top"
+    optional: false
+  - id: "sour-cream"
+    name: "Sour cream"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "salt"
+    name: "Salt"
+    amount: "1.5"
+    unit: "teaspoons"
+    note: null
+    optional: false
+  - id: "pepper"
+    name: "Black pepper"
+    amount: "1/4"
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "green-onions"
+    name: "Green onions"
+    amount: null
+    unit: null
+    note: "sliced, for garnish"
+    optional: true
+step_groups:
+  - id: "prep-base"
+    title: "Prep Potatoes & Bacon"
+    step_ids: ["boil-potatoes", "cook-bacon"]
+  - id: "make-base"
+    title: "Sauté & Thicken"
+    step_ids: ["saute-veg", "make-roux", "add-broth"]
+  - id: "blend-finish"
+    title: "Blend & Simmer"
+    step_ids: ["blend-potatoes", "add-finishers", "garnish"]
+steps:
+  - id: "boil-potatoes"
+    text: "Add cubed potatoes to a large pot, cover with cold water, and bring to a boil. Cook 15-20 minutes until fork-tender. Drain."
+    uses: ["potatoes"]
+  - id: "cook-bacon"
+    text: "In another pot, cook diced bacon until crispy. Remove and drain on paper towels, reserving 2 tbsp fat in the pot."
+    uses: ["bacon"]
+  - id: "saute-veg"
+    text: "Sauté diced onion in bacon fat for 4-5 minutes, then add garlic for 1 minute."
+    uses: ["onion", "garlic"]
+  - id: "make-roux"
+    text: "Add butter and stir until melted, then whisk in flour. Cook for 2-3 minutes, stirring frequently."
+    uses: ["butter", "flour"]
+  - id: "add-broth"
+    text: "Whisk in chicken broth and bring to a simmer until slightly thickened."
+    uses: ["broth"]
+  - id: "blend-potatoes"
+    text: "Blend 2 cups of cooked potatoes with 2 cups of broth until smooth. Pour back into the pot with remaining potato cubes."
+    uses: []
+  - id: "add-finishers"
+    text: "Add heavy cream, shredded cheese, sour cream, salt, pepper, and half of the bacon. Simmer for 10 minutes."
+    uses: ["cream", "cheese", "sour-cream", "salt", "pepper", "bacon"]
+  - id: "garnish"
+    text: "Ladle into bowls and garnish with remaining bacon, more cheese, and green onions."
+    uses: ["green-onions", "bacon", "cheese"]
+notes:
+  - "Use homemade bone broth for extra nutrition."
+  - "Don't over-blend the potatoes or they might become gummy."

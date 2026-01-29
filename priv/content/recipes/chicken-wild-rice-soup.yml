@@ -1,0 +1,161 @@
+schema: "recipe/simple-v2"
+id: "chicken-wild-rice-soup"
+slug: "chicken-wild-rice-soup"
+title: "Creamy Chicken and Wild Rice Soup"
+summary: "Hearty soup packed with vegetables, creamy broth, and flavorful herbs. Perfect for chilly evenings."
+tags: ["Dinner", "Soup", "Chicken", "Comfort Food"]
+yield:
+  quantity: 8
+  unit: "servings"
+time:
+  prep_minutes: 20
+  cook_minutes: 50
+  total_minutes: 70
+ingredient_groups:
+  - id: "base"
+    title: "Soup Base"
+    ingredient_ids: ["carrots", "celery", "onions", "butter-base", "rice", "stock", "rosemary", "thyme", "celery-seed", "bay-leaves"]
+  - id: "add-ins"
+    title: "Add-ins & Finish"
+    ingredient_ids: ["chicken", "lemon-zest", "lemon-juice", "milk", "cream"]
+  - id: "thickener"
+    title: "Thickener (Roux)"
+    ingredient_ids: ["butter-thick", "flour-thick"]
+ingredients:
+  - id: "carrots"
+    name: "Carrots"
+    amount: 2
+    unit: "cups"
+    note: "chopped"
+    optional: false
+  - id: "celery"
+    name: "Celery"
+    amount: 1
+    unit: "cup"
+    note: "chopped"
+    optional: false
+  - id: "onions"
+    name: "Large onions"
+    amount: 2
+    unit: null
+    note: "sliced"
+    optional: false
+  - id: "butter-base"
+    name: "Butter"
+    amount: 2
+    unit: "tablespoons"
+    note: "for sautéing"
+    optional: false
+  - id: "rice"
+    name: "Brown rice or wild rice blend"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "stock"
+    name: "Chicken stock"
+    amount: 4
+    unit: "cups"
+    note: "homemade bone broth preferred"
+    optional: false
+  - id: "rosemary"
+    name: "Dried rosemary"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "thyme"
+    name: "Dried thyme"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "celery-seed"
+    name: "Celery seed"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "bay-leaves"
+    name: "Bay leaves"
+    amount: 2
+    unit: null
+    note: "optional"
+    optional: true
+  - id: "chicken"
+    name: "Chicken breasts"
+    amount: 12
+    unit: "oz"
+    note: "cut into bite-sized cubes"
+    optional: false
+  - id: "lemon-zest"
+    name: "Lemon zest"
+    amount: 1
+    unit: "lemon"
+    note: null
+    optional: false
+  - id: "lemon-juice"
+    name: "Lemon juice"
+    amount: 3
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "milk"
+    name: "Whole milk"
+    amount: 1
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "cream"
+    name: "Whipping cream"
+    amount: 2
+    unit: "cups"
+    note: "or heavy cream"
+    optional: false
+  - id: "butter-thick"
+    name: "Unsalted butter"
+    amount: "1/4"
+    unit: "cup"
+    note: "for roux"
+    optional: false
+  - id: "flour-thick"
+    name: "All-purpose flour"
+    amount: "1/4"
+    unit: "cup"
+    note: "for roux"
+    optional: false
+step_groups:
+  - id: "sauté"
+    title: "Sauté & Simmer"
+    step_ids: ["saute-veg", "add-rice-stock", "simmer-rice"]
+  - id: "meat"
+    title: "Add Chicken"
+    step_ids: ["add-chicken"]
+  - id: "finish"
+    title: "Finish & Thicken"
+    step_ids: ["add-finishers", "make-roux", "thicken-soup"]
+steps:
+  - id: "saute-veg"
+    text: "In a large pot, cook carrot, celery, and onion in 2 tbsp melted butter over medium heat until tender."
+    uses: ["carrots", "celery", "onions", "butter-base"]
+  - id: "add-rice-stock"
+    text: "Season with salt and pepper. Add wild rice, chicken stock, rosemary, thyme, celery seed, and bay leaves."
+    uses: ["rice", "stock", "rosemary", "thyme", "celery-seed", "bay-leaves"]
+  - id: "simmer-rice"
+    text: "Raise heat slightly to allow soup to simmer, covered, for 20 minutes."
+    uses: []
+  - id: "add-chicken"
+    text: "Add chicken pieces and simmer for approximately 20 minutes more until chicken is cooked and rice is tender."
+    uses: ["chicken"]
+  - id: "add-finishers"
+    text: "Add lemon zest, lemon juice, whole milk, and cream. Season with more salt and pepper to taste."
+    uses: ["lemon-zest", "lemon-juice", "milk", "cream"]
+  - id: "make-roux"
+    text: "In a separate small pot, melt 1/4 cup butter and whisk in 1/4 cup flour. Stir for a minute or two."
+    uses: ["butter-thick", "flour-thick"]
+  - id: "thicken-soup"
+    text: "Add the flour and butter paste to the soup. Bring back to temperature and serve with fresh thyme."
+    uses: []
+notes:
+  - "The longer the soup sits, the more the flavors develop."
+  - "Be sure to zest the lemon lightly to avoid the bitter white pith."

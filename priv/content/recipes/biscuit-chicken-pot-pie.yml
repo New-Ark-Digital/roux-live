@@ -1,0 +1,207 @@
+schema: "recipe/simple-v2"
+id: "biscuit-chicken-pot-pie"
+slug: "biscuit-chicken-pot-pie"
+title: "Biscuit Chicken Pot Pie"
+summary: "Tender chicken, chopped veggies, and a well-seasoned cream sauce with a buttery sourdough biscuit topping."
+tags: ["Dinner", "Comfort Food", "Sourdough", "Chicken"]
+yield:
+  quantity: 8
+  unit: "servings"
+time:
+  prep_minutes: 25
+  cook_minutes: 25
+  total_minutes: 58
+ingredient_groups:
+  - id: "biscuits"
+    title: "Sourdough Biscuits"
+    ingredient_ids: ["b-flour", "b-sugar", "b-salt", "b-baking-powder", "b-baking-soda", "b-butter", "b-starter", "b-milk"]
+  - id: "filling"
+    title: "Pot Pie Filling"
+    ingredient_ids: ["f-butter", "f-garlic", "f-onion", "f-potatoes", "f-carrots", "f-flour", "f-broth", "f-parsley", "f-salt", "f-pepper", "f-garlic-powder", "f-onion-powder", "f-peas", "f-chicken", "f-cream"]
+ingredients:
+  - id: "b-flour"
+    name: "All-purpose flour"
+    amount: 2
+    unit: "cups"
+    note: "280g"
+    optional: false
+  - id: "b-sugar"
+    name: "Sugar"
+    amount: 1
+    unit: "tablespoon"
+    note: "12g"
+    optional: false
+  - id: "b-salt"
+    name: "Salt"
+    amount: "3/4"
+    unit: "teaspoon"
+    note: "4g"
+    optional: false
+  - id: "b-baking-powder"
+    name: "Baking powder"
+    amount: 2
+    unit: "teaspoons"
+    note: null
+    optional: false
+  - id: "b-baking-soda"
+    name: "Baking soda"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "b-butter"
+    name: "Cold butter"
+    amount: 1
+    unit: "stick"
+    note: "113g, diced or grated"
+    optional: false
+  - id: "b-starter"
+    name: "Sourdough starter"
+    amount: 1
+    unit: "cup"
+    note: "285g, or discard"
+    optional: false
+  - id: "b-milk"
+    name: "Milk or buttermilk"
+    amount: "1/2"
+    unit: "cup"
+    note: "122g"
+    optional: false
+  - id: "f-butter"
+    name: "Butter"
+    amount: "1/4"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "f-garlic"
+    name: "Garlic"
+    amount: 4
+    unit: "cloves"
+    note: "minced"
+    optional: false
+  - id: "f-onion"
+    name: "Medium onion"
+    amount: 1
+    unit: null
+    note: "diced"
+    optional: false
+  - id: "f-potatoes"
+    name: "Potatoes"
+    amount: 3
+    unit: "medium"
+    note: "red or gold, diced"
+    optional: false
+  - id: "f-carrots"
+    name: "Carrots"
+    amount: 4
+    unit: "medium"
+    note: "diced"
+    optional: false
+  - id: "f-flour"
+    name: "Flour"
+    amount: "1/4"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "f-broth"
+    name: "Chicken bone broth"
+    amount: 3
+    unit: "cups"
+    note: null
+    optional: false
+  - id: "f-parsley"
+    name: "Parsley"
+    amount: 1
+    unit: "tablespoon"
+    note: null
+    optional: false
+  - id: "f-salt"
+    name: "Salt"
+    amount: 3
+    unit: "teaspoons"
+    note: "adjust to taste"
+    optional: false
+  - id: "f-pepper"
+    name: "Black pepper"
+    amount: "to taste"
+    unit: null
+    note: "fresh cracked"
+    optional: false
+  - id: "f-garlic-powder"
+    name: "Garlic powder"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "f-onion-powder"
+    name: "Onion powder"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "f-peas"
+    name: "Peas"
+    amount: 1
+    unit: "cup"
+    note: "fresh or frozen"
+    optional: false
+  - id: "f-chicken"
+    name: "Cooked chicken"
+    amount: 4
+    unit: "cups"
+    note: "shredded or chopped"
+    optional: false
+  - id: "f-cream"
+    name: "Heavy cream"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+step_groups:
+  - id: "biscuit-dough"
+    title: "Biscuit Dough"
+    step_ids: ["mix-dry", "cut-butter", "add-liquids"]
+  - id: "pot-pie-filling"
+    title: "Filling"
+    step_ids: ["saute-veggies", "add-flour", "add-broth", "add-chicken-cream"]
+  - id: "bake-cool"
+    title: "Assembly & Baking"
+    step_ids: ["preheat", "cut-biscuits", "bake", "cool"]
+steps:
+  - id: "mix-dry"
+    text: "Prepare the biscuit dough by adding flour, sugar, salt, baking powder, and baking soda to a large bowl. Mix well."
+    uses: ["b-flour", "b-sugar", "b-salt", "b-baking-powder", "b-baking-soda"]
+  - id: "cut-butter"
+    text: "Dice or grate the cold butter into small pieces and add to the flour mixture. Cut the butter into the flour with a pastry cutter, a fork, or even your hands until the pieces of butter are evenly distributed. The flour mixture will be coarse and sand-like."
+    uses: ["b-butter"]
+  - id: "add-liquids"
+    text: "Add sourdough starter and buttermilk, stirring until just combined. The dough will be lumpy. Cover the dough and keep it in the refrigerator while you prepare the filling."
+    uses: ["b-starter", "b-milk"]
+  - id: "saute-veggies"
+    text: "Start the filling by adding butter, garlic, onion, potatoes, and carrots to a large cast iron skillet on medium-low heat. Sauté for 10 minutes until the vegetables start to soften."
+    uses: ["f-butter", "f-garlic", "f-onion", "f-potatoes", "f-carrots"]
+  - id: "add-flour"
+    text: "Sprinkle the flour over the sautéed vegetables, then stir and cook for a few minutes until the flour is mixed in well."
+    uses: ["f-flour"]
+  - id: "add-broth"
+    text: "Pour in the bone broth and add parsley, salt, pepper, garlic powder, and onion powder. Mix well, cover with a lid, and cook for 10 minutes."
+    uses: ["f-broth", "f-parsley", "f-salt", "f-pepper", "f-garlic-powder", "f-onion-powder"]
+  - id: "add-chicken-cream"
+    text: "Stir in peas, pre-cooked chicken, and heavy cream, then transfer the filling to a greased 9x13 baking dish."
+    uses: ["f-peas", "f-chicken", "f-cream"]
+  - id: "preheat"
+    text: "Preheat oven to 400°F (200°C)."
+    uses: []
+  - id: "cut-biscuits"
+    text: "Roll biscuit dough onto a lightly floured surface and cut out biscuits (approx. 12). Place on top of the pot pie filling, side to side."
+    uses: ["b-flour"]
+  - id: "bake"
+    text: "Bake for 10-15 minutes or until the biscuits are golden and the filling is bubbling."
+    uses: []
+  - id: "cool"
+    text: "Remove from the oven and cool for several minutes before serving."
+    uses: []
+notes:
+  - "Place butter in the freezer for 10 minutes before starting for flakier biscuits."
+  - "Work the dough as little as possible to keep biscuits soft."
+  - "Finely chop veggies to ensure they cook quickly."

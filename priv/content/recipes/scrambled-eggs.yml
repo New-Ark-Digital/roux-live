@@ -1,0 +1,83 @@
+schema: "recipe/simple-v2"
+id: "scrambled-eggs"
+slug: "scrambled-eggs"
+title: "Scrambled Eggs"
+summary: "Soft, silky, and delicious scrambled eggs, perfect for a quick breakfast or a last-minute dinner."
+tags: ["Breakfast", "Eggs", "Quick"]
+yield:
+  quantity: 2
+  unit: "servings"
+time:
+  prep_minutes: 5
+  cook_minutes: 5
+  total_minutes: 10
+ingredients:
+  - id: "eggs"
+    name: "Eggs"
+    amount: 4
+    unit: null
+    note: "farm-fresh preferred"
+    optional: false
+  - id: "milk"
+    name: "Milk"
+    amount: "1.5"
+    unit: "tablespoons"
+    note: "or water/heavy cream"
+    optional: false
+  - id: "butter"
+    name: "Butter"
+    amount: 1
+    unit: "tablespoon"
+    note: "or olive oil, tallow, or bacon grease"
+    optional: false
+  - id: "salt"
+    name: "Salt"
+    amount: "pinch"
+    unit: null
+    note: null
+    optional: false
+  - id: "pepper"
+    name: "Pepper"
+    amount: "to taste"
+    unit: null
+    note: null
+    optional: true
+  - id: "herbs"
+    name: "Fresh herbs"
+    amount: "to taste"
+    unit: null
+    note: "thyme or similar"
+    optional: true
+step_groups:
+  - id: "prep"
+    title: "Prep & Mix"
+    step_ids: ["preheat", "whisk"]
+  - id: "cooking"
+    title: "Cooking"
+    step_ids: ["melt-butter", "pour-eggs", "scramble"]
+  - id: "serving"
+    title: "Serving"
+    step_ids: ["garnish"]
+steps:
+  - id: "preheat"
+    text: "Preheat a frying pan over medium-low heat."
+    uses: []
+  - id: "whisk"
+    text: "Crack eggs one by one into a medium bowl. Add milk and a pinch of salt to the eggs, then whisk thoroughly until combined and just a little bit frothy on top."
+    uses: ["eggs", "milk", "salt"]
+  - id: "melt-butter"
+    text: "When pan is heated, add a tablespoon of butter to the skillet, and once melted, spread around evenly."
+    uses: ["butter"]
+  - id: "pour-eggs"
+    text: "Pour in the beaten eggs and let them sit for a few seconds before stirring gently."
+    uses: ["eggs", "milk", "salt"]
+  - id: "scramble"
+    text: "Stir constantly until the eggs are set, then remove from the heat. The top of the eggs may appear wet but will continue cooking once removed from the heat."
+    uses: []
+  - id: "garnish"
+    text: "Add pepper and fresh herbs if desired. Serve right away."
+    uses: ["pepper", "herbs"]
+notes:
+  - "I crack each egg into a small dish first to catch any bad eggs."
+  - "High heat will make eggs tough, so stick with lower heat and gentle stirring."
+  - "Remove from heat as soon as eggs are set; residual heat will finish the cooking."
