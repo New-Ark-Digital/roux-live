@@ -1,0 +1,60 @@
+schema: "recipe/simple-v2"
+id: "iced-maple-matcha-latte"
+slug: "iced-maple-matcha-latte"
+title: "Iced Maple Matcha Latte"
+summary: "A creamy, lightly sweet iced matcha latte whisked smooth with maple syrup."
+tags: ["Drinks", "Matcha", "Iced", "Quick"]
+yield:
+  quantity: 1
+  unit: "drink"
+time:
+  prep_minutes: 5
+  cook_minutes: 0
+  total_minutes: 5
+ingredients:
+  - id: "matcha"
+    name: "Matcha powder"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "warm-water"
+    name: "Warm water"
+    amount: 2
+    unit: "tablespoons"
+    note: "not boiling"
+    optional: false
+  - id: "maple-syrup"
+    name: "Maple syrup"
+    amount: 2
+    unit: "teaspoons"
+    note: null
+    optional: false
+  - id: "ice"
+    name: "Ice"
+    amount: "as needed"
+    unit: null
+    note: "to fill the glass"
+    optional: false
+  - id: "milk"
+    name: "Milk"
+    amount: 1
+    unit: "cup"
+    note: "fill the glass about 2/3 full"
+    optional: false
+steps:
+  - id: "froth-matcha"
+    text: "Add matcha powder and warm water to a small bowl or cup. Whisk with a handheld milk frother until smooth and foamy."
+    uses: ["matcha", "warm-water"]
+  - id: "sweeten"
+    text: "Whisk in the maple syrup until fully combined."
+    uses: ["maple-syrup"]
+  - id: "build"
+    text: "Fill a glass with ice, then pour in milk until the glass is about 2/3 full."
+    uses: ["ice", "milk"]
+  - id: "finish"
+    text: "Pour the matcha mixture over the milk and stir gently to combine."
+    uses: ["matcha", "warm-water", "maple-syrup", "milk"]
+notes:
+  - "Use a fine sift for the matcha if you want an extra-smooth latte."
+  - "Swap in oat or almond milk for a dairy-free version."
