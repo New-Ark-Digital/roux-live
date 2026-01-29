@@ -44,8 +44,8 @@ defmodule RouxLiveWeb.HomeLive do
                   The fastest and easiest way to browse, cook, and share your most cherished flavors—all in one place.
                 </p>
                 
-                <div class="w-full pt-4">
-                  <.form for={%{}} phx-submit="search" class="relative group">
+                <div class="w-full max-w-2xl mx-auto pt-4">
+                  <.form for={%{}} phx-submit="search" class="relative group w-full">
                     <input
                       type="text"
                       name="query"

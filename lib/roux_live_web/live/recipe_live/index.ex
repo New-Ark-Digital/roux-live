@@ -71,8 +71,8 @@ defmodule RouxLiveWeb.RecipeLive.Index do
           </div>
 
           <div class="flex flex-col lg:flex-row gap-6 items-center w-full">
-            <div class="relative flex-1 w-full group">
-              <form phx-change="search" phx-submit="search" class="relative">
+            <div class="relative flex-[2] w-full group min-w-0">
+              <form phx-change="search" phx-submit="search" class="relative w-full">
                 <input
                   type="text"
                   name="query"
@@ -87,7 +87,7 @@ defmodule RouxLiveWeb.RecipeLive.Index do
               </form>
             </div>
             
-            <div class="flex-none flex gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto pb-2">
+            <div class="flex-1 flex gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto pb-2 min-w-0">
               <.link
                 patch={~p"/recipes?search=#{@search_query}"}
                 class={[
