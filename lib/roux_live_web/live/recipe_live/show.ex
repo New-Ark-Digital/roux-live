@@ -86,7 +86,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
 
         <%!-- Content Section (White Background) --%>
         <section class="bg-white py-12 px-4">
-          <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start lg:sticky lg:top-24 lg:h-[calc(100vh-140px)]">
             
             <%!-- Mobile Ingredients Toggle (Visible on Mobile Only) --%>
             <div class="lg:hidden w-full space-y-4">
@@ -114,7 +114,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
             </div>
 
             <%!-- Steps Section (Left) --%>
-            <div class="lg:col-span-7 h-full lg:overflow-y-auto no-scrollbar space-y-12 lg:pr-4">
+            <div class="lg:col-span-7 lg:h-full lg:overflow-y-auto no-scrollbar space-y-12 lg:pr-4">
               <div class="lg:sticky lg:top-0 lg:bg-white lg:py-4 lg:z-10 space-y-4">
                 <div class="flex flex-wrap gap-2">
                   <%= for tag <- @recipe.tags do %>
@@ -135,7 +135,6 @@ defmodule RouxLiveWeb.RecipeLive.Show do
               </div>
 
               <div class="space-y-16 pb-12">
-
                 <%= if @recipe.step_groups != [] do %>
                   <%= for group <- @recipe.step_groups do %>
                     <div class="space-y-8">
@@ -187,6 +186,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
             </div>
           </div>
         </section>
+
 
 
         <%!-- Mobile Notes (Visible on Mobile Only) --%>
