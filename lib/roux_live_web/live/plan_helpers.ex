@@ -14,7 +14,7 @@ defmodule RouxLiveWeb.PlanHelpers do
     {:cont, socket}
   end
 
-  defp handle_event("load_plan", %{"plan" => plan}, socket) do
+  def handle_event("load_plan", %{"plan" => plan}, socket) do
     socket =
      socket 
      |> assign(:plan, plan) 
@@ -25,7 +25,7 @@ defmodule RouxLiveWeb.PlanHelpers do
     {:halt, socket}
   end
 
-  defp handle_event("toggle_plan", %{"slug" => slug}, socket) do
+  def handle_event("toggle_plan", %{"slug" => slug}, socket) do
     new_plan = 
       if slug in socket.assigns.plan do
         List.delete(socket.assigns.plan, slug)
@@ -44,5 +44,5 @@ defmodule RouxLiveWeb.PlanHelpers do
     {:halt, socket}
   end
 
-  defp handle_event(_event, _params, socket), do: {:cont, socket}
+  def handle_event(_event, _params, socket), do: {:cont, socket}
 end

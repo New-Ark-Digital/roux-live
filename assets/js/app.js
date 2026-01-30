@@ -82,12 +82,15 @@ const Hooks = {
   },
   MealPlan: {
     mounted() {
+      console.log("MealPlan hook mounted")
       // On mount, read from localStorage and push to server
       const plan = JSON.parse(localStorage.getItem("roux_meal_plan") || "[]")
+      console.log("Loading plan from localStorage:", plan)
       this.pushEvent("load_plan", {plan: plan})
 
       // Listen for updates from server to save to localStorage
       this.handleEvent("save_plan", ({plan}) => {
+        console.log("Saving plan to localStorage:", plan)
         localStorage.setItem("roux_meal_plan", JSON.stringify(plan))
       })
     }

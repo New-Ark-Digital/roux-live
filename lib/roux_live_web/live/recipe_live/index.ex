@@ -192,13 +192,13 @@ defmodule RouxLiveWeb.RecipeLive.Index do
         phx-click="toggle_plan" 
         phx-value-slug={@recipe.slug}
         class={[
-          "absolute top-6 right-6 z-30 size-12 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm",
+          "absolute top-6 right-6 z-40 size-14 rounded-full border-2 flex items-center justify-center transition-all duration-300 cursor-pointer pointer-events-auto",
           if(@recipe.slug in @plan, 
             do: "bg-coral border-coral text-white shadow-lg", 
-            else: "bg-white/20 backdrop-blur-md border-white/30 text-gray-900 hover:bg-white/40")
+            else: "bg-white border-parchment text-gray-900 hover:bg-linen shadow-sm")
         ]}
       >
-        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class={["size-6", if(@recipe.slug not in @plan, do: "text-gray-900")]} />
+        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-8 font-bold" />
       </button>
     </div>
     """

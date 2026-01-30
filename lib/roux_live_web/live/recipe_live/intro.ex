@@ -37,7 +37,7 @@ defmodule RouxLiveWeb.RecipeLive.Intro do
                   phx-click="toggle_plan" 
                   phx-value-slug={@recipe.slug}
                   class={[
-                    "px-10 py-5 rounded-full font-bold text-lg shadow-2xl transition-all active:scale-95 flex items-center gap-3 cursor-pointer z-30",
+                    "px-10 py-5 rounded-full font-bold text-lg shadow-2xl transition-all active:scale-95 flex items-center gap-3 cursor-pointer z-40 pointer-events-auto",
                     if(@recipe.slug in @plan, 
                       do: "bg-white border-2 border-coral text-coral", 
                       else: "bg-coral text-white hover:bg-red")

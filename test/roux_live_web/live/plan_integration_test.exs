@@ -1,0 +1,21 @@
+defmodule RouxLiveWeb.PlanIntegrationTest do
+  use RouxLiveWeb.ConnCase
+  import Phoenix.LiveViewTest
+
+  test "can toggle plan from home page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/")
+    
+    # Simulate the JS hook loading an empty plan
+    render_hook(view, "load_plan", %{"plan" => []})
+    
+    # Click the add to plan button for chocolate-chip-cookies
+    view
+    |> element("button[phx-value-slug='chocolate-chip-cookies']")
+    |> render_click()
+    
+    # Check if the plan was updated in the state (look for the count in the nav)
+    assert render(view) =~ "Plan"
+    assert render(view) =~ "rounded-full border-2 border-white animate-in zoom-in duration-300\">"
+    assert render(view) =~ "1"
+  end
+end
