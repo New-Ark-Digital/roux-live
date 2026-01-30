@@ -15,7 +15,6 @@ defmodule RouxLiveWeb.PlanHelpers do
   end
 
   def handle_event("load_plan", %{"plan" => plan}, socket) do
-    IO.puts "DEBUG: Received load_plan with #{inspect(plan)}"
     socket =
      socket 
      |> assign(:plan, plan) 
@@ -27,7 +26,6 @@ defmodule RouxLiveWeb.PlanHelpers do
   end
 
   def handle_event("toggle_plan", %{"slug" => slug}, socket) do
-    IO.puts "DEBUG: Received toggle_plan for #{slug}"
     new_plan = 
       if slug in socket.assigns.plan do
         List.delete(socket.assigns.plan, slug)
