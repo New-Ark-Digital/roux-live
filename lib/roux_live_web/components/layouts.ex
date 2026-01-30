@@ -41,7 +41,6 @@ defmodule RouxLiveWeb.Layouts do
     <div class="fixed top-6 left-0 right-0 z-50 px-4 pointer-events-none">
       <nav 
         id="main-nav"
-        phx-hook="MealPlan"
         class={[
         "mx-auto w-[calc(100vw-2rem)] max-w-lg bg-white/80 backdrop-blur-xl border border-parchment shadow-2xl shadow-gray-200/50 flex flex-col items-center pointer-events-auto transition-all duration-500 dynamic-island-bezier overflow-hidden p-2",
         if(@active_ingredients != [], do: "rounded-[32px]", else: "rounded-[100px]")
@@ -114,6 +113,7 @@ defmodule RouxLiveWeb.Layouts do
     </div>
 
     <main class="min-h-screen bg-canvas">
+      <div id="meal-plan-sync" phx-hook="MealPlan" class="hidden"></div>
       {render_slot(@inner_block)}
     </main>
 

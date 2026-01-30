@@ -3,7 +3,9 @@ defmodule RouxLiveWeb.PlanLive do
   alias RouxLive.Content.RecipeLoader
 
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, 
+     socket 
+     |> assign(:plan_recipes, [])}
   end
 
   def handle_params(_params, _url, socket) do
