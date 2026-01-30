@@ -2,7 +2,7 @@ app = "roux-live"
 primary_region = "iad"
 
 [http_service]
-  internal_port = 4000
+  internal_port = 4001
   force_https = true
   auto_stop_machines = false
   auto_start_machines = true
