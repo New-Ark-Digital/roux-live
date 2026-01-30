@@ -1,4 +1,4 @@
-schema: "recipe/simple-v2"
+schema: "recipe/simple-v4"
 id: "scrambled-eggs"
 slug: "scrambled-eggs"
 title: "Scrambled Eggs"
@@ -62,21 +62,34 @@ steps:
   - id: "preheat"
     text: "Preheat a frying pan over medium-low heat."
     uses: []
+    work_m: 1
+    wait_m: 2
+    resources: ["stovetop", "frying-pan"]
   - id: "whisk"
     text: "Crack eggs one by one into a medium bowl. Add milk and a pinch of salt to the eggs, then whisk thoroughly until combined and just a little bit frothy on top."
     uses: ["eggs", "milk", "salt"]
+    work_m: 3
+    resources: ["bowl", "whisk"]
   - id: "melt-butter"
     text: "When pan is heated, add a tablespoon of butter to the skillet, and once melted, spread around evenly."
     uses: ["butter"]
+    work_m: 1
+    resources: ["stovetop", "frying-pan"]
   - id: "pour-eggs"
     text: "Pour in the beaten eggs and let them sit for a few seconds before stirring gently."
     uses: ["eggs", "milk", "salt"]
+    work_m: 1
+    resources: ["stovetop", "frying-pan"]
   - id: "scramble"
     text: "Stir constantly until the eggs are set, then remove from the heat. The top of the eggs may appear wet but will continue cooking once removed from the heat."
     uses: []
+    work_m: 3
+    resources: ["stovetop", "frying-pan", "spatula"]
   - id: "garnish"
     text: "Add pepper and fresh herbs if desired. Serve right away."
     uses: ["pepper", "herbs"]
+    work_m: 1
+
 notes:
   - "I crack each egg into a small dish first to catch any bad eggs."
   - "High heat will make eggs tough, so stick with lower heat and gentle stirring."

@@ -5,11 +5,17 @@ defmodule RouxLiveWeb.PlanLive do
   def mount(_params, _session, socket) do
     {:ok, 
      socket 
-     |> assign(:plan_recipes, [])}
+     |> assign(:plan_recipes, [])
+     |> assign(:phases, nil)}
   end
 
   def handle_params(_params, _url, socket) do
     {:noreply, socket}
+  end
+
+  def handle_event("generate_flow", _params, socket) do
+    phases = RouxLive.Orchestrator.generate_phases(socket.assigns.plan_recipes)
+    {:noreply, assign(socket, :phases, phases)}
   end
 
   def handle_info({:plan_updated, plan}, socket) do
@@ -17,7 +23,10 @@ defmodule RouxLiveWeb.PlanLive do
       plan
       |> Enum.map(&RecipeLoader.load!/1)
 
-    {:noreply, assign(socket, :plan_recipes, plan_recipes)}
+    {:noreply, 
+     socket 
+     |> assign(:plan_recipes, plan_recipes)
+     |> assign(:phases, nil)}
   end
 
   def render(assigns) do
@@ -79,35 +88,122 @@ defmodule RouxLiveWeb.PlanLive do
                 </.link>
               </div>
 
-              <%!-- Timeline Orchestrator (Placeholder for now) --%>
+              <%!-- Timeline Orchestrator --%>
               <div class="lg:col-span-8 space-y-8">
                 <div class="flex items-center justify-between">
                   <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Orchestrated Timeline</h2>
                   <span class="px-3 py-1 bg-basil text-gray-600 text-[10px] font-bold uppercase tracking-widest rounded-full">
-                    Deterministic v3
+                    Deterministic v4
                   </span>
                 </div>
                 
-                <div class="bg-cream p-12 rounded-[48px] border border-parchment space-y-12 min-h-[400px] flex flex-col items-center justify-center text-center">
-                  <div class="size-20 bg-white rounded-full flex items-center justify-center shadow-xl mb-6">
-                    <.icon name="hero-sparkles" class="size-10 text-coral" />
+                <%= if is_nil(@phases) do %>
+                  <div class="bg-cream p-12 rounded-[48px] border border-parchment space-y-12 min-h-[400px] flex flex-col items-center justify-center text-center">
+                    <div class="size-20 bg-white rounded-full flex items-center justify-center shadow-xl mb-6">
+                      <.icon name="hero-sparkles" class="size-10 text-coral" />
+                    </div>
+                    <div class="space-y-4 max-w-md">
+                      <h3 class="text-3xl font-display text-gray-900">The Orchestrator is ready.</h3>
+                      <p class="text-gray-500 leading-relaxed">
+                        I've analyzed your {length(@plan_recipes)} recipes. Next, I'll merge their instructions into a single, phased workflow.
+                      </p>
+                    </div>
+                    <button 
+                      phx-click="generate_flow"
+                      class="px-10 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-coral transition-all active:scale-95 shadow-2xl cursor-pointer"
+                    >
+                      Generate Phase Flow &rarr;
+                    </button>
                   </div>
-                  <div class="space-y-4 max-w-md">
-                    <h3 class="text-3xl font-display text-gray-900">The Orchestrator is ready.</h3>
-                    <p class="text-gray-500 leading-relaxed">
-                      I've analyzed your {length(@plan_recipes)} recipes. Next, I'll merge their instructions into a single, phased workflow.
-                    </p>
+                <% else %>
+                  <div class="space-y-12 pb-24">
+                    <%!-- Phase 0: Pre-Prep --%>
+                    <.phase_section 
+                      :if={@phases.pre_prep != []}
+                      title="Phase 0: The Long Tail" 
+                      subtitle="Items that need to be started hours or days ahead."
+                      tasks={@phases.pre_prep} 
+                      color="bg-lavender"
+                    />
+
+                    <%!-- Phase 1: Mise en Place --%>
+                    <.phase_section 
+                      :if={@phases.mise_en_place != []}
+                      title="Phase 1: Mise en Place" 
+                      subtitle="Dicing, measuring, and getting everything ready to cook."
+                      tasks={@phases.mise_en_place} 
+                      color="bg-basil"
+                    />
+
+                    <%!-- Phase 2: Setup --%>
+                    <.phase_section 
+                      :if={@phases.setup != []}
+                      title="Phase 2: The Setup" 
+                      subtitle="Preheating ovens and boiling water."
+                      tasks={@phases.setup} 
+                      color="bg-egg-yolk"
+                    />
+
+                    <%!-- Phase 3: Action --%>
+                    <.phase_section 
+                      :if={@phases.action != []}
+                      title="Phase 3: The Action" 
+                      subtitle="The interlocking steps of the actual cooking process."
+                      tasks={@phases.action} 
+                      color="bg-pink"
+                    />
                   </div>
-                  <button class="px-10 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-coral transition-all active:scale-95 shadow-2xl">
-                    Generate Phase Flow &rarr;
-                  </button>
-                </div>
+                <% end %>
               </div>
             </div>
           <% end %>
         </div>
       </div>
     </RouxLiveWeb.Layouts.app>
+    """
+  end
+
+  def phase_section(assigns) do
+    ~H"""
+    <div class="space-y-6 animate-in slide-in-from-bottom-4 duration-700">
+      <div class="flex items-end justify-between border-b border-parchment pb-4">
+        <div class="space-y-1">
+          <h3 class="text-2xl font-display text-gray-900">{@title}</h3>
+          <p class="text-sm text-gray-500">{@subtitle}</p>
+        </div>
+        <span class={["px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest", @color]}>
+          {length(@tasks)} Tasks
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4">
+        <%= for task <- @tasks do %>
+          <div class="bg-white p-6 rounded-3xl border border-parchment shadow-sm flex items-start gap-6 group hover:border-coral transition-all">
+            <div class="flex-none pt-1">
+              <div class="size-6 rounded-lg border-2 border-parchment group-hover:border-coral transition-colors flex items-center justify-center">
+                <div class="size-3 bg-coral rounded-sm scale-0 group-hover:scale-100 transition-transform"></div>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none block">
+                {task.recipe_title}
+              </span>
+              <p class="text-lg text-gray-700 leading-tight">
+                {task.text}
+              </p>
+              <div class="flex gap-4">
+                <span :if={task.work_m > 0} class="text-[9px] font-bold text-gray-400 uppercase bg-linen px-2 py-0.5 rounded-md">
+                  Active: {task.work_m}m
+                </span>
+                <span :if={task.wait_m > 0} class="text-[9px] font-bold text-gray-400 uppercase bg-linen px-2 py-0.5 rounded-md">
+                  Wait: {task.wait_m}m
+                </span>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
     """
   end
 end

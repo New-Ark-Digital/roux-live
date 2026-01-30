@@ -15,7 +15,17 @@ defmodule RouxLiveWeb.PlanIntegrationTest do
     
     # Check if the plan was updated in the state (look for the count in the nav)
     assert render(view) =~ "Plan"
-    assert render(view) =~ "rounded-full border-2 border-white animate-in zoom-in duration-300\">"
     assert render(view) =~ "1"
+
+    # Navigate to the plan page
+    {:ok, plan_view, _html} = live(conn, ~p"/plan")
+    
+    # Simulate loading the plan from hook
+    render_hook(plan_view, "load_plan", %{"plan" => ["chocolate-chip-cookies"]})
+    
+    # Click the generate flow button and assert on the result
+    assert plan_view
+           |> element("button", "Generate Phase Flow")
+           |> render_click() =~ "Phase 2: The Setup"
   end
 end

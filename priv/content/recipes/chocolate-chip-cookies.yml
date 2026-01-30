@@ -48,6 +48,7 @@ ingredients:
     unit: "cup"
     note: "softened"
     optional: false
+    lead_time_m: 120
   - id: "sugar"
     name: "Granulated sugar"
     amount: "3/4"
@@ -89,30 +90,50 @@ steps:
   - id: "preheat-oven"
     text: "Preheat oven to 375°F (190°C)."
     uses: []
+    work_m: 1
+    wait_m: 15
   - id: "combine-dry"
     text: "In a small bowl, whisk together flour, baking soda, and salt."
     uses: ["flour", "baking-soda", "salt"]
+    work_m: 3
+    resources: ["small-bowl", "whisk"]
   - id: "cream-butter"
     text: "In a large bowl, beat softened butter, granulated sugar, brown sugar, and vanilla extract until creamy."
     uses: ["butter", "sugar", "brown-sugar", "vanilla"]
+    work_m: 5
+    resources: ["large-bowl", "stand-mixer"]
   - id: "add-egg"
     text: "Add egg and beat well."
     uses: ["egg"]
+    work_m: 2
+    resources: ["stand-mixer"]
   - id: "mix-in-dry"
     text: "Gradually beat in flour mixture."
     uses: ["flour", "baking-soda", "salt"]
+    work_m: 3
+    resources: ["stand-mixer"]
   - id: "stir-in-chips"
     text: "Stir in chocolate chips."
     uses: ["chocolate-chips"]
+    work_m: 1
+    resources: ["spatula"]
   - id: "drop-dough"
     text: "Drop by rounded tablespoon onto ungreased baking sheets."
     uses: []
+    work_m: 5
+    resources: ["baking-sheets"]
   - id: "bake"
     text: "Bake for 9 to 11 minutes or until golden brown."
     uses: []
+    work_m: 1
+    wait_m: 10
+    resources: ["oven"]
   - id: "cool"
     text: "Cool on baking sheets for 2 minutes; remove to wire racks to cool completely."
     uses: []
+    work_m: 1
+    wait_m: 15
+    resources: ["wire-racks"]
 notes:
   - "For a softer cookie, do not overbake."
   - "You can use milk chocolate or dark chocolate chips if preferred."
