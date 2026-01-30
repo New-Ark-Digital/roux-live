@@ -37,23 +37,24 @@ defmodule RouxLiveWeb.RecipeLive.Intro do
                   phx-click="toggle_plan" 
                   phx-value-slug={@recipe.slug}
                   class={[
-                    "px-10 py-5 rounded-full font-bold text-lg shadow-2xl transition-all active:scale-95 flex items-center gap-3",
+                    "px-10 py-5 rounded-full font-bold text-lg shadow-2xl transition-all active:scale-95 flex items-center gap-3 cursor-pointer z-30",
                     if(@recipe.slug in @plan, 
                       do: "bg-white border-2 border-coral text-coral", 
                       else: "bg-coral text-white hover:bg-red")
                   ]}
                 >
-                  <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-6" />
+                  <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class={["size-6", if(@recipe.slug not in @plan, do: "text-gray-900")]} />
                   {if @recipe.slug in @plan, do: "Added to Plan", else: "Add to Plan"}
                 </button>
                 
                 <.link 
                   navigate={~p"/recipes/#{@recipe.slug}/cook"}
-                  class="px-10 py-5 bg-gray-900 text-white rounded-full font-bold text-lg shadow-2xl hover:bg-gray-800 transition-all active:scale-95 flex items-center gap-3"
+                  class="px-10 py-5 bg-gray-900 text-white rounded-full font-bold text-lg shadow-2xl hover:bg-gray-800 transition-all active:scale-95 flex items-center gap-3 cursor-pointer z-30"
                 >
                   <.icon name="hero-fire" class="size-6 text-orange" />
                   Cook Now
                 </.link>
+
               </div>
             </div>
 

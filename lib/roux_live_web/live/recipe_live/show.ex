@@ -24,6 +24,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
     active_step = Enum.find(assigns.recipe.steps, &(&1.id == assigns.active_step_id))
     active_step_index = Enum.find_index(assigns.recipe.steps, &(&1.id == assigns.active_step_id))
     highlighted_ids = (active_step && active_step.uses) || []
+
     active_ingredients = Enum.filter(assigns.recipe.ingredients, &(&1.id in highlighted_ids))
     assigns = assign(assigns, 
       active_step: active_step, 

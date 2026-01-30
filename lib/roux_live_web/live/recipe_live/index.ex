@@ -155,52 +155,53 @@ defmodule RouxLiveWeb.RecipeLive.Index do
   def recipe_card(assigns) do
     ~H"""
     <div class="group relative h-full">
+      <.link navigate={~p"/recipes/#{@recipe.slug}"} class="block h-full">
+        <div class="h-full rounded-recipe border border-parchment bg-white overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col group-hover:-translate-y-2">
+          <div class={["h-56 relative overflow-hidden", @accent_color]}>
+            <div class="absolute top-6 left-6 flex gap-2">
+              <%= for tag <- Enum.take(@recipe.tags, 2) do %>
+                <span class="px-3 py-1 bg-white text-[10px] font-bold text-gray-900 uppercase tracking-widest rounded-full shadow-sm">
+                  {tag}
+                </span>
+              <% end %>
+            </div>
+            <div class="absolute bottom-6 right-6 text-white text-[10px] font-bold bg-black/10 backdrop-blur-md px-4 py-1.5 rounded-full uppercase tracking-widest">
+              {@recipe.time.total_minutes} min
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center text-white/10 text-[12rem] font-display pointer-events-none group-hover:scale-125 group-hover:rotate-6 transition-transform duration-1000">
+              {String.at(@recipe.title, 0)}
+            </div>
+          </div>
+          <div class="p-10 space-y-4 flex-1 flex flex-col justify-between">
+            <div class="space-y-4">
+              <h4 class="text-3xl font-display text-gray-900 group-hover:text-coral transition-colors leading-tight">
+                {@recipe.title}
+              </h4>
+              <p class="text-gray-500 line-clamp-3 leading-relaxed">
+                {@recipe.summary}
+              </p>
+            </div>
+            <div class="pt-6 border-t border-linen flex items-center text-xs font-bold text-gray-400 uppercase tracking-widest group-hover:text-coral transition-colors">
+              View Recipe <span class="ml-2 group-hover:translate-x-2 transition-transform">&rarr;</span>
+            </div>
+          </div>
+        </div>
+      </.link>
+
       <button 
         phx-click="toggle_plan" 
         phx-value-slug={@recipe.slug}
         class={[
-          "absolute top-6 right-6 z-20 size-12 rounded-full border flex items-center justify-center transition-all duration-300",
+          "absolute top-6 right-6 z-30 size-12 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm",
           if(@recipe.slug in @plan, 
             do: "bg-coral border-coral text-white shadow-lg", 
             else: "bg-white/20 backdrop-blur-md border-white/30 text-gray-900 hover:bg-white/40")
         ]}
       >
-        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-6" />
+        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class={["size-6", if(@recipe.slug not in @plan, do: "text-gray-900")]} />
       </button>
+    </div>
+    """
+  end
 
-      <.link navigate={~p"/recipes/#{@recipe.slug}"} class="block h-full">
-        <div class="h-full rounded-recipe border border-parchment bg-white overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col group-hover:-translate-y-2">
-        <div class={["h-56 relative overflow-hidden", @accent_color]}>
-          <div class="absolute top-6 left-6 flex gap-2">
-            <%= for tag <- Enum.take(@recipe.tags, 2) do %>
-              <span class="px-3 py-1 bg-white text-[10px] font-bold text-gray-900 uppercase tracking-widest rounded-full shadow-sm">
-                {tag}
-              </span>
-            <% end %>
-          </div>
-          <div class="absolute bottom-6 right-6 text-white text-[10px] font-bold bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full uppercase tracking-widest">
-            {@recipe.time.total_minutes} min
-          </div>
-          <div class="absolute inset-0 flex items-center justify-center text-white/10 text-[12rem] font-display pointer-events-none group-hover:scale-125 group-hover:rotate-6 transition-transform duration-1000">
-            {String.at(@recipe.title, 0)}
-          </div>
-        </div>
-        <div class="p-10 space-y-4 flex-1 flex flex-col justify-between">
-          <div class="space-y-4">
-            <h4 class="text-3xl font-display text-gray-900 group-hover:text-coral transition-colors leading-tight">
-              {@recipe.title}
-            </h4>
-            <p class="text-gray-500 line-clamp-3 leading-relaxed">
-              {@recipe.summary}
-            </p>
-          </div>
-          <div class="pt-6 border-t border-linen flex items-center text-xs font-bold text-gray-400 uppercase tracking-widest group-hover:text-coral transition-colors">
-            View Recipe <span class="ml-2 group-hover:translate-x-2 transition-transform">&rarr;</span>
-          </div>
-        </div>
-      </div>
-    </.link>
-  </div>
-  """
-end
 end

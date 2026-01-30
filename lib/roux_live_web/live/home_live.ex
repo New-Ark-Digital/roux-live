@@ -167,19 +167,6 @@ defmodule RouxLiveWeb.HomeLive do
   def recipe_card(assigns) do
     ~H"""
     <div class="group relative h-full">
-      <button 
-        phx-click="toggle_plan" 
-        phx-value-slug={@recipe.slug}
-        class={[
-          "absolute top-4 right-4 z-20 size-10 rounded-full border flex items-center justify-center transition-all duration-300",
-          if(@recipe.slug in @plan, 
-            do: "bg-coral border-coral text-white shadow-lg", 
-            else: "bg-white/20 backdrop-blur-md border-white/30 text-gray-900 hover:bg-white/40")
-        ]}
-      >
-        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-5" />
-      </button>
-
       <.link navigate={~p"/recipes/#{@recipe.slug}"} class="block h-full">
         <div class="h-full rounded-recipe border border-parchment bg-white overflow-hidden shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col">
           <div class={["h-48 relative overflow-hidden", @accent_color]}>
@@ -209,6 +196,19 @@ defmodule RouxLiveWeb.HomeLive do
           </div>
         </div>
       </.link>
+
+      <button 
+        phx-click="toggle_plan" 
+        phx-value-slug={@recipe.slug}
+        class={[
+          "absolute top-4 right-4 z-30 size-10 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer",
+          if(@recipe.slug in @plan, 
+            do: "bg-coral border-coral text-white shadow-lg", 
+            else: "bg-white/20 backdrop-blur-md border-white/30 text-gray-900 hover:bg-white/40")
+        ]}
+      >
+        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class={["size-5", if(@recipe.slug not in @plan, do: "text-gray-900")]} />
+      </button>
     </div>
     """
   end
