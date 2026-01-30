@@ -86,7 +86,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
 
         <%!-- Content Section (White Background) --%>
         <section class="bg-white py-12 px-4">
-          <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start lg:sticky lg:top-24 lg:h-[calc(100vh-140px)]">
+          <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start lg:sticky lg:top-24 lg:h-[calc(100vh-140px)] lg:min-h-[500px]">
             
             <%!-- Mobile Ingredients Toggle (Visible on Mobile Only) --%>
             <div class="lg:hidden w-full space-y-4">
