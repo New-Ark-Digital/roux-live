@@ -91,9 +91,35 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                   </div>
                 </div>
 
+                <%!-- Context Summary Header --%>
+                <div :if={@active_ingredients != []} class="px-8 py-4 bg-linen/50 border-b border-parchment/20">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="size-1.5 rounded-full bg-coral animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Ingredients</span>
+                  </div>
+                  <div class="flex flex-wrap gap-2">
+                    <%= for ingredient <- @active_ingredients do %>
+                      <span class="text-[10px] font-bold text-coral bg-white border border-coral/20 px-2 py-0.5 rounded-full">
+                        {ingredient.name}
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+
                 <%!-- Scrollable Ingredients --%>
-                <div class="overflow-y-auto custom-scrollbar space-y-10 flex-1 px-8 py-8 min-h-0">
-                  <.render_ingredients recipe={@recipe} highlighted_ids={@highlighted_ids} />
+                <div class="relative flex-1 min-h-0 flex overflow-hidden">
+                  <%!-- Indicator Strip (Pips) --%>
+                  <div id="ingredient-pips" class="w-1.5 h-full relative pointer-events-none ml-4">
+                    <%!-- JS Hook will inject pips here --%>
+                  </div>
+                  
+                  <div 
+                    id="ingredients-list-container"
+                    phx-hook="IngredientAutoScroll"
+                    class="overflow-y-auto custom-scrollbar space-y-10 flex-1 px-8 py-8 relative"
+                  >
+                    <.render_ingredients recipe={@recipe} highlighted_ids={@highlighted_ids} />
+                  </div>
                 </div>
               </div>
 
@@ -243,10 +269,13 @@ defmodule RouxLiveWeb.RecipeLive.Show do
 
   def ingredient_item(assigns) do
     ~H"""
-    <li class={[
-      "flex justify-between items-baseline gap-4 p-4 rounded-2xl transition-all border border-transparent",
-      if(@highlighted, do: "bg-white border-parchment shadow-lg scale-105", else: "opacity-60 grayscale-[0.5]")
-    ]}>
+    <li 
+      data-highlighted={to_string(@highlighted)}
+      class={[
+        "flex justify-between items-baseline gap-4 p-4 rounded-2xl transition-all border border-transparent",
+        if(@highlighted, do: "bg-white border-parchment shadow-lg scale-105", else: "opacity-60 grayscale-[0.5]")
+      ]}
+    >
       <span class={[
         "text-lg transition-colors",
         if(@highlighted, do: "text-gray-900 font-bold", else: "text-gray-700")

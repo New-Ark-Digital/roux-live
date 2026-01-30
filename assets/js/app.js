@@ -45,6 +45,40 @@ const Hooks = {
         }
       }, 0)
     }
+  },
+  IngredientAutoScroll: {
+    mounted() {
+      this.syncPips()
+    },
+    updated() {
+      this.syncPips()
+      const highlighted = this.el.querySelector('[data-highlighted="true"]')
+      if (highlighted) {
+        // Delay scroll slightly to ensure layout is ready
+        setTimeout(() => {
+          highlighted.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        }, 100)
+      }
+    },
+    syncPips() {
+      const pipsContainer = document.getElementById('ingredient-pips')
+      if (!pipsContainer) return
+
+      pipsContainer.innerHTML = ''
+      pipsContainer.style.position = 'relative'
+
+      const totalHeight = this.el.scrollHeight
+      const items = this.el.querySelectorAll('[data-highlighted="true"]')
+
+      items.forEach(item => {
+        const pip = document.createElement('div')
+        const top = (item.offsetTop / totalHeight) * 100
+        
+        pip.className = 'absolute left-0 w-full h-1.5 bg-coral rounded-full opacity-40 shadow-sm transition-all duration-500'
+        pip.style.top = `${top}%`
+        pipsContainer.appendChild(pip)
+      })
+    }
   }
 }
 
