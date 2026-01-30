@@ -24,14 +24,6 @@ defmodule RouxLiveWeb.HomeLive do
         tag: "Lent"
       },
       %{
-        id: "novenas",
-        title: "Novenas & Gatherings",
-        description: "Hearty staples for family gatherings and novena nights.",
-        recipes: Enum.filter(recipes, &("Novenas" in &1.tags)) |> Enum.take(3),
-        accent: "bg-orange",
-        tag: "Novenas"
-      },
-      %{
         id: "sourdough",
         title: "The Sourdough Journey",
         description: "Fermented goodness from the heart of the kitchen.",
