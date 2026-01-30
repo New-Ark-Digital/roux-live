@@ -38,22 +38,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
       active_ingredients={@active_ingredients} 
       active_step_index={@active_step_index}
     >
-      <div class="space-y-0 font-body">
-        <%!-- Visual Mood Hero (Replacing the big card) --%>
-        <section class="bg-cream pt-20 pb-12 px-4 relative overflow-hidden">
-          <%!-- Animated Blobs contained in a smaller area --%>
-          <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-            <div class="absolute -top-10 -left-10 w-64 h-64 bg-coral rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-            <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-orange rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-          </div>
-          
-          <div class="max-w-7xl mx-auto relative z-10 flex flex-col items-center justify-center min-h-[120px]">
-            <div class="size-24 rounded-[32px] bg-white border border-parchment shadow-xl flex items-center justify-center text-4xl font-display text-coral rotate-3 hover:rotate-0 transition-transform duration-500">
-              {String.at(@recipe.title, 0)}
-            </div>
-          </div>
-        </section>
-
+      <div class="space-y-0 font-body pt-24 sm:pt-32">
         <%!-- Content Section (White Background) --%>
         <section class="bg-white py-12 px-4">
           <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start lg:sticky lg:top-24 lg:h-[calc(100vh-140px)] lg:min-h-[500px]">
