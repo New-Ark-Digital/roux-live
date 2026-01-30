@@ -1,0 +1,70 @@
+schema: "recipe/simple-v2"
+id: "creamy-garlic-shrimp"
+slug: "creamy-garlic-shrimp"
+title: "Creamy Garlic Shrimp"
+summary: "Tender shrimp in a rich, buttery garlic sauce. Perfect over pasta or with crusty bread for a quick Lenten meal."
+tags: ["Dinner", "Seafood", "Lent", "Quick"]
+yield:
+  quantity: 4
+  unit: "servings"
+time:
+  prep_minutes: 10
+  cook_minutes: 10
+  total_minutes: 20
+ingredients:
+  - id: "shrimp"
+    name: "Large shrimp"
+    amount: 1
+    unit: "lb"
+    note: "peeled and deveined"
+    optional: false
+  - id: "butter"
+    name: "Butter"
+    amount: 3
+    unit: "tablespoons"
+    note: null
+    optional: false
+  - id: "garlic"
+    name: "Garlic"
+    amount: 4
+    unit: "cloves"
+    note: "minced"
+    optional: false
+  - id: "cream"
+    name: "Heavy cream"
+    amount: "1/2"
+    unit: "cup"
+    note: null
+    optional: false
+  - id: "parmesan"
+    name: "Parmesan cheese"
+    amount: "1/4"
+    unit: "cup"
+    note: "grated"
+    optional: false
+  - id: "parsley"
+    name: "Fresh parsley"
+    amount: 2
+    unit: "tablespoons"
+    note: "chopped"
+    optional: false
+step_groups:
+  - id: "sear"
+    title: "Searing"
+    step_ids: ["sear-shrimp"]
+  - id: "sauce"
+    title: "The Sauce"
+    step_ids: ["make-sauce", "combine"]
+steps:
+  - id: "sear-shrimp"
+    text: "Melt 1 tbsp butter in a large skillet over medium-high heat. Sear shrimp for 1-2 minutes per side until pink. Remove from skillet."
+    uses: ["shrimp", "butter"]
+  - id: "make-sauce"
+    text: "In the same skillet, melt remaining butter. Add garlic and cook for 1 minute until fragrant. Stir in heavy cream and parmesan."
+    uses: ["butter", "garlic", "cream", "parmesan"]
+  - id: "combine"
+    text: "Add shrimp back to the skillet. Simmer for 2 minutes until the sauce thickens. Garnish with parsley."
+    uses: ["parsley"]
+notes:
+  - "Don't overcook the shrimp as they will become rubbery."
+  - "Add a pinch of red pepper flakes for a little kick."

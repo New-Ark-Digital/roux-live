@@ -6,18 +6,46 @@ defmodule RouxLiveWeb.HomeLive do
     recipes = RecipeLoader.list_all()
     featured = Enum.find(recipes, &(&1.slug == "chocolate-chip-cookies")) || List.first(recipes)
     
-    # Get unique tags for the "Quick Tags" section
-    tags = 
-      recipes 
-      |> Enum.flat_map(& &1.tags) 
-      |> Enum.uniq() 
-      |> Enum.sort()
+    collections = [
+      %{
+        id: "foundational",
+        title: "The Foundational Collection",
+        description: "Absolute basics every home chef should master.",
+        recipes: Enum.filter(recipes, &("Foundational" in &1.tags)) |> Enum.take(3),
+        accent: "bg-blue",
+        tag: "Foundational"
+      },
+      %{
+        id: "lent",
+        title: "Lenten Favorites",
+        description: "Meatless recipes perfect for the Lenten season.",
+        recipes: Enum.filter(recipes, &("Lent" in &1.tags)) |> Enum.take(3),
+        accent: "bg-pink",
+        tag: "Lent"
+      },
+      %{
+        id: "novenas",
+        title: "Novenas & Gatherings",
+        description: "Hearty staples for family gatherings and novena nights.",
+        recipes: Enum.filter(recipes, &("Novenas" in &1.tags)) |> Enum.take(3),
+        accent: "bg-orange",
+        tag: "Novenas"
+      },
+      %{
+        id: "sourdough",
+        title: "The Sourdough Journey",
+        description: "Fermented goodness from the heart of the kitchen.",
+        recipes: Enum.filter(recipes, &("Sourdough" in &1.tags)) |> Enum.take(3),
+        accent: "bg-basil",
+        tag: "Sourdough"
+      }
+    ]
 
     {:ok, 
      socket 
      |> assign(:recipes, recipes) 
      |> assign(:featured, featured) 
-     |> assign(:tags, tags)
+     |> assign(:collections, collections)
      |> assign(:search_query, "")}
   end
 
@@ -62,79 +90,76 @@ defmodule RouxLiveWeb.HomeLive do
           </div>
         </section>
 
-        <%!-- Categories Section (Cream Background) --%>
-        <section class="bg-cream py-24 px-4">
-          <div class="max-w-7xl mx-auto space-y-12">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <div class="space-y-4">
-                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Discover</h2>
-                <h3 class="text-5xl font-display text-gray-900">Explore by category</h3>
+        <%!-- Curated Collections --%>
+        <%= for {collection, c_index} <- Enum.with_index(@collections) do %>
+          <section class={["py-24 px-4", if(rem(c_index, 2) == 0, do: "bg-cream", else: "bg-white")]}>
+            <div class="max-w-7xl mx-auto space-y-12">
+              <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div class="space-y-4">
+                  <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Collection</h2>
+                  <h3 class="text-5xl font-display text-gray-900">{collection.title}</h3>
+                  <p class="text-lg text-gray-500 max-w-xl">{collection.description}</p>
+                </div>
+                <.link
+                  patch={~p"/recipes?tag=#{collection.tag}"}
+                  class="flex-none px-8 py-4 bg-white border border-parchment rounded-full font-body font-bold text-gray-700 hover:scale-105 hover:border-coral transition-all shadow-sm active:scale-95"
+                >
+                  View All &rarr;
+                </.link>
               </div>
-              <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-                <%= for tag <- @tags do %>
-                  <.link
-                    patch={~p"/recipes?tag=#{tag}"}
-                    class="flex-none px-8 py-4 bg-white border border-parchment rounded-full font-body font-bold text-gray-700 hover:scale-105 hover:border-coral transition-all shadow-sm active:scale-95"
-                  >
-                    {tag}
-                  </.link>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <%= for recipe <- collection.recipes do %>
+                  <.recipe_card recipe={recipe} accent_color={collection.accent} />
                 <% end %>
               </div>
             </div>
+          </section>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <%= for {recipe, index} <- Enum.with_index(Enum.take(@recipes, 3)) do %>
-                <% 
-                  colors = ["bg-pink", "bg-orange", "bg-blue", "bg-coral", "bg-red"]
-                  color = Enum.at(colors, rem(index, length(colors)))
-                %>
-                <.recipe_card recipe={recipe} accent_color={color} />
-              <% end %>
-            </div>
-          </div>
-        </section>
-
-        <%!-- Spotlight Section (White Background) --%>
-        <section class="bg-white py-24 px-4">
-          <div class="max-w-7xl mx-auto">
-            <.link navigate={~p"/recipes/#{@featured.slug}"} class="group block relative overflow-hidden rounded-[48px] border border-parchment bg-white shadow-2xl hover:shadow-coral/10 transition-all duration-500">
-              <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
-                <div class="p-8 sm:p-16 space-y-8 flex flex-col justify-center">
-                  <div class="space-y-4">
-                    <span class="px-4 py-1 bg-coral text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
-                      Baker's Spotlight
-                    </span>
-                    <h3 class="text-6xl sm:text-7xl font-display text-gray-900 leading-tight group-hover:text-coral transition-colors">
-                      {@featured.title}
-                    </h3>
-                    <p class="text-xl text-gray-600 max-w-md leading-relaxed">
-                      {@featured.summary}
-                    </p>
-                  </div>
-                  
-                  <div class="flex gap-8 border-t border-parchment pt-8">
-                    <div>
-                      <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Time</span>
-                      <span class="text-2xl font-display text-gray-900">{@featured.time.total_minutes}m</span>
+          <%= if c_index == 1 do %>
+            <%!-- Spotlight Section (White Background) --%>
+            <section class="bg-white py-24 px-4">
+              <div class="max-w-7xl mx-auto">
+                <.link navigate={~p"/recipes/#{@featured.slug}"} class="group block relative overflow-hidden rounded-[48px] border border-parchment bg-white shadow-2xl hover:shadow-coral/10 transition-all duration-500">
+                  <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
+                    <div class="p-8 sm:p-16 space-y-8 flex flex-col justify-center">
+                      <div class="space-y-4">
+                        <span class="px-4 py-1 bg-coral text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
+                          Baker's Spotlight
+                        </span>
+                        <h3 class="text-6xl sm:text-7xl font-display text-gray-900 leading-tight group-hover:text-coral transition-colors">
+                          {@featured.title}
+                        </h3>
+                        <p class="text-xl text-gray-600 max-w-md leading-relaxed">
+                          {@featured.summary}
+                        </p>
+                      </div>
+                      
+                      <div class="flex gap-8 border-t border-parchment pt-8">
+                        <div>
+                          <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Time</span>
+                          <span class="text-2xl font-display text-gray-900">{@featured.time.total_minutes}m</span>
+                        </div>
+                        <div>
+                          <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Ingredients</span>
+                          <span class="text-2xl font-display text-gray-900">{length(@featured.ingredients)}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Ingredients</span>
-                      <span class="text-2xl font-display text-gray-900">{length(@featured.ingredients)}</span>
+                    <div class="bg-coral h-full min-h-[300px] relative overflow-hidden flex items-center justify-center p-12">
+                      <%!-- Abstract Visual --%>
+                      <div class="size-64 rounded-[64px] bg-white/20 rotate-12 group-hover:rotate-45 transition-transform duration-1000 scale-150"></div>
+                      <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black/10"></div>
+                      <div class="relative z-10 text-white font-display text-9xl opacity-20 pointer-events-none">
+                        {String.at(@featured.title, 0)}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="bg-coral h-full min-h-[300px] relative overflow-hidden flex items-center justify-center p-12">
-                  <%!-- Abstract Visual --%>
-                  <div class="size-64 rounded-[64px] bg-white/20 rotate-12 group-hover:rotate-45 transition-transform duration-1000 scale-150"></div>
-                  <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black/10"></div>
-                  <div class="relative z-10 text-white font-display text-9xl opacity-20 pointer-events-none">
-                    {String.at(@featured.title, 0)}
-                  </div>
-                </div>
+                </.link>
               </div>
-            </.link>
-          </div>
-        </section>
+            </section>
+          <% end %>
+        <% end %>
       </div>
     </RouxLiveWeb.Layouts.app>
     """

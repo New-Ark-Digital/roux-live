@@ -3,7 +3,7 @@ id: "chocolate-chip-cookies"
 slug: "chocolate-chip-cookies"
 title: "Chocolate Chip Cookies"
 summary: "The classic chewy and soft chocolate chip cookies that everyone loves."
-tags: ["Baking", "Classic", "Dessert"]
+tags: ["Baking", "Classic", "Dessert", "Foundational"]
 yield:
   quantity: 24
   unit: "cookies"

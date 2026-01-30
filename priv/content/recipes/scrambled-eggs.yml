@@ -3,7 +3,7 @@ id: "scrambled-eggs"
 slug: "scrambled-eggs"
 title: "Scrambled Eggs"
 summary: "Soft, silky, and delicious scrambled eggs, perfect for a quick breakfast or a last-minute dinner."
-tags: ["Breakfast", "Eggs", "Quick"]
+tags: ["Breakfast", "Eggs", "Quick", "Foundational", "Lent"]
 yield:
   quantity: 2
   unit: "servings"

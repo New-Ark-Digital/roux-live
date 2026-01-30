@@ -3,7 +3,7 @@ id: "shepherds-pie"
 slug: "shepherds-pie"
 title: "The Best Shepherd's Pie"
 summary: "Hearty and easy shepherd’s pie packed full of seasoned beef and vegetables, topped with creamy mashed potatoes and parmesan cheese."
-tags: ["Dinner", "Comfort Food", "Beef", "Classic"]
+tags: ["Dinner", "Comfort Food", "Beef", "Classic", "Foundational"]
 yield:
   quantity: 8
   unit: "servings"

@@ -1,0 +1,70 @@
+schema: "recipe/simple-v2"
+id: "margherita-pizza"
+slug: "margherita-pizza"
+title: "Classic Margherita Pizza"
+summary: "A simple yet elegant pizza with a bubbly sourdough crust, fresh mozzarella, and aromatic basil."
+tags: ["Dinner", "Italian", "Sourdough", "Foundational"]
+yield:
+  quantity: 2
+  unit: "pizzas"
+time:
+  prep_minutes: 20
+  cook_minutes: 10
+  total_minutes: 1440 # 1 day fermentation
+ingredients:
+  - id: "dough"
+    name: "Sourdough pizza dough"
+    amount: 500
+    unit: "g"
+    note: "cold fermented"
+    optional: false
+  - id: "sauce"
+    name: "San Marzano tomatoes"
+    amount: "1/2"
+    unit: "cup"
+    note: "crushed"
+    optional: false
+  - id: "cheese"
+    name: "Fresh mozzarella"
+    amount: 8
+    unit: "oz"
+    note: "torn into pieces"
+    optional: false
+  - id: "basil"
+    name: "Fresh basil"
+    amount: "handful"
+    unit: null
+    note: null
+    optional: false
+  - id: "oil"
+    name: "Extra virgin olive oil"
+    amount: "drizzle"
+    unit: null
+    note: null
+    optional: false
+step_groups:
+  - id: "prep"
+    title: "Prep & Preheat"
+    step_ids: ["preheat-stone"]
+  - id: "assembly"
+    title: "Shaping & Topping"
+    step_ids: ["shape-dough", "add-toppings"]
+  - id: "baking"
+    title: "Baking"
+    step_ids: ["bake-pizza"]
+steps:
+  - id: "preheat-stone"
+    text: "Place a pizza stone in the oven and preheat to its highest setting (usually 500-550°F) for at least 45 minutes."
+    uses: []
+  - id: "shape-dough"
+    text: "Stretch the sourdough dough into a 12-inch circle on a piece of parchment paper or a floured pizza peel."
+    uses: ["dough"]
+  - id: "add-toppings"
+    text: "Spread a thin layer of crushed tomatoes over the dough. Top with pieces of mozzarella and a drizzle of olive oil."
+    uses: ["sauce", "cheese", "oil"]
+  - id: "bake-pizza"
+    text: "Slide the pizza onto the stone. Bake for 7-10 minutes until the crust is charred and the cheese is bubbly. Add fresh basil immediately after taking it out."
+    uses: ["basil"]
+notes:
+  - "Do not put the basil on before baking as it will burn."
+  - "A high-quality olive oil makes a big difference in the final taste."

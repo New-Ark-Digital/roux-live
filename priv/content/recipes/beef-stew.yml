@@ -1,0 +1,82 @@
+schema: "recipe/simple-v2"
+id: "beef-stew"
+slug: "beef-stew"
+title: "Classic Beef Stew"
+summary: "A slow-cooked, hearty stew with melt-in-your-mouth beef and tender vegetables. A staple for cold winter gatherings."
+tags: ["Dinner", "Comfort Food", "Beef", "Novenas"]
+yield:
+  quantity: 6
+  unit: "servings"
+time:
+  prep_minutes: 20
+  cook_minutes: 180
+  total_minutes: 200
+ingredients:
+  - id: "beef"
+    name: "Beef chuck roast"
+    amount: 2
+    unit: "lbs"
+    note: "cut into 1-inch cubes"
+    optional: false
+  - id: "flour"
+    name: "Flour"
+    amount: "1/4"
+    unit: "cup"
+    note: "for dredging"
+    optional: false
+  - id: "onion"
+    name: "Onion"
+    amount: 1
+    unit: null
+    note: "chopped"
+    optional: false
+  - id: "carrots"
+    name: "Carrots"
+    amount: 3
+    unit: null
+    note: "sliced"
+    optional: false
+  - id: "potatoes"
+    name: "Potatoes"
+    amount: 3
+    unit: null
+    note: "cubed"
+    optional: false
+  - id: "broth"
+    name: "Beef broth"
+    amount: 4
+    unit: "cups"
+    note: null
+    optional: false
+  - id: "thyme"
+    name: "Dried thyme"
+    amount: 1
+    unit: "teaspoon"
+    note: null
+    optional: false
+  - id: "bay-leaf"
+    name: "Bay leaf"
+    amount: 1
+    unit: null
+    note: null
+    optional: false
+step_groups:
+  - id: "sear"
+    title: "Searing"
+    step_ids: ["dredge-sear"]
+  - id: "simmer"
+    title: "Simmering"
+    step_ids: ["add-veg", "slow-cook"]
+steps:
+  - id: "dredge-sear"
+    text: "Dredge beef in flour. In a large pot, sear the beef in oil until browned on all sides. Remove and set aside."
+    uses: ["beef", "flour"]
+  - id: "add-veg"
+    text: "In the same pot, add onion, carrots, and potatoes. Cook for 5 minutes. Pour in beef broth, scraping up the bits from the bottom."
+    uses: ["onion", "carrots", "potatoes", "broth"]
+  - id: "slow-cook"
+    text: "Add beef back to the pot along with thyme and bay leaf. Cover and simmer on low heat for 2.5 to 3 hours until beef is tender."
+    uses: ["beef", "thyme", "bay-leaf"]
+notes:
+  - "Low and slow is the key to tender beef."
+  - "The stew is even better the next day."

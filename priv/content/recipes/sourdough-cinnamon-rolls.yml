@@ -3,7 +3,7 @@ id: "sourdough-cinnamon-rolls"
 slug: "sourdough-cinnamon-rolls"
 title: "Sourdough Cinnamon Rolls"
 summary: "Soft, fluffy sourdough rolls with layers of cinnamon sugar, topped with decadent cream cheese icing."
-tags: ["Breakfast", "Dessert", "Sourdough", "Baking"]
+tags: ["Breakfast", "Dessert", "Sourdough", "Baking", "Foundational"]
 yield:
   quantity: 12
   unit: "rolls"
