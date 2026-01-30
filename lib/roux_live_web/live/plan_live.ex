@@ -92,9 +92,14 @@ defmodule RouxLiveWeb.PlanLive do
               <div class="lg:col-span-8 space-y-8">
                 <div class="flex items-center justify-between">
                   <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Orchestrated Timeline</h2>
-                  <span class="px-3 py-1 bg-basil text-gray-600 text-[10px] font-bold uppercase tracking-widest rounded-full">
-                    Deterministic v4
-                  </span>
+                  <div class="flex gap-2">
+                    <span :if={@phases && @phases.warnings != []} class="px-3 py-1 bg-red/10 text-red text-[10px] font-bold uppercase tracking-widest rounded-full animate-pulse">
+                      Resource Conflict
+                    </span>
+                    <span class="px-3 py-1 bg-basil text-gray-600 text-[10px] font-bold uppercase tracking-widest rounded-full">
+                      Deterministic v4
+                    </span>
+                  </div>
                 </div>
                 
                 <%= if is_nil(@phases) do %>
@@ -117,6 +122,16 @@ defmodule RouxLiveWeb.PlanLive do
                   </div>
                 <% else %>
                   <div class="space-y-12 pb-24">
+                    <%!-- Warnings Area --%>
+                    <div :if={@phases.warnings != []} class="bg-red/5 border border-red/20 p-6 rounded-[32px] space-y-3">
+                      <%= for warning <- @phases.warnings do %>
+                        <p class="text-sm text-red-600 font-bold flex items-center gap-2">
+                          <span class="size-2 rounded-full bg-red animate-pulse"></span>
+                          {warning}
+                        </p>
+                      <% end %>
+                    </div>
+
                     <%!-- Phase 0: Pre-Prep --%>
                     <.phase_section 
                       :if={@phases.pre_prep != []}

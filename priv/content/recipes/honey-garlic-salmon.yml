@@ -1,9 +1,11 @@
-schema: "recipe/simple-v2"
+schema: "recipe/simple-v4"
 id: "honey-garlic-salmon"
 slug: "honey-garlic-salmon"
 title: "Honey Garlic Salmon"
 summary: "A quick and delicious glazed salmon that's perfect for a meatless Friday or a healthy weeknight dinner."
 tags: ["Dinner", "Seafood", "Lent", "Quick", "Foundational"]
+dishes: ["Large skillet", "Small bowl", "Whisk", "Spatula"]
+skills: ["Searing", "Deglazing", "Glazing"]
 yield:
   quantity: 4
   unit: "servings"
@@ -18,36 +20,42 @@ ingredients:
     unit: null
     note: "6 oz each"
     optional: false
+    requires_prep: false
   - id: "honey"
     name: "Honey"
     amount: "1/3"
     unit: "cup"
     note: null
     optional: false
+    requires_prep: false
   - id: "soy-sauce"
     name: "Soy sauce"
     amount: "1/4"
     unit: "cup"
     note: null
     optional: false
+    requires_prep: false
   - id: "lemon-juice"
     name: "Lemon juice"
     amount: 2
     unit: "tablespoons"
     note: null
     optional: false
+    requires_prep: false
   - id: "garlic"
     name: "Garlic"
     amount: 3
     unit: "cloves"
     note: "minced"
     optional: false
+    requires_prep: true
   - id: "butter"
     name: "Butter"
     amount: 1
     unit: "tablespoon"
     note: null
     optional: false
+    requires_prep: false
 step_groups:
   - id: "glaze"
     title: "The Glaze"
@@ -59,15 +67,27 @@ steps:
   - id: "whisk-glaze"
     text: "In a small bowl, whisk together honey, soy sauce, lemon juice, and minced garlic."
     uses: ["honey", "soy-sauce", "lemon-juice", "garlic"]
+    work_m: 2
+    wait_m: 0
+    resources: ["small-bowl", "whisk"]
   - id: "sear-salmon"
     text: "Melt butter in a large skillet over medium-high heat. Add salmon fillets, skin-side down, and sear for 3-4 minutes until golden."
     uses: ["salmon", "butter"]
+    work_m: 2
+    wait_m: 4
+    resources: ["stovetop", "large-skillet"]
   - id: "add-glaze"
     text: "Flip the salmon and pour the glaze into the skillet."
     uses: ["honey", "soy-sauce", "lemon-juice", "garlic"]
+    work_m: 1
+    wait_m: 0
+    resources: ["stovetop", "large-skillet"]
   - id: "thicken"
     text: "Cook for another 3-4 minutes, spooning the glaze over the salmon as it thickens, until the salmon is cooked through."
     uses: []
+    work_m: 1
+    wait_m: 4
+    resources: ["stovetop", "large-skillet"]
 notes:
   - "Garnish with fresh parsley or sesame seeds for a beautiful finish."
   - "Serve over rice or with steamed broccoli."

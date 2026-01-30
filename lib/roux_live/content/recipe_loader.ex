@@ -89,7 +89,7 @@ defmodule RouxLive.Content.RecipeLoader do
           note: i["note"],
           optional: i["optional"] || false,
           lead_time_m: i["lead_time_m"] || 0,
-          requires_prep: Map.get(i, "requires_prep", true)
+          requires_prep: Map.get(i, "requires_prep", false)
         }
       end),
       step_groups: Enum.map(data["step_groups"] || [], fn g ->

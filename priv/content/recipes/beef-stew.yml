@@ -1,9 +1,11 @@
-schema: "recipe/simple-v2"
+schema: "recipe/simple-v4"
 id: "beef-stew"
 slug: "beef-stew"
 title: "Classic Beef Stew"
-summary: "A slow-cooked, hearty stew with melt-in-your-mouth beef and tender vegetables. A staple for cold winter gatherings."
+summary: "A slow-cooked, hearty stew with melt-in-your-mouth beef and tender vegetables. A staple for winter gatherings."
 tags: ["Dinner", "Comfort Food", "Beef"]
+dishes: ["Large pot", "Cutting board", "Chef's knife", "Wooden spoon"]
+skills: ["Dredging", "Searing", "Deglazing", "Slow-cooking"]
 yield:
   quantity: 6
   unit: "servings"
@@ -18,6 +20,7 @@ ingredients:
     unit: "lbs"
     note: "cut into 1-inch cubes"
     optional: false
+    requires_prep: true
   - id: "flour"
     name: "Flour"
     amount: "1/4"
@@ -30,18 +33,21 @@ ingredients:
     unit: null
     note: "chopped"
     optional: false
+    requires_prep: true
   - id: "carrots"
     name: "Carrots"
     amount: 3
     unit: null
     note: "sliced"
     optional: false
+    requires_prep: true
   - id: "potatoes"
     name: "Potatoes"
     amount: 3
     unit: null
     note: "cubed"
     optional: false
+    requires_prep: true
   - id: "broth"
     name: "Beef broth"
     amount: 4
@@ -71,12 +77,21 @@ steps:
   - id: "dredge-sear"
     text: "Dredge beef in flour. In a large pot, sear the beef in oil until browned on all sides. Remove and set aside."
     uses: ["beef", "flour"]
+    work_m: 10
+    wait_m: 0
+    resources: ["stovetop", "large-pot"]
   - id: "add-veg"
     text: "In the same pot, add onion, carrots, and potatoes. Cook for 5 minutes. Pour in beef broth, scraping up the bits from the bottom."
     uses: ["onion", "carrots", "potatoes", "broth"]
+    work_m: 5
+    wait_m: 5
+    resources: ["stovetop", "large-pot"]
   - id: "slow-cook"
     text: "Add beef back to the pot along with thyme and bay leaf. Cover and simmer on low heat for 2.5 to 3 hours until beef is tender."
     uses: ["beef", "thyme", "bay-leaf"]
+    work_m: 2
+    wait_m: 150
+    resources: ["stovetop", "large-pot"]
 notes:
   - "Low and slow is the key to tender beef."
   - "The stew is even better the next day."

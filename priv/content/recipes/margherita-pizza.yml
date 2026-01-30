@@ -1,9 +1,11 @@
-schema: "recipe/simple-v2"
+schema: "recipe/simple-v4"
 id: "margherita-pizza"
 slug: "margherita-pizza"
 title: "Classic Margherita Pizza"
 summary: "A simple yet elegant pizza with a bubbly sourdough crust, fresh mozzarella, and aromatic basil."
 tags: ["Dinner", "Italian", "Sourdough", "Foundational"]
+dishes: ["Pizza stone", "Pizza peel", "Parchment paper"]
+skills: ["Dough stretching", "Oven Management", "Stone Baking"]
 yield:
   quantity: 2
   unit: "pizzas"
@@ -18,24 +20,28 @@ ingredients:
     unit: "g"
     note: "cold fermented"
     optional: false
+    requires_prep: false
   - id: "sauce"
     name: "San Marzano tomatoes"
     amount: "1/2"
     unit: "cup"
     note: "crushed"
     optional: false
+    requires_prep: true
   - id: "cheese"
     name: "Fresh mozzarella"
     amount: 8
     unit: "oz"
     note: "torn into pieces"
     optional: false
+    requires_prep: true
   - id: "basil"
     name: "Fresh basil"
     amount: "handful"
     unit: null
     note: null
     optional: false
+    requires_prep: true
   - id: "oil"
     name: "Extra virgin olive oil"
     amount: "drizzle"
@@ -56,15 +62,27 @@ steps:
   - id: "preheat-stone"
     text: "Place a pizza stone in the oven and preheat to its highest setting (usually 500-550°F) for at least 45 minutes."
     uses: []
+    work_m: 1
+    wait_m: 45
+    resources: ["oven", "pizza-stone"]
   - id: "shape-dough"
     text: "Stretch the sourdough dough into a 12-inch circle on a piece of parchment paper or a floured pizza peel."
     uses: ["dough"]
+    work_m: 5
+    wait_m: 0
+    resources: ["pizza-peel"]
   - id: "add-toppings"
     text: "Spread a thin layer of crushed tomatoes over the dough. Top with pieces of mozzarella and a drizzle of olive oil."
     uses: ["sauce", "cheese", "oil"]
+    work_m: 3
+    wait_m: 0
+    resources: []
   - id: "bake-pizza"
     text: "Slide the pizza onto the stone. Bake for 7-10 minutes until the crust is charred and the cheese is bubbly. Add fresh basil immediately after taking it out."
     uses: ["basil"]
+    work_m: 1
+    wait_m: 8
+    resources: ["oven", "pizza-stone"]
 notes:
   - "Do not put the basil on before baking as it will burn."
   - "A high-quality olive oil makes a big difference in the final taste."
