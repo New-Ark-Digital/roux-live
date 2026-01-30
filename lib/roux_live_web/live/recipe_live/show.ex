@@ -104,21 +104,6 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                       </span>
                     <% end %>
                   </div>
-                  <div class="flex items-center gap-4">
-                    <button 
-                      phx-click="toggle_plan" 
-                      phx-value-slug={@recipe.slug}
-                      class={[
-                        "px-8 py-4 rounded-full font-body font-bold transition-all active:scale-95 shadow-xl flex items-center gap-2",
-                        if(@recipe.slug in @plan, 
-                          do: "bg-coral text-white hover:bg-red", 
-                          else: "bg-gray-900 text-white hover:bg-coral")
-                      ]}
-                    >
-                      <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-5" />
-                      {if @recipe.slug in @plan, do: "Added to Plan", else: "Add to Plan"}
-                    </button>
-                  </div>
                 </div>
 
                 <%!-- Scrollable Ingredients --%>

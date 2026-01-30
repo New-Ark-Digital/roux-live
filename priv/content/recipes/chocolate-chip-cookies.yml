@@ -1,9 +1,11 @@
-schema: "recipe/simple-v2"
+schema: "recipe/simple-v4"
 id: "chocolate-chip-cookies"
 slug: "chocolate-chip-cookies"
 title: "Chocolate Chip Cookies"
-summary: "The classic chewy and soft chocolate chip cookies that everyone loves."
+summary: "The classic chewy and soft chocolate chip cookies that everyone loves. This heirloom recipe has been perfected over generations, delivering a gold-standard balance of buttery dough and rich chocolate pools."
 tags: ["Baking", "Classic", "Dessert", "Foundational"]
+dishes: ["Stand mixer", "Large bowl", "Small bowl", "Baking sheets", "Whisk"]
+skills: ["Creaming", "Whisking", "Folding", "Oven Management"]
 yield:
   quantity: 24
   unit: "cookies"

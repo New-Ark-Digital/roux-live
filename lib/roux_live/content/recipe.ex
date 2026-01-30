@@ -29,6 +29,6 @@ defmodule RouxLive.Content.Recipe do
     defstruct [:id, :text, :uses, :work_m, :wait_m, :resources]
   end
 
-  @enforce_keys [:id, :slug, :title, :summary, :yield, :time, :ingredient_groups, :ingredients, :step_groups, :steps, :notes, :tags]
-  defstruct [:id, :slug, :title, :summary, :yield, :time, :ingredient_groups, :ingredients, :step_groups, :steps, :notes, :tags]
+  @enforce_keys [:id, :slug, :title, :summary, :yield, :time, :ingredient_groups, :ingredients, :step_groups, :steps, :notes, :tags, :dishes, :skills]
+  defstruct [:id, :slug, :title, :summary, :yield, :time, :ingredient_groups, :ingredients, :step_groups, :steps, :notes, :tags, :dishes, :skills]
 end

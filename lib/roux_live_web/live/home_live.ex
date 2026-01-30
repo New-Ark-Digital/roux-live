@@ -174,7 +174,7 @@ defmodule RouxLiveWeb.HomeLive do
           "absolute top-4 right-4 z-20 size-10 rounded-full border flex items-center justify-center transition-all duration-300",
           if(@recipe.slug in @plan, 
             do: "bg-coral border-coral text-white shadow-lg", 
-            else: "bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/40")
+            else: "bg-white/20 backdrop-blur-md border-white/30 text-gray-900 hover:bg-white/40")
         ]}
       >
         <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-5" />

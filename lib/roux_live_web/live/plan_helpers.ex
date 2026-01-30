@@ -7,6 +7,8 @@ defmodule RouxLiveWeb.PlanHelpers do
       socket 
       |> assign(:plan, []) 
       |> assign(:plan_count, 0)
+      |> assign(:active_step_index, nil)
+      |> assign(:active_ingredients, [])
       |> attach_hook(:plan_events, :handle_event, &handle_event/3)
 
     {:cont, socket}

@@ -162,7 +162,7 @@ defmodule RouxLiveWeb.RecipeLive.Index do
           "absolute top-6 right-6 z-20 size-12 rounded-full border flex items-center justify-center transition-all duration-300",
           if(@recipe.slug in @plan, 
             do: "bg-coral border-coral text-white shadow-lg", 
-            else: "bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/40")
+            else: "bg-white/20 backdrop-blur-md border-white/30 text-gray-900 hover:bg-white/40")
         ]}
       >
         <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-6" />

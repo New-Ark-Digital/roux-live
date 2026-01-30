@@ -28,7 +28,7 @@ defmodule RouxLive.Content.RecipeLoader do
   end
 
   defp validate!(data) do
-    if data["schema"] not in ["recipe/simple-v1", "recipe/simple-v2", "recipe/simple-v3"] do
+    if data["schema"] not in ["recipe/simple-v1", "recipe/simple-v2", "recipe/simple-v3", "recipe/simple-v4"] do
       raise "Unsupported schema: #{data["schema"]}"
     end
 
@@ -110,7 +110,9 @@ defmodule RouxLive.Content.RecipeLoader do
         }
       end),
       notes: data["notes"] || [],
-      tags: data["tags"] || []
+      tags: data["tags"] || [],
+      dishes: data["dishes"] || [],
+      skills: data["skills"] || []
     }
   end
 end

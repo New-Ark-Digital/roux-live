@@ -20,7 +20,8 @@ defmodule RouxLiveWeb.Router do
 
       live "/", HomeLive, :index
       live "/recipes", RecipeLive.Index, :index
-      live "/recipes/:slug", RecipeLive.Show, :show
+      live "/recipes/:slug", RecipeLive.Intro, :show
+      live "/recipes/:slug/cook", RecipeLive.Show, :show
       live "/plan", PlanLive, :index
     end
   end

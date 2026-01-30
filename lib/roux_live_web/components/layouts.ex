@@ -67,6 +67,14 @@ defmodule RouxLiveWeb.Layouts do
           </div>
 
           <div class="flex items-center gap-1">
+            <.link 
+              :if={@plan_count > 0}
+              navigate={~p"/plan"}
+              class="hidden md:flex px-6 py-2.5 bg-coral text-white font-body font-bold rounded-full hover:bg-red transition-all active:scale-95 text-sm items-center gap-2 mr-2 animate-pulse shadow-lg shadow-coral/20"
+            >
+              <.icon name="hero-fire" class="size-4" />
+              Start Cooking
+            </.link>
             <button class="px-6 py-2.5 bg-gray-900 text-white font-body font-bold rounded-full hover:bg-coral transition-all active:scale-95 text-sm">
               Favorites
             </button>
