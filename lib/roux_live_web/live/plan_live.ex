@@ -145,22 +145,35 @@ defmodule RouxLiveWeb.PlanLive do
                     </div>
 
                     <%!-- Kitchen Profile Selector --%>
-                    <div class="flex p-1 bg-linen rounded-full border border-parchment">
-                      <%= for {type, label} <- [{"minimalist", "MinimalIST"}, {"standard", "Standard"}, {"chef", "Chef"}] do %>
-                        <button
-                          phx-click="select_kitchen"
-                          phx-value-type={type}
-                          class={[
-                            "px-6 py-2 rounded-full text-xs font-bold transition-all",
-                            if(@kitchen_type == type,
-                              do: "bg-gray-900 text-white shadow-lg",
-                              else: "text-gray-400 hover:text-gray-600"
-                            )
-                          ]}
-                        >
-                          {label}
-                        </button>
-                      <% end %>
+                    <div class="space-y-4 flex flex-col items-center">
+                      <div class="flex p-1 bg-linen rounded-full border border-parchment">
+                        <%= for {type, label} <- [{"minimalist", "Minimalist"}, {"standard", "Standard"}, {"chef", "Chef"}] do %>
+                          <button
+                            phx-click="select_kitchen"
+                            phx-value-type={type}
+                            class={[
+                              "px-6 py-2 rounded-full text-xs font-bold transition-all",
+                              if(@kitchen_type == type,
+                                do: "bg-gray-900 text-white shadow-lg",
+                                else: "text-gray-400 hover:text-gray-600"
+                              )
+                            ]}
+                          >
+                            {label}
+                          </button>
+                        <% end %>
+                      </div>
+
+                      <p class="text-xs text-gray-400 font-medium italic">
+                        <%= case @kitchen_type do %>
+                          <% "minimalist" -> %>
+                            2 Burners, 1 Oven, 1 Prep Area
+                          <% "standard" -> %>
+                            4 Burners, 1 Oven, 2 Prep Areas
+                          <% "chef" -> %>
+                            6 Burners, Double Oven, Prep Island
+                        <% end %>
+                      </p>
                     </div>
 
                     <button
