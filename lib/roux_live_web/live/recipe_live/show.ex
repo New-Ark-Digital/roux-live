@@ -39,47 +39,17 @@ defmodule RouxLiveWeb.RecipeLive.Show do
       active_step_index={@active_step_index}
     >
       <div class="space-y-0 font-body">
-        <%!-- Header Section (Cream Background) --%>
-        <section class="bg-cream pt-32 pb-20 px-4">
-          <div class="max-w-7xl mx-auto">
-            <div class="bg-white p-8 sm:p-16 rounded-[48px] border border-parchment shadow-xl space-y-10 relative overflow-hidden">
-              <%!-- Decorative Background --%>
-              <div class="absolute -right-20 -top-20 size-96 bg-coral/5 rounded-full blur-3xl"></div>
-              
-              <div class="relative z-10 space-y-6">
-                <div class="flex flex-wrap gap-2">
-                  <%= for tag <- @recipe.tags do %>
-                    <span class="px-4 py-1.5 bg-linen text-gray-600 text-[10px] font-bold uppercase tracking-widest rounded-full border border-parchment">
-                      {tag}
-                    </span>
-                  <% end %>
-                </div>
-                <h1 class="text-6xl sm:text-7xl lg:text-8xl font-display text-gray-900 leading-[0.9] tracking-tight">
-                  {@recipe.title}
-                </h1>
-                <p class="text-xl text-gray-600 max-w-3xl leading-relaxed">
-                  {@recipe.summary}
-                </p>
-              </div>
-
-              <div class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-linen">
-                <div class="space-y-1">
-                  <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">Prep Time</span>
-                  <span class="text-2xl font-display text-gray-900">{@recipe.time.prep_minutes}m</span>
-                </div>
-                <div class="space-y-1 border-l border-linen pl-6">
-                  <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">Cook Time</span>
-                  <span class="text-2xl font-display text-gray-900">{@recipe.time.cook_minutes}m</span>
-                </div>
-                <div class="space-y-1 border-l border-linen pl-6">
-                  <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Time</span>
-                  <span class="text-2xl font-display text-gray-900">{@recipe.time.total_minutes}m</span>
-                </div>
-                <div class="space-y-1 border-l border-linen pl-6">
-                  <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">Yield</span>
-                  <span class="text-2xl font-display text-gray-900">{@recipe.yield.quantity} {@recipe.yield.unit}</span>
-                </div>
-              </div>
+        <%!-- Visual Mood Hero (Replacing the big card) --%>
+        <section class="bg-cream pt-20 pb-12 px-4 relative overflow-hidden">
+          <%!-- Animated Blobs contained in a smaller area --%>
+          <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
+            <div class="absolute -top-10 -left-10 w-64 h-64 bg-coral rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+            <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-orange rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+          </div>
+          
+          <div class="max-w-7xl mx-auto relative z-10 flex flex-col items-center justify-center min-h-[120px]">
+            <div class="size-24 rounded-[32px] bg-white border border-parchment shadow-xl flex items-center justify-center text-4xl font-display text-coral rotate-3 hover:rotate-0 transition-transform duration-500">
+              {String.at(@recipe.title, 0)}
             </div>
           </div>
         </section>
