@@ -200,6 +200,7 @@ defmodule RouxLiveWeb.RecipeLive.Index do
         </div>
       </div>
     </.link>
-    """
-  end
+  </div>
+  """
+end
 end
