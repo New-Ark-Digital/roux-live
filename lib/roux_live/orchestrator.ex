@@ -1,10 +1,14 @@
 defmodule RouxLive.Orchestrator do
   defmodule Task do
     @enforce_keys [:id, :text, :recipe_title, :work_m, :wait_m, :phase]
-    defstruct [:id, :text, :recipe_title, :work_m, :wait_m, :phase, :resources]
+    defstruct [:id, :text, :recipe_title, :work_m, :wait_m, :phase, :resources, :start_at_m]
   end
 
   def generate_phases(recipes) do
+    # 1. Unified Mise en Place (Phase 1)
+    mise_en_place = aggregate_prep(recipes)
+
+    # 2. Instructions Extraction
     all_raw_tasks = 
       Enum.flat_map(recipes, fn recipe ->
         Enum.map(recipe.steps, fn step ->
@@ -20,74 +24,97 @@ defmodule RouxLive.Orchestrator do
         end)
       end)
 
-    # Automatic Ingredient Prep Tasks
-    auto_prep_tasks = 
-      recipes
-      |> Enum.flat_map(fn recipe ->
-        recipe.ingredients
-        |> Enum.filter(&(&1.requires_prep))
-        |> Enum.map(fn ing ->
-          %Task{
-            id: "auto-prep-#{recipe.slug}-#{ing.id}",
-            text: "Prep #{ing.name}: #{ing.note || "process as needed"}",
-            recipe_title: recipe.title,
-            work_m: 2, # Default 2 mins for prep
-            wait_m: 0,
-            phase: :mise_en_place,
-            resources: []
-          }
-        end)
-      end)
-
-    # Pre-prep tasks from ingredients (lead time)
-    pre_prep_tasks = 
-      recipes
-      |> Enum.flat_map(fn recipe ->
-        recipe.ingredients
-        |> Enum.filter(&(&1.lead_time_m > 0))
-        |> Enum.map(fn ing ->
-          %Task{
-            id: "pre-prep-#{recipe.slug}-#{ing.id}",
-            text: "Advance Prep: #{ing.name} (#{ing.note || "required lead time"})",
-            recipe_title: recipe.title,
-            work_m: 0,
-            wait_m: ing.lead_time_m,
-            phase: :pre_prep,
-            resources: []
-          }
-        end)
-      end)
-
-    all_tasks = all_raw_tasks ++ auto_prep_tasks ++ pre_prep_tasks
-
-    # Phases
-    pre_prep = Enum.filter(all_tasks, &(&1.phase == :pre_prep))
-    mise_en_place = Enum.filter(all_tasks, &(&1.phase == :mise_en_place))
-    setup = Enum.filter(all_tasks, &(&1.phase == :setup))
+    # 3. Categorization
+    pre_prep = Enum.filter(all_raw_tasks, &(&1.phase == :pre_prep))
+    long_lead = Enum.filter(all_raw_tasks, &(&1.phase == :long_lead))
+    setup = Enum.filter(all_raw_tasks, &(&1.phase == :setup))
     
-    # Interleave the Action phase
-    action_raw = Enum.filter(all_tasks, &(&1.phase == :action))
-    action_interleaved = interleave_tasks(action_raw)
+    # 4. Critical Path Interlock (Phase 4)
+    action_raw = Enum.filter(all_raw_tasks, &(&1.phase == :action))
+    action_interleaved = build_deterministic_timeline(action_raw)
 
-    warnings = generate_warnings(all_tasks)
+    warnings = generate_warnings(all_raw_tasks)
 
     %{
       pre_prep: pre_prep,
       mise_en_place: mise_en_place,
+      long_lead: long_lead,
       setup: setup,
       action: action_interleaved,
       warnings: warnings
     }
   end
 
-  defp generate_warnings(tasks) do
-    # Simple check for multiple oven temperatures needed at once
-    # This is a bit complex without full time simulation, but we can look for
-    # tasks in the 'action' phase that mention temperatures.
+  defp aggregate_prep(recipes) do
+    recipes
+    |> Enum.flat_map(fn r -> 
+      Enum.filter(r.ingredients, & &1.requires_prep) 
+      |> Enum.map(& {&1, r.title})
+    end)
+    |> Enum.group_by(fn {ing, _} -> String.downcase(ing.name) end)
+    |> Enum.map(fn {name, items} ->
+      details = Enum.map_join(items, ", ", fn {ing, title} -> "#{ing.amount} #{ing.unit} for #{title}" end)
+      
+      %Task{
+        id: "agg-prep-#{name}",
+        text: "Prep #{String.capitalize(name)}: #{details}",
+        recipe_title: "Unified Mise en Place",
+        work_m: length(items) * 2,
+        wait_m: 0,
+        phase: :mise_en_place,
+        resources: []
+      }
+    end)
+    |> Enum.sort_by(& &1.text)
+  end
+
+  defp determine_phase(step) do
+    text = String.downcase(step.text)
+    cond do
+      step.wait_m >= 60 -> :pre_prep
+      step.wait_m > 0 and not Enum.any?(step.resources, &(&1 in ["oven", "stovetop", "skillet"])) -> :long_lead
+      String.contains?(text, ["preheat", "boil", "bring to temperature"]) -> :setup
+      true -> :action
+    end
+  end
+
+  defp build_deterministic_timeline([]), do: []
+  defp build_deterministic_timeline(tasks) do
+    # Group by recipe
+    by_recipe = Enum.group_by(tasks, & &1.recipe_title)
     
+    # Calculate durations for reverse scheduling
+    recipe_durations = 
+      Enum.map(by_recipe, fn {title, r_tasks} ->
+        duration = Enum.reduce(r_tasks, 0, fn t, acc -> acc + t.work_m + t.wait_m end)
+        {title, duration}
+      end) |> Map.new()
+
+    max_duration = Map.values(recipe_durations) |> Enum.max()
+
+    # Position tasks anchored to common finish time
+    positioned_tasks = 
+      Enum.flat_map(by_recipe, fn {title, r_tasks} ->
+        # Calculate start offset so this recipe ends at max_duration
+        offset = max_duration - Map.get(recipe_durations, title)
+        
+        {final_tasks, _} = Enum.reduce(r_tasks, {[], offset}, fn t, {acc, current_time} ->
+          task_with_time = %{t | start_at_m: current_time}
+          {acc ++ [task_with_time], current_time + t.work_m + t.wait_m}
+        end)
+        final_tasks
+      end)
+
+    # Simple interleaving sort
+    # We sort by start time, but if times are equal, we prioritize shorter tasks 
+    # or follow a consistent recipe order.
+    Enum.sort_by(positioned_tasks, & {&1.start_at_m, &1.work_m})
+  end
+
+  defp generate_warnings(tasks) do
     oven_tasks = 
       tasks 
-      |> Enum.filter(&Enum.member?(&1.resources, "oven"))
+      |> Enum.filter(&Enum.member?(&1.resources || [], "oven"))
       |> Enum.map(fn t -> 
         temp = Regex.run(~r/\d{3}°F/, t.text)
         {t.recipe_title, temp}
@@ -100,48 +127,5 @@ defmodule RouxLive.Orchestrator do
     else
       []
     end
-  end
-
-  defp determine_phase(step) do
-    text = String.downcase(step.text)
-    cond do
-      step.wait_m >= 60 -> :pre_prep
-      String.contains?(text, ["preheat", "boil", "bring to temperature"]) -> :setup
-      step.wait_m == 0 and not Enum.any?(step.resources, &(&1 in ["oven", "stovetop", "grill", "skillet"])) -> :mise_en_place
-      true -> :action
-    end
-  end
-
-  defp interleave_tasks([]), do: []
-  defp interleave_tasks(tasks) do
-    # Simple interleaving: 
-    # 1. Sort by recipe (to keep relative order within recipe)
-    # 2. In a real DAG we'd use dependencies, but here we'll keep it simple for now
-    # but try to interleave work into wait times.
-    
-    # For now, let's just ensure we don't have all Recipe A then all Recipe B
-    # if Recipe A has a long wait at the start.
-    
-    # Better: Group by recipe, then zip them
-    tasks_by_recipe = Enum.group_by(tasks, & &1.recipe_title) |> Map.values()
-    
-    interleave_lists(tasks_by_recipe, [])
-  end
-
-  defp interleave_lists([], acc), do: Enum.reverse(acc)
-  defp interleave_lists(lists, acc) do
-    # Take one from each non-empty list
-    {heads, remainders} = 
-      lists
-      |> Enum.map(fn
-        [h | t] -> {h, t}
-        [] -> {nil, []}
-      end)
-      |> Enum.unzip()
-
-    new_acc = Enum.reject(heads, &is_nil/1) ++ acc
-    new_lists = Enum.reject(remainders, &(&1 == []))
-    
-    interleave_lists(new_lists, new_acc)
   end
 end

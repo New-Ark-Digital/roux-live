@@ -145,25 +145,34 @@ defmodule RouxLiveWeb.PlanLive do
                     <.phase_section 
                       :if={@phases.mise_en_place != []}
                       title="Phase 1: Mise en Place" 
-                      subtitle="Dicing, measuring, and getting everything ready to cook."
+                      subtitle="All dicing, mincing, and measuring. Get this done first!"
                       tasks={@phases.mise_en_place} 
                       color="bg-basil"
                     />
 
-                    <%!-- Phase 2: Setup --%>
+                    <%!-- Phase 2: Long-Lead --%>
+                    <.phase_section 
+                      :if={@phases.long_lead != []}
+                      title="Phase 2: Long-Lead Prep" 
+                      subtitle="Steps that need to start now to wait later (doughs, marinades)."
+                      tasks={@phases.long_lead} 
+                      color="bg-lavender"
+                    />
+
+                    <%!-- Phase 3: Setup --%>
                     <.phase_section 
                       :if={@phases.setup != []}
-                      title="Phase 2: The Setup" 
+                      title="Phase 3: The Setup" 
                       subtitle="Preheating ovens and boiling water."
                       tasks={@phases.setup} 
                       color="bg-egg-yolk"
                     />
 
-                    <%!-- Phase 3: Action --%>
+                    <%!-- Phase 4: Action --%>
                     <.phase_section 
                       :if={@phases.action != []}
-                      title="Phase 3: The Action" 
-                      subtitle="The interlocking steps of the actual cooking process."
+                      title="Phase 4: Active Interlock" 
+                      subtitle="The interleaved cooking process. Follow the order for perfect timing."
                       tasks={@phases.action} 
                       color="bg-pink"
                     />
