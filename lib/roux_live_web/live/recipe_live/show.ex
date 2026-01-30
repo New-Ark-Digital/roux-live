@@ -40,8 +40,8 @@ defmodule RouxLiveWeb.RecipeLive.Show do
     >
       <div class="font-body pt-24 lg:pt-28">
         <%!-- Content Section (White Background) --%>
-        <section class="bg-white py-12 px-4">
-          <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start lg:h-[calc(100vh-140px)] lg:min-h-[600px]">
+        <section class="bg-white px-4">
+          <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:h-[calc(100vh-140px)] lg:min-h-[600px] items-stretch">
             
             <%!-- Mobile Ingredients Toggle (Visible on Mobile Only) --%>
             <div class="lg:hidden w-full space-y-4">
@@ -69,10 +69,10 @@ defmodule RouxLiveWeb.RecipeLive.Show do
             </div>
 
             <%!-- Sidebar Column (Left on Desktop: Title, Stats, Ingredients, Notes) --%>
-            <div class="hidden lg:flex lg:col-span-5 h-full flex-col gap-6 overflow-hidden lg:sticky lg:top-24">
+            <div class="hidden lg:flex lg:col-span-5 flex-col gap-6 overflow-hidden h-full">
               <div class="bg-cream p-10 px-2 rounded-[48px] border border-parchment flex flex-col min-h-0 flex-1 shadow-sm">
                 <%!-- Recipe Header inside Sidebar --%>
-                <div class="px-8 pb-6 border-b border-parchment/20 space-y-4">
+                <div class="px-8 pb-6 border-b border-parchment/20 space-y-4 shrink-0">
                   <div class="flex flex-wrap gap-2">
                     <%= for tag <- @recipe.tags do %>
                       <span class="px-2 py-0.5 bg-white/50 text-gray-500 text-[8px] font-bold uppercase tracking-widest rounded-full border border-parchment/30">
@@ -92,7 +92,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                 </div>
 
                 <%!-- Scrollable Ingredients --%>
-                <div class="overflow-y-auto no-scrollbar space-y-10 flex-1 px-8 py-8">
+                <div class="overflow-y-auto no-scrollbar space-y-10 flex-1 px-8 py-8 min-h-0">
                   <.render_ingredients recipe={@recipe} highlighted_ids={@highlighted_ids} />
                 </div>
               </div>
@@ -113,7 +113,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
             </div>
 
             <%!-- Main Column (Right on Desktop: Instructions) --%>
-            <div class="lg:col-span-7 h-full flex flex-col lg:sticky lg:top-24">
+            <div class="lg:col-span-7 flex flex-col h-full overflow-hidden">
               <div class="lg:hidden space-y-4 mb-8">
                 <h1 class="text-5xl font-display text-gray-900 leading-tight">{@recipe.title}</h1>
                 <div class="flex flex-wrap gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
@@ -122,7 +122,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                 </div>
               </div>
 
-              <div class="flex-1 overflow-y-auto no-scrollbar lg:pr-4">
+              <div class="flex-1 overflow-y-auto no-scrollbar lg:pr-4 min-h-0">
                 <h2 class="hidden lg:block text-xs font-bold text-gray-400 uppercase tracking-[0.3em] mb-8">Instructions</h2>
                 <div class="space-y-16 pb-12">
                   <%= if @recipe.step_groups != [] do %>
