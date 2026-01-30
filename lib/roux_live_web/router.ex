@@ -14,12 +14,15 @@ defmodule RouxLiveWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", RouxLiveWeb do
-    pipe_through :browser
+  live_session :default, on_mount: [RouxLiveWeb.PlanHelpers] do
+    scope "/", RouxLiveWeb do
+      pipe_through :browser
 
-    live "/", HomeLive, :index
-    live "/recipes", RecipeLive.Index, :index
-    live "/recipes/:slug", RecipeLive.Show, :show
+      live "/", HomeLive, :index
+      live "/recipes", RecipeLive.Index, :index
+      live "/recipes/:slug", RecipeLive.Show, :show
+      live "/plan", PlanLive, :index
+    end
   end
 
   # Other scopes may use custom stacks.

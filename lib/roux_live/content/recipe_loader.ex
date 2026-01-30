@@ -28,7 +28,7 @@ defmodule RouxLive.Content.RecipeLoader do
   end
 
   defp validate!(data) do
-    if data["schema"] not in ["recipe/simple-v1", "recipe/simple-v2"] do
+    if data["schema"] not in ["recipe/simple-v1", "recipe/simple-v2", "recipe/simple-v3"] do
       raise "Unsupported schema: #{data["schema"]}"
     end
 
@@ -87,7 +87,9 @@ defmodule RouxLive.Content.RecipeLoader do
           amount: i["amount"],
           unit: i["unit"],
           note: i["note"],
-          optional: i["optional"] || false
+          optional: i["optional"] || false,
+          lead_time_m: i["lead_time_m"] || 0,
+          requires_prep: Map.get(i, "requires_prep", true)
         }
       end),
       step_groups: Enum.map(data["step_groups"] || [], fn g ->
@@ -101,7 +103,10 @@ defmodule RouxLive.Content.RecipeLoader do
         %Step{
           id: s["id"],
           text: s["text"],
-          uses: s["uses"] || []
+          uses: s["uses"] || [],
+          work_m: s["work_m"] || 2,
+          wait_m: s["wait_m"] || 0,
+          resources: s["resources"] || []
         }
       end),
       notes: data["notes"] || [],

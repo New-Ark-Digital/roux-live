@@ -43,7 +43,10 @@ defmodule RouxLiveWeb.HomeLive do
 
   def render(assigns) do
     ~H"""
-    <RouxLiveWeb.Layouts.app flash={@flash}>
+    <RouxLiveWeb.Layouts.app 
+      flash={@flash} 
+      plan_count={@plan_count}
+    >
       <div class="font-body">
         <%!-- Hero Section --%>
         <section class="bg-white pt-32 pb-20 px-4">
@@ -89,7 +92,7 @@ defmodule RouxLiveWeb.HomeLive do
               <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div class="space-y-4">
                   <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Collection</h2>
-                  <h3 class="text-5xl font-display text-gray-900">{collection.title}</h3>
+                  <h3 class="text-5 font-display text-gray-900">{collection.title}</h3>
                   <p class="text-lg text-gray-500 max-w-xl">{collection.description}</p>
                 </div>
                 <.link
@@ -102,7 +105,7 @@ defmodule RouxLiveWeb.HomeLive do
 
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <%= for recipe <- collection.recipes do %>
-                  <.recipe_card recipe={recipe} accent_color={collection.accent} />
+                  <.recipe_card recipe={recipe} accent_color={collection.accent} plan={@plan} />
                 <% end %>
               </div>
             </div>
@@ -159,38 +162,54 @@ defmodule RouxLiveWeb.HomeLive do
 
   attr :recipe, :map, required: true
   attr :accent_color, :string, default: "bg-coral"
+  attr :plan, :list, required: true
 
   def recipe_card(assigns) do
     ~H"""
-    <.link navigate={~p"/recipes/#{@recipe.slug}"} class="group block h-full">
-      <div class="h-full rounded-recipe border border-parchment bg-white overflow-hidden shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col">
-        <div class={["h-48 relative overflow-hidden", @accent_color]}>
-          <%!-- Card Header / Visual --%>
-          <div class="absolute top-4 left-4 flex gap-2">
-            <%= for tag <- Enum.take(@recipe.tags, 2) do %>
-              <span class="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
-                {tag}
-              </span>
-            <% end %>
+    <div class="group relative h-full">
+      <button 
+        phx-click="toggle_plan" 
+        phx-value-slug={@recipe.slug}
+        class={[
+          "absolute top-4 right-4 z-20 size-10 rounded-full border flex items-center justify-center transition-all duration-300",
+          if(@recipe.slug in @plan, 
+            do: "bg-coral border-coral text-white shadow-lg", 
+            else: "bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/40")
+        ]}
+      >
+        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-5" />
+      </button>
+
+      <.link navigate={~p"/recipes/#{@recipe.slug}"} class="block h-full">
+        <div class="h-full rounded-recipe border border-parchment bg-white overflow-hidden shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col">
+          <div class={["h-48 relative overflow-hidden", @accent_color]}>
+            <%!-- Card Header / Visual --%>
+            <div class="absolute top-4 left-4 flex gap-2">
+              <%= for tag <- Enum.take(@recipe.tags, 2) do %>
+                <span class="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
+                  {tag}
+                </span>
+              <% end %>
+            </div>
+            <div class="absolute bottom-4 right-4 text-white text-xs font-bold bg-black/10 backdrop-blur-md px-3 py-1 rounded-full">
+              {@recipe.time.total_minutes}m
+            </div>
+            <%!-- Decorative Initial --%>
+            <div class="absolute inset-0 flex items-center justify-center text-white/10 text-9xl font-display pointer-events-none group-hover:scale-110 transition-transform duration-700">
+              {String.at(@recipe.title, 0)}
+            </div>
           </div>
-          <div class="absolute bottom-4 right-4 text-white text-xs font-bold bg-black/10 backdrop-blur-md px-3 py-1 rounded-full">
-            {@recipe.time.total_minutes}m
-          </div>
-          <%!-- Decorative Initial --%>
-          <div class="absolute inset-0 flex items-center justify-center text-white/10 text-9xl font-display pointer-events-none group-hover:scale-110 transition-transform duration-700">
-            {String.at(@recipe.title, 0)}
+          <div class="p-8 space-y-4 flex-1">
+            <h4 class="text-2xl font-display text-gray-900 group-hover:text-coral transition-colors leading-tight">
+              {@recipe.title}
+            </h4>
+            <p class="text-gray-500 line-clamp-2 leading-relaxed text-sm">
+              {@recipe.summary}
+            </p>
           </div>
         </div>
-        <div class="p-8 space-y-4 flex-1">
-          <h4 class="text-2xl font-display text-gray-900 group-hover:text-coral transition-colors leading-tight">
-            {@recipe.title}
-          </h4>
-          <p class="text-gray-500 line-clamp-2 leading-relaxed text-sm">
-            {@recipe.summary}
-          </p>
-        </div>
-      </div>
-    </.link>
+      </.link>
+    </div>
     """
   end
 

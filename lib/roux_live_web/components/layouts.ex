@@ -28,6 +28,7 @@ defmodule RouxLiveWeb.Layouts do
   attr :flash, :map, required: true, doc: "the map of flash messages"
   attr :active_ingredients, :list, default: [], doc: "list of ingredients for the active step"
   attr :active_step_index, :integer, default: nil, doc: "index of the active step"
+  attr :plan_count, :integer, default: 0, doc: "number of recipes in the meal plan"
 
   attr :current_scope, :map,
     default: nil,
@@ -38,7 +39,10 @@ defmodule RouxLiveWeb.Layouts do
   def app(assigns) do
     ~H"""
     <div class="fixed top-6 left-0 right-0 z-50 px-4 pointer-events-none">
-      <nav class={[
+      <nav 
+        id="main-nav"
+        phx-hook="MealPlan"
+        class={[
         "mx-auto w-[calc(100vw-2rem)] max-w-lg bg-white/80 backdrop-blur-xl border border-parchment shadow-2xl shadow-gray-200/50 flex flex-col items-center pointer-events-auto transition-all duration-500 dynamic-island-bezier overflow-hidden p-2",
         if(@active_ingredients != [], do: "rounded-[32px]", else: "rounded-[100px]")
       ]}>
@@ -51,10 +55,13 @@ defmodule RouxLiveWeb.Layouts do
             
             <div class="hidden sm:flex items-center gap-1 border-l border-parchment pl-2">
               <.link navigate={~p"/recipes"} class="px-4 py-2 rounded-full font-body font-bold text-gray-600 hover:bg-linen transition-colors">
-                Discover
-              </.link>
-              <.link navigate={~p"/recipes"} class="px-4 py-2 rounded-full font-body font-bold text-gray-600 hover:bg-linen transition-colors">
                 Index
+              </.link>
+              <.link navigate={~p"/plan"} class="px-4 py-2 rounded-full font-body font-bold text-gray-600 hover:bg-linen transition-colors relative">
+                Plan
+                <span :if={@plan_count > 0} class="absolute -top-1 -right-1 size-5 bg-coral text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white animate-in zoom-in duration-300">
+                  {@plan_count}
+                </span>
               </.link>
             </div>
           </div>

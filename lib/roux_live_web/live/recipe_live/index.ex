@@ -136,7 +136,7 @@ defmodule RouxLiveWeb.RecipeLive.Index do
                       colors = ["bg-pink", "bg-orange", "bg-blue", "bg-coral", "bg-red"]
                       color = Enum.at(colors, rem(index, length(colors)))
                     %>
-                    <.recipe_card recipe={recipe} accent_color={color} />
+                    <.recipe_card recipe={recipe} accent_color={color} plan={@plan} />
                   <% end %>
                 </div>
               </section>
@@ -148,10 +148,28 @@ defmodule RouxLiveWeb.RecipeLive.Index do
     """
   end
 
+  attr :recipe, :map, required: true
+  attr :accent_color, :string, default: "bg-coral"
+  attr :plan, :list, required: true
+
   def recipe_card(assigns) do
     ~H"""
-    <.link navigate={~p"/recipes/#{@recipe.slug}"} class="group block h-full">
-      <div class="h-full rounded-recipe border border-parchment bg-white overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col group-hover:-translate-y-2">
+    <div class="group relative h-full">
+      <button 
+        phx-click="toggle_plan" 
+        phx-value-slug={@recipe.slug}
+        class={[
+          "absolute top-6 right-6 z-20 size-12 rounded-full border flex items-center justify-center transition-all duration-300",
+          if(@recipe.slug in @plan, 
+            do: "bg-coral border-coral text-white shadow-lg", 
+            else: "bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/40")
+        ]}
+      >
+        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-6" />
+      </button>
+
+      <.link navigate={~p"/recipes/#{@recipe.slug}"} class="block h-full">
+        <div class="h-full rounded-recipe border border-parchment bg-white overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col group-hover:-translate-y-2">
         <div class={["h-56 relative overflow-hidden", @accent_color]}>
           <div class="absolute top-6 left-6 flex gap-2">
             <%= for tag <- Enum.take(@recipe.tags, 2) do %>

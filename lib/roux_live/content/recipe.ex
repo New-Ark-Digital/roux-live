@@ -15,8 +15,8 @@ defmodule RouxLive.Content.Recipe do
   end
 
   defmodule Ingredient do
-    @enforce_keys [:id, :name, :amount, :unit, :note, :optional]
-    defstruct [:id, :name, :amount, :unit, :note, :optional]
+    @enforce_keys [:id, :name, :amount, :unit, :note, :optional, :lead_time_m, :requires_prep]
+    defstruct [:id, :name, :amount, :unit, :note, :optional, :lead_time_m, :requires_prep]
   end
 
   defmodule StepGroup do
@@ -25,8 +25,8 @@ defmodule RouxLive.Content.Recipe do
   end
 
   defmodule Step do
-    @enforce_keys [:id, :text, :uses]
-    defstruct [:id, :text, :uses]
+    @enforce_keys [:id, :text, :uses, :work_m, :wait_m, :resources]
+    defstruct [:id, :text, :uses, :work_m, :wait_m, :resources]
   end
 
   @enforce_keys [:id, :slug, :title, :summary, :yield, :time, :ingredient_groups, :ingredients, :step_groups, :steps, :notes, :tags]
