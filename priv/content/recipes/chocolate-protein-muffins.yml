@@ -103,7 +103,7 @@ steps:
     text: "Preheat oven to 375°F (190°C) and add liners to a muffin tin."
     uses: []
   - id: "mix-dry"
-    text: "In a large bowl, mix einkorn flour, sugar, baking soda, collagen, cocoa powder, and salt."
+    text: "In a large-bowl, mix einkorn flour, sugar, baking soda, collagen, cocoa powder, and salt."
     uses: ["flour", "sugar", "baking-soda", "collagen", "cocoa", "salt"]
   - id: "mix-wet"
     text: "In a separate bowl, whisk together eggs, yogurt, oil, milk, and vanilla."

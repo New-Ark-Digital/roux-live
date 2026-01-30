@@ -57,7 +57,7 @@ step_groups:
     step_ids: ["make-sauce", "combine"]
 steps:
   - id: "sear-shrimp"
-    text: "Melt 1 tbsp butter in a large skillet over medium-high heat. Sear shrimp for 1-2 minutes per side until pink. Remove from skillet."
+    text: "Melt 1 tbsp butter in a skillet over medium-high heat. Sear shrimp for 1-2 minutes per side until pink. Remove from skillet."
     uses: ["shrimp", "butter"]
   - id: "make-sauce"
     text: "In the same skillet, melt remaining butter. Add garlic and cook for 1 minute until fragrant. Stir in heavy cream and parmesan."

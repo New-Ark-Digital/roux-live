@@ -65,14 +65,14 @@ step_groups:
     step_ids: ["sear-salmon", "add-glaze", "thicken"]
 steps:
   - id: "whisk-glaze"
-    text: "In a small bowl, whisk together honey, soy sauce, lemon juice, and minced garlic."
+    text: "In a small-bowl, whisk together honey, soy sauce, lemon juice, and minced garlic."
     uses: ["honey", "soy-sauce", "lemon-juice", "garlic"]
     work_m: 2
     wait_m: 0
     resources: ["small-bowl", "whisk"]
     type: "standard"
   - id: "sear-salmon"
-    text: "Melt butter in a large skillet over medium-high heat. Add salmon fillets, skin-side down, and sear for 3-4 minutes until golden."
+    text: "Melt butter in a skillet over medium-high heat. Add salmon fillets, skin-side down, and sear for 3-4 minutes until golden."
     uses: ["salmon", "butter"]
     work_m: 2
     wait_m: 4

@@ -44,7 +44,7 @@ ingredients:
     optional: false
 steps:
   - id: "froth-matcha"
-    text: "Add matcha powder and warm water to a small bowl or cup. Whisk with a handheld milk frother until smooth and foamy."
+    text: "Add matcha powder and warm water to a small-bowl or cup. Whisk with a handheld milk frother until smooth and foamy."
     uses: ["matcha", "warm-water"]
   - id: "sweeten"
     text: "Whisk in the maple syrup until fully combined."

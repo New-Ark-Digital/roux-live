@@ -77,13 +77,13 @@ steps:
     type: "setup"
     resources: ["oven"]
   - id: "combine-dry"
-    text: "In a small bowl, whisk together flour, baking soda, and salt."
+    text: "In a small-bowl, whisk together flour, baking soda, and salt."
     uses: ["flour", "baking-soda", "salt"]
     work_m: 3
     resources: ["small-bowl", "whisk"]
     type: "standard"
   - id: "cream-butter"
-    text: "In a large bowl, beat softened butter, granulated sugar, brown sugar, and vanilla extract until creamy."
+    text: "In a large-bowl, beat softened butter, granulated sugar, brown sugar, and vanilla extract until creamy."
     uses: ["butter", "sugar", "brown-sugar", "vanilla"]
     work_m: 5
     resources: ["large-bowl", "stand-mixer"]

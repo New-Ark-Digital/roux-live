@@ -68,14 +68,14 @@ step_groups:
     step_ids: ["garnish"]
 steps:
   - id: "preheat"
-    text: "Preheat a frying pan over medium-low heat."
+    text: "Preheat a skillet over medium-low heat."
     uses: []
     work_m: 1
     wait_m: 2
     resources: ["stovetop", "skillet"]
     type: "setup"
   - id: "whisk"
-    text: "Crack eggs one by one into a medium bowl. Add milk and a pinch of salt to the eggs, then whisk thoroughly until combined and just a little bit frothy on top."
+    text: "Crack eggs one by one into a medium-bowl. Add milk and a pinch of salt to the eggs, then whisk thoroughly until combined and just a little bit frothy on top."
     uses: ["eggs", "milk", "salt"]
     work_m: 3
     wait_m: 0

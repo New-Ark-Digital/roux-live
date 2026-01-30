@@ -11,11 +11,20 @@ defmodule RouxLive.Orchestrator do
       :type,
       :resources,
       :start_at_m,
-      :recipe_slug
+      :recipe_slug,
+      :is_utility
     ]
   end
 
-  def generate_phases(recipes) do
+  @kitchen_profiles %{
+    "minimalist" => %{burners: 2, ovens: 1, prep_areas: 1},
+    "standard" => %{burners: 4, ovens: 1, prep_areas: 2},
+    "chef" => %{burners: 6, ovens: 2, prep_areas: 10}
+  }
+
+  def generate_phases(recipes, kitchen_type \\ "standard") do
+    profile = Map.get(@kitchen_profiles, kitchen_type, @kitchen_profiles["standard"])
+
     # 1. Unified Mise en Place (Phase 1)
     mise_en_place = aggregate_prep(recipes)
 
@@ -32,24 +41,19 @@ defmodule RouxLive.Orchestrator do
             wait_m: step.wait_m,
             resources: step.resources || [],
             type: step.type,
-            # To be assigned
-            phase: nil
+            phase: nil,
+            is_utility: false
           }
         end)
       end)
 
     # 3. Categorize into strict phases
-    # Phase 2: Long-Lead
     long_lead = Enum.filter(all_raw_tasks, &(&1.type == "long-lead"))
-
-    # Phase 3: Setup
     setup = Enum.filter(all_raw_tasks, &(&1.type == "setup"))
-
-    # Phase 4: Action (everything else)
     action_raw = Enum.filter(all_raw_tasks, &(&1.type not in ["long-lead", "setup"]))
 
-    # 4. Build Interleaved Timeline for Action Phase
-    action_timeline = build_resource_aware_timeline(action_raw)
+    # 4. Build Resource-Aware Timeline
+    action_timeline = build_resource_aware_timeline(action_raw, profile)
 
     warnings = generate_warnings(all_raw_tasks)
 
@@ -83,15 +87,16 @@ defmodule RouxLive.Orchestrator do
         wait_m: 0,
         phase: :mise_en_place,
         type: "prep",
-        resources: []
+        resources: [],
+        is_utility: false
       }
     end)
     |> Enum.sort_by(& &1.text)
   end
 
-  defp build_resource_aware_timeline([]), do: []
+  defp build_resource_aware_timeline([], _profile), do: []
 
-  defp build_resource_aware_timeline(tasks) do
+  defp build_resource_aware_timeline(tasks, profile) do
     by_recipe = Enum.group_by(tasks, & &1.recipe_slug)
 
     recipe_metrics =
@@ -106,43 +111,98 @@ defmodule RouxLive.Orchestrator do
         do: Enum.map(Map.values(recipe_metrics), & &1.total) |> Enum.max(),
         else: 0
 
-    Enum.reduce(Map.keys(recipe_metrics), [], fn slug, current_schedule ->
-      metrics = recipe_metrics[slug]
-      preferred_start = max_duration - metrics.total
-
-      {new_tasks, _} =
-        Enum.reduce(metrics.tasks, {[], preferred_start}, fn t, {acc, earliest_start} ->
-          start_time = find_available_slot(t, earliest_start, current_schedule)
-          task_with_time = %{t | start_at_m: start_time}
-          {acc ++ [task_with_time], start_time + t.work_m + t.wait_m}
-        end)
-
-      current_schedule ++ new_tasks
-    end)
-    |> Enum.sort_by(&{&1.start_at_m, &1.work_m})
+    schedule_recipes(Map.keys(recipe_metrics), recipe_metrics, max_duration, profile, [])
   end
 
-  defp find_available_slot(task, preferred_start, schedule) do
-    conflicts =
-      Enum.any?(schedule, fn existing ->
-        t_start = preferred_start
-        t_end = preferred_start + task.work_m
-        e_start = existing.start_at_m
-        e_end = existing.start_at_m + existing.work_m
+  defp schedule_recipes([], _metrics, _max_duration, _profile, schedule),
+    do: Enum.sort_by(schedule, &{&1.start_at_m, &1.work_m})
 
-        work_overlap = overlap?(t_start, t_end, e_start, e_end)
+  defp schedule_recipes([slug | rest], metrics, max_duration, profile, schedule) do
+    recipe_info = metrics[slug]
+    preferred_start = max_duration - recipe_info.total
+
+    {new_tasks, updated_schedule} =
+      Enum.reduce(recipe_info.tasks, {[], schedule}, fn t, {acc, current_schedule} ->
+        earliest_possible =
+          case List.last(acc) do
+            nil -> preferred_start
+            prev -> prev.start_at_m + prev.work_m + prev.wait_m
+          end
+
+        start_time = find_available_slot(t, earliest_possible, current_schedule, profile)
+
+        {cleanup_tasks, updated_current} =
+          check_and_inject_cleanup(t, start_time, current_schedule)
+
+        task_with_time = %{t | start_at_m: start_time}
+
+        {acc ++ cleanup_tasks ++ [task_with_time],
+         updated_current ++ cleanup_tasks ++ [task_with_time]}
+      end)
+
+    schedule_recipes(rest, metrics, max_duration, profile, updated_schedule)
+  end
+
+  defp find_available_slot(task, start_at, schedule, profile) do
+    has_conflict =
+      Enum.any?(schedule, fn existing ->
+        t_active_start = start_at
+        t_active_end = start_at + task.work_m
+
+        e_active_start = existing.start_at_m
+        e_active_end = existing.start_at_m + existing.work_m
+
+        buffer = if task.type == "terminal" or existing.type == "terminal", do: 2, else: 0
+
+        work_overlap =
+          overlap?(t_active_start - buffer, t_active_end + buffer, e_active_start, e_active_end)
 
         resource_overlap =
           Enum.any?(task.resources || [], fn res -> res in (existing.resources || []) end) and
-            overlap?(t_start, t_end, e_start, e_end)
+            overlap?(
+              start_at,
+              start_at + task.work_m + task.wait_m,
+              existing.start_at_m,
+              existing.start_at_m + existing.work_m + existing.wait_m
+            )
 
         work_overlap or resource_overlap
       end)
 
-    if conflicts do
-      find_available_slot(task, preferred_start + 1, schedule)
+    if has_conflict do
+      find_available_slot(task, start_at + 1, schedule, profile)
     else
-      preferred_start
+      start_at
+    end
+  end
+
+  defp check_and_inject_cleanup(task, start_time, schedule) do
+    shared_resources =
+      Enum.filter(task.resources || [], fn res ->
+        Enum.any?(schedule, fn existing ->
+          res in (existing.resources || []) and existing.recipe_slug != task.recipe_slug
+        end)
+      end)
+
+    if shared_resources != [] do
+      cleanup_task = %Task{
+        id: "cleanup-#{task.id}",
+        text:
+          "Cleanup: #{Enum.join(shared_resources, ", ")} (Transition to #{task.recipe_title})",
+        recipe_title: "Kitchen Maintenance",
+        recipe_slug: "utility",
+        work_m: 3,
+        wait_m: 0,
+        phase: :action,
+        type: "utility",
+        resources: shared_resources,
+        start_at_m: max(0, start_time - 3),
+        is_utility: true
+      }
+
+      {[cleanup_task], schedule}
+    else
+      {[], schedule}
     end
   end
 

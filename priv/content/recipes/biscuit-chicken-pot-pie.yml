@@ -153,7 +153,7 @@ step_groups:
     step_ids: ["preheat", "cut-biscuits", "bake", "cool"]
 steps:
   - id: "mix-dry"
-    text: "Prepare the biscuit dough by adding dry ingredients to a large bowl. Mix well."
+    text: "Prepare the biscuit dough by adding dry ingredients to a large-bowl. Mix well."
     uses: ["b-flour", "b-sugar", "b-salt", "b-baking-powder", "b-baking-soda"]
     work_m: 5
     wait_m: 0

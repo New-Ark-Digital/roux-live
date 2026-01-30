@@ -97,7 +97,7 @@ step_groups:
     step_ids: ["toast-buns", "assemble-subs", "broil-subs"]
 steps:
   - id: "mix-meat"
-    text: "In a large bowl, combine ground beef, eggs, parmesan, salt, diced onion, Italian seasoning, and flour. Mix well with your hands."
+    text: "In a large-bowl, combine ground beef, eggs, parmesan, salt, diced onion, Italian seasoning, and flour. Mix well with your hands."
     uses: ["m-beef", "m-eggs", "m-parmesan", "m-salt", "m-onion", "m-flour", "m-seasoning"]
   - id: "roll-balls"
     text: "Roll mixture into 1\" balls and place on a parchment-lined baking sheet."

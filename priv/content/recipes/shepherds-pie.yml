@@ -150,19 +150,19 @@ steps:
     uses: ["f-butter", "f-onion", "f-carrot", "f-garlic"]
     work_m: 2
     wait_m: 5
-    resources: ["stovetop", "large-skillet", "oven"]
+    resources: ["stovetop", "skillet", "oven"]
   - id: "brown-beef"
     text: "Add beef and cook until no longer pink. Drain excess fat."
     uses: ["f-beef"]
     work_m: 5
     wait_m: 0
-    resources: ["stovetop", "large-skillet"]
+    resources: ["stovetop", "skillet"]
   - id: "season-simmer"
     text: "Stir in tomato paste, flour, Worcestershire sauce, Italian seasoning, beef stock, salt, pepper, and peas. Simmer for a few minutes until thickened. Transfer to an 8x11 dish."
     uses: ["f-tomato-paste", "f-flour", "f-worcestershire", "f-italian-seasoning", "f-broth", "f-salt", "f-pepper", "f-peas"]
     work_m: 5
     wait_m: 5
-    resources: ["stovetop", "large-skillet", "baking-dish"]
+    resources: ["stovetop", "skillet", "baking-dish"]
   - id: "boil-potatoes"
     text: "Add potatoes to heavily salted cold water and bring to a boil. Cook until fork tender (10-20 mins)."
     uses: ["m-potatoes"]

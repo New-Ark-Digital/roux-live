@@ -6,15 +6,25 @@ defmodule RouxLiveWeb.PlanLive do
     {:ok,
      socket
      |> assign(:plan_recipes, [])
-     |> assign(:phases, nil)}
+     |> assign(:phases, nil)
+     |> assign(:kitchen_type, "standard")}
   end
 
   def handle_params(_params, _url, socket) do
     {:noreply, socket}
   end
 
+  def handle_event("select_kitchen", %{"type" => type}, socket) do
+    {:noreply, assign(socket, :kitchen_type, type)}
+  end
+
   def handle_event("generate_flow", _params, socket) do
-    phases = RouxLive.Orchestrator.generate_phases(socket.assigns.plan_recipes)
+    phases =
+      RouxLive.Orchestrator.generate_phases(
+        socket.assigns.plan_recipes,
+        socket.assigns.kitchen_type
+      )
+
     {:noreply, assign(socket, :phases, phases)}
   end
 
@@ -117,7 +127,7 @@ defmodule RouxLiveWeb.PlanLive do
                       Resource Conflict
                     </span>
                     <span class="px-3 py-1 bg-basil text-gray-600 text-[10px] font-bold uppercase tracking-widest rounded-full">
-                      Deterministic v4
+                      Deterministic v6
                     </span>
                   </div>
                 </div>
@@ -130,9 +140,29 @@ defmodule RouxLiveWeb.PlanLive do
                     <div class="space-y-4 max-w-md">
                       <h3 class="text-3xl font-display text-gray-900">The Orchestrator is ready.</h3>
                       <p class="text-gray-500 leading-relaxed">
-                        I've analyzed your {length(@plan_recipes)} recipes. Next, I'll merge their instructions into a single, phased workflow.
+                        I've analyzed your {length(@plan_recipes)} recipes. Next, choose your kitchen setup and I'll build your workflow.
                       </p>
                     </div>
+
+                    <%!-- Kitchen Profile Selector --%>
+                    <div class="flex p-1 bg-linen rounded-full border border-parchment">
+                      <%= for {type, label} <- [{"minimalist", "MinimalIST"}, {"standard", "Standard"}, {"chef", "Chef"}] do %>
+                        <button
+                          phx-click="select_kitchen"
+                          phx-value-type={type}
+                          class={[
+                            "px-6 py-2 rounded-full text-xs font-bold transition-all",
+                            if(@kitchen_type == type,
+                              do: "bg-gray-900 text-white shadow-lg",
+                              else: "text-gray-400 hover:text-gray-600"
+                            )
+                          ]}
+                        >
+                          {label}
+                        </button>
+                      <% end %>
+                    </div>
+
                     <button
                       phx-click="generate_flow"
                       class="px-10 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-coral transition-all active:scale-95 shadow-2xl cursor-pointer"
@@ -154,15 +184,6 @@ defmodule RouxLiveWeb.PlanLive do
                         </p>
                       <% end %>
                     </div>
-
-                    <%!-- Phase 0: Pre-Prep --%>
-                    <.phase_section
-                      :if={@phases.pre_prep != []}
-                      title="Phase 0: The Long Tail"
-                      subtitle="Items that need to be started hours or days ahead."
-                      tasks={@phases.pre_prep}
-                      color="bg-lavender"
-                    />
 
                     <%!-- Phase 1: Mise en Place --%>
                     <.phase_section
@@ -227,13 +248,23 @@ defmodule RouxLiveWeb.PlanLive do
       </div>
 
       <div class="grid grid-cols-1 gap-4">
-        <%= for {task, index} <- Enum.with_index(@tasks) do %>
+        <%= for task <- @tasks do %>
           <div class={[
-            "bg-white p-6 rounded-3xl border border-parchment shadow-sm flex items-start gap-6 group hover:border-coral transition-all",
+            "p-6 rounded-3xl border transition-all flex items-start gap-6 group hover:border-coral",
+            if(task.is_utility,
+              do: "bg-linen/30 border-dashed border-gray-300 opacity-70",
+              else: "bg-white border-parchment shadow-sm"
+            ),
             task.type == "terminal" && "border-dashed opacity-80"
           ]}>
             <div class="flex-none pt-1">
-              <div class="size-6 rounded-lg border-2 border-parchment group-hover:border-coral transition-colors flex items-center justify-center">
+              <div class={[
+                "size-6 rounded-lg border-2 flex items-center justify-center transition-colors",
+                if(task.is_utility,
+                  do: "border-gray-300",
+                  else: "border-parchment group-hover:border-coral"
+                )
+              ]}>
                 <div class="size-3 bg-coral rounded-sm scale-0 group-hover:scale-100 transition-transform">
                 </div>
               </div>
@@ -250,7 +281,10 @@ defmodule RouxLiveWeb.PlanLive do
                   T +{task.start_at_m}m
                 </span>
               </div>
-              <p class="text-lg text-gray-700 leading-tight">
+              <p class={[
+                "text-lg leading-tight",
+                if(task.is_utility, do: "text-gray-500 italic font-medium", else: "text-gray-700")
+              ]}>
                 {task.text}
               </p>
               <div class="flex gap-4">
