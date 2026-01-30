@@ -121,7 +121,7 @@ defmodule RouxLiveWeb.Layouts do
         </div>
 
         <div class="text-gray-400 text-xs font-body">
-          &copy; 2026 Newark Digital. All rights reserved.
+          &copy; 2026 New Ark Digital, LLC. All rights reserved.
         </div>
       </div>
     </footer>
