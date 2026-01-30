@@ -92,7 +92,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                 </div>
 
                 <%!-- Scrollable Ingredients --%>
-                <div class="overflow-y-auto no-scrollbar space-y-10 flex-1 px-8 py-8 min-h-0">
+                <div class="overflow-y-auto custom-scrollbar space-y-10 flex-1 px-8 py-8 min-h-0">
                   <.render_ingredients recipe={@recipe} highlighted_ids={@highlighted_ids} />
                 </div>
               </div>
@@ -122,7 +122,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                 </div>
               </div>
 
-              <div class="flex-1 overflow-y-auto no-scrollbar lg:pr-4 min-h-0">
+              <div class="flex-1 overflow-y-auto custom-scrollbar lg:pr-4 min-h-0">
                 <h2 class="hidden lg:block text-xs font-bold text-gray-400 uppercase tracking-[0.3em] mb-8">Instructions</h2>
                 <div class="space-y-16 pb-12">
                   <%= if @recipe.step_groups != [] do %>
