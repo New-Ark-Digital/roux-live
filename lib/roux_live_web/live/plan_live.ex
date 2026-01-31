@@ -311,7 +311,11 @@ defmodule RouxLiveWeb.PlanLive do
                   :if={task.wait_m > 0}
                   class="text-[9px] font-bold text-gray-400 uppercase bg-linen px-2 py-0.5 rounded-md"
                 >
-                  Wait: {task.wait_m}m
+                  <%= if task.wait_details do %>
+                    {task.wait_details.kind}: {task.wait_m}m
+                  <% else %>
+                    Wait: {task.wait_m}m
+                  <% end %>
                 </span>
                 <span
                   :if={is_list(task.resources) and task.resources != []}

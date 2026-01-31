@@ -1,10 +1,18 @@
-schema: "recipe/simple-v5"
+schema: "recipe/simple-v5.1"
 id: "honey-garlic-salmon"
 slug: "honey-garlic-salmon"
 title: "Honey Garlic Salmon"
 summary: "A quick and delicious glazed salmon that's perfect for a meatless Friday or a healthy weeknight dinner."
 tags: ["Dinner", "Seafood", "Lent", "Quick", "Foundational"]
-dishes: ["Large skillet", "Small bowl", "Whisk", "Spatula"]
+equipment:
+  - id: large-skillet
+    name: "Large skillet"
+  - id: small-bowl
+    name: "Small bowl"
+  - id: whisk
+    name: "Whisk"
+  - id: spatula
+    name: "Spatula"
 skills: ["Searing", "Deglazing", "Glazing"]
 yield:
   quantity: 4
@@ -25,22 +33,16 @@ ingredients:
     name: "Honey"
     amount: "1/3"
     unit: "cup"
-    note: null
-    optional: false
     requires_prep: false
   - id: "soy-sauce"
     name: "Soy sauce"
     amount: "1/4"
     unit: "cup"
-    note: null
-    optional: false
     requires_prep: false
   - id: "lemon-juice"
     name: "Lemon juice"
     amount: 2
     unit: "tablespoons"
-    note: null
-    optional: false
     requires_prep: false
   - id: "garlic"
     name: "Garlic"
@@ -48,13 +50,10 @@ ingredients:
     unit: "cloves"
     requires_prep: true
     note: "minced"
-
   - id: "butter"
     name: "Butter"
     amount: 1
     unit: "tablespoon"
-    note: null
-    optional: false
     requires_prep: false
 step_groups:
   - id: "glaze"
@@ -75,7 +74,10 @@ steps:
     text: "Melt butter in a skillet over medium-high heat. Add salmon fillets, skin-side down, and sear for 3-4 minutes until golden."
     uses: ["salmon", "butter"]
     work_m: 2
-    wait_m: 4
+    wait:
+      minutes: 4
+      kind: simmer
+      attention: low
     resources: ["stovetop", "skillet"]
     type: "standard"
   - id: "add-glaze"
@@ -89,7 +91,10 @@ steps:
     text: "Cook for another 3-4 minutes, spooning the glaze over the salmon as it thickens, until the salmon is cooked through."
     uses: []
     work_m: 1
-    wait_m: 4
+    wait:
+      minutes: 4
+      kind: reduce
+      attention: high
     resources: ["stovetop", "skillet"]
     type: "standard"
 notes:

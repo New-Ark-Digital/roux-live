@@ -1,10 +1,20 @@
-schema: "recipe/simple-v5"
+schema: "recipe/simple-v5.1"
 id: "chocolate-chip-cookies"
 slug: "chocolate-chip-cookies"
 title: "Chocolate Chip Cookies"
 summary: "The classic chewy and soft chocolate chip cookies that everyone loves. This heirloom recipe has been perfected over generations, delivering a gold-standard balance of buttery dough and rich chocolate pools."
 tags: ["Baking", "Classic", "Dessert", "Foundational"]
-dishes: ["Stand mixer", "Large bowl", "Small bowl", "Baking sheets", "Whisk"]
+equipment:
+  - id: stand-mixer
+    name: "Stand mixer"
+  - id: large-bowl
+    name: "Large bowl"
+  - id: small-bowl
+    name: "Small bowl"
+  - id: baking-sheets
+    name: "Baking sheets"
+  - id: whisk
+    name: "Whisk"
 skills: ["Creaming", "Whisking", "Folding", "Oven Management"]
 yield:
   quantity: 24
@@ -73,7 +83,10 @@ steps:
     text: "Preheat oven to 375°F (190°C)."
     uses: []
     work_m: 1
-    wait_m: 15
+    wait:
+      minutes: 15
+      kind: preheat
+      attention: none
     type: "setup"
     resources: ["oven"]
   - id: "combine-dry"
@@ -116,14 +129,20 @@ steps:
     text: "Bake for 9 to 11 minutes or until golden brown."
     uses: []
     work_m: 1
-    wait_m: 10
+    wait:
+      minutes: 10
+      kind: bake
+      attention: low
     resources: ["oven"]
     type: "standard"
   - id: "cool"
     text: "Cool on baking sheets for 2 minutes; remove to wire racks to cool completely."
     uses: []
     work_m: 1
-    wait_m: 15
+    wait:
+      minutes: 15
+      kind: rest
+      attention: none
     type: "terminal"
     resources: ["wire-racks"]
 notes:

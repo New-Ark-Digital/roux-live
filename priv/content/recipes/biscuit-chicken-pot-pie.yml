@@ -1,10 +1,20 @@
-schema: "recipe/simple-v5"
+schema: "recipe/simple-v5.1"
 id: "biscuit-chicken-pot-pie"
 slug: "biscuit-chicken-pot-pie"
 title: "Biscuit Chicken Pot Pie"
 summary: "Tender chicken, chopped veggies, and a well-seasoned cream sauce with a buttery sourdough biscuit topping."
 tags: ["Dinner", "Comfort Food", "Sourdough", "Chicken", "Foundational"]
-dishes: ["Cast iron skillet", "Large bowl", "Pastry cutter", "Baking dish", "Whisk"]
+equipment:
+  - id: skillet
+    name: "Cast iron skillet"
+  - id: large-bowl
+    name: "Large bowl"
+  - id: pastry-cutter
+    name: "Pastry cutter"
+  - id: baking-dish
+    name: "Baking dish"
+  - id: whisk
+    name: "Whisk"
 skills: ["Sautéing", "Roux-making", "Biscuit shaping", "Oven Management"]
 yield:
   quantity: 8
@@ -26,47 +36,12 @@ ingredients:
     amount: 2
     unit: "cups"
     requires_prep: false
-  - id: "b-sugar"
-    name: "Sugar"
-    amount: 1
-    unit: "tablespoon"
-    requires_prep: false
-  - id: "b-salt"
-    name: "Salt"
-    amount: "3/4"
-    unit: "teaspoon"
-    requires_prep: false
-  - id: "b-baking-powder"
-    name: "Baking powder"
-    amount: 2
-    unit: "teaspoons"
-    requires_prep: false
-  - id: "b-baking-soda"
-    name: "Baking soda"
-    amount: 1
-    unit: "teaspoon"
-    requires_prep: false
   - id: "b-butter"
     name: "Cold butter"
     amount: 1
     unit: "stick"
     requires_prep: true
     note: "diced or grated"
-  - id: "b-starter"
-    name: "Sourdough starter"
-    amount: 1
-    unit: "cup"
-    requires_prep: false
-  - id: "b-milk"
-    name: "Milk or buttermilk"
-    amount: "1/2"
-    unit: "cup"
-    requires_prep: false
-  - id: "f-butter"
-    name: "Butter"
-    amount: "1/4"
-    unit: "cup"
-    requires_prep: false
   - id: "f-garlic"
     name: "Garlic"
     amount: 4
@@ -91,56 +66,75 @@ ingredients:
     unit: "medium"
     requires_prep: true
     note: "diced"
-  - id: "f-flour"
-    name: "Flour"
-    amount: "1/4"
-    unit: "cup"
-    requires_prep: false
-  - id: "f-broth"
-    name: "Chicken bone broth"
-    amount: 3
-    unit: "cups"
-    requires_prep: false
-  - id: "f-parsley"
-    name: "Parsley"
-    amount: 1
-    unit: "tablespoon"
-    requires_prep: false
-  - id: "f-salt"
-    name: "Salt"
-    amount: 3
-    unit: "teaspoons"
-    requires_prep: false
-  - id: "f-pepper"
-    name: "Black pepper"
-    amount: "to taste"
-    requires_prep: false
-  - id: "f-garlic-powder"
-    name: "Garlic powder"
-    amount: 1
-    unit: "teaspoon"
-    requires_prep: false
-  - id: "f-onion-powder"
-    name: "Onion powder"
-    amount: 1
-    unit: "teaspoon"
-    requires_prep: false
-  - id: "f-peas"
-    name: "Peas"
-    amount: 1
-    unit: "cup"
-    requires_prep: false
   - id: "f-chicken"
     name: "Cooked chicken"
     amount: 4
     unit: "cups"
     requires_prep: true
     note: "shredded or chopped"
+  - id: "b-sugar"
+    name: "Sugar"
+    amount: 1
+    unit: "tablespoon"
+  - id: "b-salt"
+    name: "Salt"
+    amount: "3/4"
+    unit: "teaspoon"
+  - id: "b-baking-powder"
+    name: "Baking powder"
+    amount: 2
+    unit: "teaspoons"
+  - id: "b-baking-soda"
+    name: "Baking soda"
+    amount: 1
+    unit: "teaspoon"
+  - id: "b-starter"
+    name: "Sourdough starter"
+    amount: 1
+    unit: "cup"
+  - id: "b-milk"
+    name: "Milk or buttermilk"
+    amount: "1/2"
+    unit: "cup"
+  - id: "f-butter"
+    name: "Butter"
+    amount: "1/4"
+    unit: "cup"
+  - id: "f-flour"
+    name: "Flour"
+    amount: "1/4"
+    unit: "cup"
+  - id: "f-broth"
+    name: "Chicken bone broth"
+    amount: 3
+    unit: "cups"
+  - id: "f-parsley"
+    name: "Parsley"
+    amount: 1
+    unit: "tablespoon"
+  - id: "f-salt"
+    name: "Salt"
+    amount: 3
+    unit: "teaspoons"
+  - id: "f-pepper"
+    name: "Black pepper"
+    amount: "to taste"
+  - id: "f-garlic-powder"
+    name: "Garlic powder"
+    amount: 1
+    unit: "teaspoon"
+  - id: "f-onion-powder"
+    name: "Onion powder"
+    amount: 1
+    unit: "teaspoon"
+  - id: "f-peas"
+    name: "Peas"
+    amount: 1
+    unit: "cup"
   - id: "f-cream"
     name: "Heavy cream"
     amount: "1/2"
     unit: "cup"
-    requires_prep: false
 step_groups:
   - id: "biscuit-dough"
     title: "Biscuit Dough"
@@ -170,21 +164,30 @@ steps:
     text: "Add sourdough starter and buttermilk, stirring until just combined. Cover and keep in the refrigerator."
     uses: ["b-starter", "b-milk"]
     work_m: 5
-    wait_m: 30
+    wait:
+      minutes: 30
+      kind: chill
+      attention: none
     type: "long-lead"
     resources: ["large-bowl"]
   - id: "preheat"
     text: "Preheat oven to 400°F (200°C)."
     uses: []
     work_m: 1
-    wait_m: 15
-    type: "standard"
+    wait:
+      minutes: 15
+      kind: preheat
+      attention: none
+    type: "setup"
     resources: ["oven"]
   - id: "saute-veggies"
     text: "Sauté butter, garlic, onion, potatoes, and carrots in a skillet for 10 minutes until softened."
     uses: ["f-butter", "f-garlic", "f-onion", "f-potatoes", "f-carrots"]
     work_m: 5
-    wait_m: 10
+    wait:
+      minutes: 10
+      kind: simmer
+      attention: low
     type: "standard"
     resources: ["stovetop", "skillet"]
   - id: "add-flour"
@@ -198,7 +201,10 @@ steps:
     text: "Pour in the bone broth and seasoning. Mix well, cover, and cook for 10 minutes."
     uses: ["f-broth", "f-parsley", "f-salt", "f-pepper", "f-garlic-powder", "f-onion-powder"]
     work_m: 2
-    wait_m: 10
+    wait:
+      minutes: 10
+      kind: simmer
+      attention: low
     type: "standard"
     resources: ["stovetop", "skillet"]
   - id: "add-chicken-cream"
@@ -219,14 +225,20 @@ steps:
     text: "Bake for 15 minutes until the biscuits are golden."
     uses: []
     work_m: 1
-    wait_m: 15
+    wait:
+      minutes: 15
+      kind: bake
+      attention: low
     type: "standard"
     resources: ["oven"]
   - id: "cool"
     text: "Remove from the oven and cool for several minutes before serving."
     uses: []
     work_m: 1
-    wait_m: 5
+    wait:
+      minutes: 5
+      kind: rest
+      attention: none
     type: "terminal"
     resources: []
 notes:

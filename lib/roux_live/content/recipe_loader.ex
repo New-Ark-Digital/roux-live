@@ -1,6 +1,16 @@
 defmodule RouxLive.Content.RecipeLoader do
   alias RouxLive.Content.Recipe
-  alias RouxLive.Content.Recipe.{Yield, Time, IngredientGroup, Ingredient, Step, StepGroup}
+
+  alias RouxLive.Content.Recipe.{
+    Yield,
+    Time,
+    IngredientGroup,
+    Ingredient,
+    Step,
+    StepGroup,
+    Equipment,
+    Wait
+  }
 
   def load!(slug) do
     path = Path.join(:code.priv_dir(:roux_live), "content/recipes/#{slug}.yml")
@@ -33,7 +43,8 @@ defmodule RouxLive.Content.RecipeLoader do
          "recipe/simple-v2",
          "recipe/simple-v3",
          "recipe/simple-v4",
-         "recipe/simple-v5"
+         "recipe/simple-v5",
+         "recipe/simple-v5.1"
        ] do
       raise "Unsupported schema: #{data["schema"]}"
     end
@@ -100,7 +111,10 @@ defmodule RouxLive.Content.RecipeLoader do
             note: i["note"],
             optional: i["optional"] || false,
             lead_time_m: i["lead_time_m"] || 0,
-            requires_prep: Map.get(i, "requires_prep", false)
+            requires_prep: Map.get(i, "requires_prep", false),
+            canonical: i["canonical"],
+            pantry_class: i["pantry_class"],
+            normalized_amount: i["normalized_amount"]
           }
         end),
       step_groups:
@@ -113,19 +127,44 @@ defmodule RouxLive.Content.RecipeLoader do
         end),
       steps:
         Enum.map(data["steps"], fn s ->
+          type = s["type"] || determine_default_type(s)
+          wait_m = s["wait_m"] || 0
+
+          wait_details =
+            case s["wait"] do
+              nil ->
+                %Wait{minutes: wait_m, kind: determine_wait_kind(s)}
+
+              w ->
+                %Wait{
+                  minutes: w["minutes"] || wait_m,
+                  kind: String.to_atom(w["kind"] || to_string(determine_wait_kind(s))),
+                  attention: String.to_atom(w["attention"] || "none"),
+                  blocking: w["blocking"] || false
+                }
+            end
+
           %Step{
             id: s["id"],
             text: s["text"],
             uses: s["uses"] || [],
             work_m: s["work_m"] || 2,
-            wait_m: s["wait_m"] || 0,
+            wait_m: wait_details.minutes,
             resources: s["resources"] || [],
-            type: s["type"] || determine_default_type(s)
+            type: type,
+            wait_details: wait_details
           }
         end),
       notes: data["notes"] || [],
       tags: data["tags"] || [],
-      dishes: data["dishes"] || [],
+      equipment:
+        Enum.map(data["equipment"] || data["dishes"] || [], fn
+          e when is_binary(e) ->
+            %Equipment{id: String.downcase(String.replace(e, " ", "-")), name: e}
+
+          e when is_map(e) ->
+            %Equipment{id: e["id"], name: e["name"]}
+        end),
       skills: data["skills"] || []
     }
   end
@@ -143,6 +182,23 @@ defmodule RouxLive.Content.RecipeLoader do
 
       true ->
         "standard"
+    end
+  end
+
+  defp determine_wait_kind(step) do
+    text = String.downcase(step["text"] || "")
+
+    cond do
+      String.contains?(text, "preheat") -> :preheat
+      String.contains?(text, "simmer") -> :simmer
+      String.contains?(text, "bake") -> :bake
+      String.contains?(text, "rest") -> :rest
+      String.contains?(text, "chill") -> :chill
+      String.contains?(text, "marinate") -> :marinate
+      String.contains?(text, "soak") -> :soak
+      String.contains?(text, "proof") -> :proof
+      String.contains?(text, "reduce") -> :reduce
+      true -> :other
     end
   end
 end

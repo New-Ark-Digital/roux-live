@@ -16,7 +16,24 @@ defmodule RouxLive.Content.Recipe do
 
   defmodule Ingredient do
     @enforce_keys [:id, :name, :amount, :unit, :note, :optional, :lead_time_m, :requires_prep]
-    defstruct [:id, :name, :amount, :unit, :note, :optional, :lead_time_m, :requires_prep]
+    defstruct [
+      :id,
+      :name,
+      :amount,
+      :unit,
+      :note,
+      :optional,
+      :lead_time_m,
+      :requires_prep,
+      :canonical,
+      :pantry_class,
+      :normalized_amount
+    ]
+  end
+
+  defmodule Equipment do
+    @enforce_keys [:id, :name]
+    defstruct [:id, :name]
   end
 
   defmodule StepGroup do
@@ -24,11 +41,45 @@ defmodule RouxLive.Content.Recipe do
     defstruct [:id, :title, :step_ids]
   end
 
-  defmodule Step do
-    @enforce_keys [:id, :text, :uses, :work_m, :wait_m, :resources, :type]
-    defstruct [:id, :text, :uses, :work_m, :wait_m, :resources, :type]
+  defmodule Wait do
+    defstruct minutes: 0, kind: :other, attention: :none, blocking: false
   end
 
-  @enforce_keys [:id, :slug, :title, :summary, :yield, :time, :ingredient_groups, :ingredients, :step_groups, :steps, :notes, :tags, :dishes, :skills]
-  defstruct [:id, :slug, :title, :summary, :yield, :time, :ingredient_groups, :ingredients, :step_groups, :steps, :notes, :tags, :dishes, :skills]
+  defmodule Step do
+    @enforce_keys [:id, :text, :uses, :work_m, :wait_m, :resources, :type]
+    defstruct [:id, :text, :uses, :work_m, :wait_m, :resources, :type, :wait_details]
+  end
+
+  @enforce_keys [
+    :id,
+    :slug,
+    :title,
+    :summary,
+    :yield,
+    :time,
+    :ingredient_groups,
+    :ingredients,
+    :step_groups,
+    :steps,
+    :notes,
+    :tags,
+    :equipment,
+    :skills
+  ]
+  defstruct [
+    :id,
+    :slug,
+    :title,
+    :summary,
+    :yield,
+    :time,
+    :ingredient_groups,
+    :ingredients,
+    :step_groups,
+    :steps,
+    :notes,
+    :tags,
+    :equipment,
+    :skills
+  ]
 end
