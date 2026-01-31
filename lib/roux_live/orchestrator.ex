@@ -53,7 +53,7 @@ defmodule RouxLive.Orchestrator do
     action_raw = Enum.filter(all_raw_tasks, &(&1.type not in ["long-lead", "setup"]))
 
     # 4. Build Resource-Aware Timeline
-    action_timeline = build_resource_aware_timeline(action_raw, profile)
+    action_timeline = build_resource_aware_timeline(action_raw, profile, kitchen_type)
 
     warnings = generate_warnings(all_raw_tasks)
 
@@ -94,9 +94,9 @@ defmodule RouxLive.Orchestrator do
     |> Enum.sort_by(& &1.text)
   end
 
-  defp build_resource_aware_timeline([], _profile), do: []
+  defp build_resource_aware_timeline([], _profile, _kitchen_type), do: []
 
-  defp build_resource_aware_timeline(tasks, profile) do
+  defp build_resource_aware_timeline(tasks, profile, kitchen_type) do
     by_recipe = Enum.group_by(tasks, & &1.recipe_slug)
 
     recipe_metrics =
@@ -111,17 +111,24 @@ defmodule RouxLive.Orchestrator do
         do: Enum.map(Map.values(recipe_metrics), & &1.total) |> Enum.max(),
         else: 0
 
-    schedule_recipes(Map.keys(recipe_metrics), recipe_metrics, max_duration, profile, [])
+    schedule_recipes(
+      Map.keys(recipe_metrics),
+      recipe_metrics,
+      max_duration,
+      profile,
+      kitchen_type,
+      []
+    )
   end
 
-  defp schedule_recipes([], _metrics, _max_duration, _profile, schedule),
+  defp schedule_recipes([], _metrics, _max_duration, _profile, _kitchen_type, schedule),
     do: Enum.sort_by(schedule, &{&1.start_at_m, &1.work_m})
 
-  defp schedule_recipes([slug | rest], metrics, max_duration, profile, schedule) do
+  defp schedule_recipes([slug | rest], metrics, max_duration, profile, kitchen_type, schedule) do
     recipe_info = metrics[slug]
     preferred_start = max_duration - recipe_info.total
 
-    {new_tasks, updated_schedule} =
+    {_new_tasks, updated_schedule} =
       Enum.reduce(recipe_info.tasks, {[], schedule}, fn t, {acc, current_schedule} ->
         earliest_possible =
           case List.last(acc) do
@@ -131,19 +138,21 @@ defmodule RouxLive.Orchestrator do
 
         start_time = find_available_slot(t, earliest_possible, current_schedule, profile)
 
-        {cleanup_tasks, updated_current} =
-          check_and_inject_cleanup(t, start_time, current_schedule)
+        {cleanup_tasks, _} =
+          check_and_inject_cleanup(t, start_time, current_schedule, kitchen_type)
 
         task_with_time = %{t | start_at_m: start_time}
 
         {acc ++ cleanup_tasks ++ [task_with_time],
-         updated_current ++ cleanup_tasks ++ [task_with_time]}
+         current_schedule ++ cleanup_tasks ++ [task_with_time]}
       end)
 
-    schedule_recipes(rest, metrics, max_duration, profile, updated_schedule)
+    schedule_recipes(rest, metrics, max_duration, profile, kitchen_type, updated_schedule)
   end
 
   defp find_available_slot(task, start_at, schedule, profile) do
+    task_resource_types = categorize_resources(task.resources)
+
     has_conflict =
       Enum.any?(schedule, fn existing ->
         t_active_start = start_at
@@ -154,10 +163,10 @@ defmodule RouxLive.Orchestrator do
 
         buffer = if task.type == "terminal" or existing.type == "terminal", do: 2, else: 0
 
-        work_overlap =
+        chef_lock_conflict =
           overlap?(t_active_start - buffer, t_active_end + buffer, e_active_start, e_active_end)
 
-        resource_overlap =
+        name_conflict =
           Enum.any?(task.resources || [], fn res -> res in (existing.resources || []) end) and
             overlap?(
               start_at,
@@ -166,43 +175,100 @@ defmodule RouxLive.Orchestrator do
               existing.start_at_m + existing.work_m + existing.wait_m
             )
 
-        work_overlap or resource_overlap
+        chef_lock_conflict or name_conflict
       end)
 
-    if has_conflict do
+    capacity_conflict =
+      if not has_conflict do
+        window_start = start_at
+        window_end = start_at + task.work_m + task.wait_m
+
+        overlapping_tasks =
+          Enum.filter(schedule, fn e ->
+            overlap?(window_start, window_end, e.start_at_m, e.start_at_m + e.work_m + e.wait_m)
+          end)
+
+        burner_conflict =
+          if :burner in task_resource_types do
+            in_use =
+              overlapping_tasks
+              |> Enum.filter(fn e -> :burner in categorize_resources(e.resources) end)
+              |> length()
+
+            in_use >= profile.burners
+          else
+            false
+          end
+
+        oven_conflict =
+          if :oven in task_resource_types do
+            in_use =
+              overlapping_tasks
+              |> Enum.filter(fn e -> :oven in categorize_resources(e.resources) end)
+              |> length()
+
+            in_use >= profile.ovens
+          else
+            false
+          end
+
+        burner_conflict or oven_conflict
+      else
+        false
+      end
+
+    if has_conflict or capacity_conflict do
       find_available_slot(task, start_at + 1, schedule, profile)
     else
       start_at
     end
   end
 
-  defp check_and_inject_cleanup(task, start_time, schedule) do
-    shared_resources =
-      Enum.filter(task.resources || [], fn res ->
-        Enum.any?(schedule, fn existing ->
-          res in (existing.resources || []) and existing.recipe_slug != task.recipe_slug
-        end)
-      end)
+  defp categorize_resources(resources) do
+    Enum.map(resources || [], fn
+      res when res in ["stovetop", "skillet", "pot", "pan"] -> :burner
+      res when res in ["oven"] -> :oven
+      _ -> :prep
+    end)
+    |> Enum.uniq()
+  end
 
-    if shared_resources != [] do
-      cleanup_task = %Task{
-        id: "cleanup-#{task.id}",
-        text:
-          "Cleanup: #{Enum.join(shared_resources, ", ")} (Transition to #{task.recipe_title})",
-        recipe_title: "Kitchen Maintenance",
-        recipe_slug: "utility",
-        work_m: 3,
-        wait_m: 0,
-        phase: :action,
-        type: "utility",
-        resources: shared_resources,
-        start_at_m: max(0, start_time - 3),
-        is_utility: true
-      }
-
-      {[cleanup_task], schedule}
-    else
+  defp check_and_inject_cleanup(task, start_time, schedule, kitchen_type) do
+    if kitchen_type == "chef" do
       {[], schedule}
+    else
+      resources_to_clean =
+        Enum.filter(task.resources || [], fn res ->
+          # Find the most recent use of this specific resource
+          last_use =
+            schedule
+            |> Enum.filter(&(res in (&1.resources || [])))
+            |> Enum.max_by(& &1.start_at_m, fn -> nil end)
+
+          # Only clean if the last user was a different recipe AND it wasn't already a cleanup task
+          last_use != nil and last_use.recipe_slug != task.recipe_slug and not last_use.is_utility
+        end)
+
+      if resources_to_clean != [] do
+        cleanup_task = %Task{
+          id: "cleanup-#{task.id}-#{Enum.join(resources_to_clean, "-")}",
+          text:
+            "Cleanup: #{Enum.join(resources_to_clean, ", ")} (Transition to #{task.recipe_title})",
+          recipe_title: "Kitchen Maintenance",
+          recipe_slug: "utility",
+          work_m: 3,
+          wait_m: 0,
+          phase: :action,
+          type: "utility",
+          resources: resources_to_clean,
+          start_at_m: max(0, start_time - 3),
+          is_utility: true
+        }
+
+        {[cleanup_task], schedule}
+      else
+        {[], schedule}
+      end
     end
   end
 
