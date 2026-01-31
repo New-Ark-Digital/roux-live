@@ -4,6 +4,7 @@ defmodule RouxLiveWeb.RecipeLive.Show do
 
   def mount(%{"slug" => slug}, _session, socket) do
     recipe = RecipeLoader.load!(slug)
+
     {:ok,
      socket
      |> assign(:recipe, recipe)
@@ -26,27 +27,28 @@ defmodule RouxLiveWeb.RecipeLive.Show do
     highlighted_ids = (active_step && active_step.uses) || []
 
     active_ingredients = Enum.filter(assigns.recipe.ingredients, &(&1.id in highlighted_ids))
-    assigns = assign(assigns, 
-      active_step: active_step, 
-      active_step_index: active_step_index,
-      highlighted_ids: highlighted_ids, 
-      active_ingredients: active_ingredients
-    )
+
+    assigns =
+      assign(assigns,
+        active_step: active_step,
+        active_step_index: active_step_index,
+        highlighted_ids: highlighted_ids,
+        active_ingredients: active_ingredients
+      )
 
     ~H"""
-    <RouxLiveWeb.Layouts.app 
-      flash={@flash} 
-      active_ingredients={@active_ingredients} 
+    <RouxLiveWeb.Layouts.app
+      flash={@flash}
+      active_ingredients={@active_ingredients}
       active_step_index={@active_step_index}
     >
       <div class="font-body pt-24 lg:pt-28">
         <%!-- Content Section (White Background) --%>
         <section class="bg-white px-4">
           <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:h-[calc(100vh-140px)] lg:min-h-[600px] items-stretch">
-            
             <%!-- Mobile Ingredients Toggle (Visible on Mobile Only) --%>
             <div class="lg:hidden w-full space-y-4">
-              <button 
+              <button
                 phx-click="toggle_mobile_ingredients"
                 class="w-full flex items-center justify-between p-6 bg-cream border border-parchment rounded-[32px] font-display text-2xl text-gray-900"
               >
@@ -58,10 +60,13 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                   <.icon name="hero-chevron-down" class="size-6" />
                 </span>
               </button>
-              
+
               <div class={[
                 "overflow-hidden transition-all duration-500",
-                if(@show_mobile_ingredients, do: "max-h-[2000px] opacity-100 mb-8", else: "max-h-0 opacity-0")
+                if(@show_mobile_ingredients,
+                  do: "max-h-[2000px] opacity-100 mb-8",
+                  else: "max-h-0 opacity-0"
+                )
               ]}>
                 <div class="bg-cream p-8 px-10 rounded-[32px] border border-parchment space-y-8">
                   <.render_ingredients recipe={@recipe} highlighted_ids={@highlighted_ids} />
@@ -93,10 +98,15 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                 </div>
 
                 <%!-- Context Summary Header --%>
-                <div :if={@active_ingredients != []} class="px-8 py-4 bg-linen/50 border-b border-parchment/20">
+                <div
+                  :if={@active_ingredients != []}
+                  class="px-8 py-4 bg-linen/50 border-b border-parchment/20"
+                >
                   <div class="flex items-center gap-2 mb-2">
                     <span class="size-1.5 rounded-full bg-coral animate-pulse"></span>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Ingredients</span>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      Active Ingredients
+                    </span>
                   </div>
                   <div class="flex flex-wrap gap-2">
                     <%= for ingredient <- @active_ingredients do %>
@@ -113,8 +123,8 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                   <div id="ingredient-pips" class="w-1.5 h-full relative pointer-events-none ml-4">
                     <%!-- JS Hook will inject pips here --%>
                   </div>
-                  
-                  <div 
+
+                  <div
                     id="ingredients-list-container"
                     phx-hook="IngredientAutoScroll"
                     class="overflow-y-auto custom-scrollbar space-y-10 flex-1 px-8 py-8 relative"
@@ -150,7 +160,9 @@ defmodule RouxLiveWeb.RecipeLive.Show do
               </div>
 
               <div class="flex-1 overflow-y-auto custom-scrollbar lg:pr-4 min-h-0">
-                <h2 class="hidden lg:block text-xs font-bold text-gray-400 uppercase tracking-[0.3em] mb-8">Instructions</h2>
+                <h2 class="hidden lg:block text-xs font-bold text-gray-400 uppercase tracking-[0.3em] mb-8">
+                  Instructions
+                </h2>
                 <div class="space-y-16 pb-12">
                   <%= if @recipe.step_groups != [] do %>
                     <%= for group <- @recipe.step_groups do %>
@@ -161,10 +173,8 @@ defmodule RouxLiveWeb.RecipeLive.Show do
                         </h3>
                         <div class="space-y-6">
                           <%= for step_id <- group.step_ids do %>
-                            <% 
-                              step = Enum.find(@recipe.steps, &(&1.id == step_id))
-                              index = Enum.find_index(@recipe.steps, &(&1.id == step_id))
-                            %>
+                            <% step = Enum.find(@recipe.steps, &(&1.id == step_id))
+                            index = Enum.find_index(@recipe.steps, &(&1.id == step_id)) %>
                             <.step_item step={step} index={index} active_step_id={@active_step_id} />
                           <% end %>
                         </div>
@@ -182,9 +192,6 @@ defmodule RouxLiveWeb.RecipeLive.Show do
             </div>
           </div>
         </section>
-
-
-
 
         <%!-- Mobile Notes (Visible on Mobile Only) --%>
         <section :if={@recipe.notes != []} class="lg:hidden bg-white pb-20 px-4">
@@ -211,11 +218,16 @@ defmodule RouxLiveWeb.RecipeLive.Show do
     <%= if @recipe.ingredient_groups != [] do %>
       <%= for group <- @recipe.ingredient_groups do %>
         <div class="space-y-6">
-          <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{group.title}</h3>
+          <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+            {group.title}
+          </h3>
           <ul class="space-y-4">
             <%= for ingredient_id <- group.ingredient_ids do %>
               <% ingredient = Enum.find(@recipe.ingredients, &(&1.id == ingredient_id)) %>
-              <.ingredient_item ingredient={ingredient} highlighted={ingredient.id in @highlighted_ids} />
+              <.ingredient_item
+                ingredient={ingredient}
+                highlighted={ingredient.id in @highlighted_ids}
+              />
             <% end %>
           </ul>
         </div>
@@ -250,7 +262,10 @@ defmodule RouxLiveWeb.RecipeLive.Show do
       <div class="flex gap-6">
         <span class={[
           "flex-none flex items-center justify-center size-10 rounded-2xl text-base font-bold transition-all",
-          if(@active_step_id == @step.id, do: "bg-coral text-white rotate-6", else: "bg-linen text-gray-400 group-hover:bg-coral/10 group-hover:text-coral")
+          if(@active_step_id == @step.id,
+            do: "bg-coral text-white rotate-6",
+            else: "bg-linen text-gray-400 group-hover:bg-coral/10 group-hover:text-coral"
+          )
         ]}>
           {@index + 1}
         </span>
@@ -270,11 +285,14 @@ defmodule RouxLiveWeb.RecipeLive.Show do
 
   def ingredient_item(assigns) do
     ~H"""
-    <li 
+    <li
       data-highlighted={to_string(@highlighted)}
       class={[
         "flex justify-between items-baseline gap-4 p-4 rounded-2xl transition-all border border-transparent",
-        if(@highlighted, do: "bg-white border-parchment shadow-lg scale-105", else: "opacity-60 grayscale-[0.5]")
+        if(@highlighted,
+          do: "bg-white border-parchment shadow-lg scale-105",
+          else: "opacity-60 grayscale-[0.5]"
+        )
       ]}
     >
       <span class={[

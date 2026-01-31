@@ -71,6 +71,102 @@ const Hooks = {
         localStorage.setItem("roux_meal_plan", JSON.stringify(plan))
       })
     }
+  },
+  CookingTimer: {
+    mounted() {
+      this.timer = null;
+      this.secondsLeft = 0;
+      this.isRunning = false;
+
+      this.display = this.el.querySelector('#timer-display');
+      this.toggleBtn = this.el.querySelector('#timer-toggle');
+      this.icon = this.el.querySelector('#timer-icon');
+      this.progressBar = document.getElementById('global-progress-bar');
+
+      this.toggleBtn.addEventListener('click', () => {
+        if (this.isRunning) {
+          this.stop();
+        } else {
+          this.start();
+        }
+      });
+
+      this.init();
+    },
+    updated() {
+      // If the task changed, reset timer
+      const newSeconds = this.getSeconds();
+      if (newSeconds !== this.initialSeconds) {
+        this.stop();
+        this.init();
+      }
+    },
+    init() {
+      this.initialSeconds = this.getSeconds();
+      this.secondsLeft = this.initialSeconds;
+      this.offsetSeconds = parseInt(this.el.dataset.offset) || 0;
+      this.totalSeconds = parseInt(this.el.dataset.total) || 0;
+      this.updateDisplay();
+    },
+    getSeconds() {
+      const work = parseInt(this.el.dataset.work) || 0;
+      const wait = parseInt(this.el.dataset.wait) || 0;
+      return (work || wait) * 60;
+    },
+    start() {
+      if (this.secondsLeft <= 0) return;
+      this.isRunning = true;
+      this.toggleBtn.classList.replace('bg-gray-900', 'bg-red-500');
+      this.icon.classList.replace('hero-play', 'hero-pause');
+      
+      this.timer = setInterval(() => {
+        this.secondsLeft--;
+        this.updateDisplay();
+        this.updateGlobalProgress();
+        if (this.secondsLeft <= 0) {
+          this.stop();
+          this.playAlarm();
+        }
+      }, 1000);
+    },
+    stop() {
+      this.isRunning = false;
+      clearInterval(this.timer);
+      this.toggleBtn.classList.replace('bg-red-500', 'bg-gray-900');
+      this.icon.classList.replace('hero-pause', 'hero-play');
+    },
+    updateDisplay() {
+      const mins = Math.floor(this.secondsLeft / 60);
+      const secs = this.secondsLeft % 60;
+      this.display.innerText = `${mins}:${secs.toString().padStart(2, '0')}`;
+    },
+    updateGlobalProgress() {
+      if (!this.progressBar || this.totalSeconds <= 0) return;
+      
+      const elapsedInTask = this.initialSeconds - this.secondsLeft;
+      const totalElapsed = this.offsetSeconds + elapsedInTask;
+      const progress = (totalElapsed / this.totalSeconds) * 100;
+      
+      this.progressBar.style.width = `${progress}%`;
+
+      // Update remaining time display
+      const remainingSeconds = Math.max(0, this.totalSeconds - totalElapsed);
+      const timeRemainingDisplay = document.getElementById('time-remaining-display');
+      if (timeRemainingDisplay) {
+        const h = Math.floor(remainingSeconds / 3600);
+        const m = Math.floor((remainingSeconds % 3600) / 60);
+        const s = remainingSeconds % 60;
+        
+        let text = "";
+        if (h > 0) text += `${h}h `;
+        text += `${m}m ${s}s left`;
+        timeRemainingDisplay.innerText = text;
+      }
+    },
+    playAlarm() {
+      // Simple haptic or audio feedback could go here
+      alert("Timer finished!");
+    }
   }
 }
 

@@ -5,7 +5,7 @@ defmodule RouxLiveWeb.HomeLive do
   def mount(_params, _session, socket) do
     recipes = RecipeLoader.list_all()
     featured = Enum.find(recipes, &(&1.slug == "chocolate-chip-cookies")) || List.first(recipes)
-    
+
     collections = [
       %{
         id: "foundational",
@@ -33,18 +33,18 @@ defmodule RouxLiveWeb.HomeLive do
       }
     ]
 
-    {:ok, 
-     socket 
-     |> assign(:recipes, recipes) 
-     |> assign(:featured, featured) 
+    {:ok,
+     socket
+     |> assign(:recipes, recipes)
+     |> assign(:featured, featured)
      |> assign(:collections, collections)
      |> assign(:search_query, "")}
   end
 
   def render(assigns) do
     ~H"""
-    <RouxLiveWeb.Layouts.app 
-      flash={@flash} 
+    <RouxLiveWeb.Layouts.app
+      flash={@flash}
       plan_count={@plan_count}
     >
       <div class="font-body">
@@ -54,19 +54,22 @@ defmodule RouxLiveWeb.HomeLive do
             <div class="relative overflow-hidden rounded-[48px] bg-cream border border-parchment mesh-gradient p-8 sm:p-16 lg:p-24 min-h-[600px] flex items-center justify-center">
               <%!-- Animated Blobs --%>
               <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-40">
-                <div class="absolute -top-20 -left-20 w-96 h-96 bg-coral rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-                <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-orange rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+                <div class="absolute -top-20 -left-20 w-96 h-96 bg-coral rounded-full mix-blend-multiply filter blur-3xl animate-blob">
+                </div>
+                <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-orange rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000">
+                </div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000">
+                </div>
               </div>
 
               <div class="relative z-10 text-center space-y-8 max-w-4xl">
                 <h1 class="text-6xl sm:text-7xl lg:text-8xl font-display text-gray-900 leading-[0.9] tracking-tight">
-                  recipes that <br/> aren't <span class="text-coral italic">annoying</span> to use.
+                  recipes that <br /> aren't <span class="text-coral italic">annoying</span> to use.
                 </h1>
                 <p class="text-xl text-gray-600 max-w-xl mx-auto">
                   The fastest and easiest way to browse, cook, and share your most cherished flavors—all in one place.
                 </p>
-                
+
                 <div class="w-full max-w-2xl mx-auto pt-4">
                   <.form for={%{}} phx-submit="search" class="relative group w-full">
                     <input
@@ -91,7 +94,9 @@ defmodule RouxLiveWeb.HomeLive do
             <div class="max-w-7xl mx-auto space-y-12">
               <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div class="space-y-4">
-                  <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Collection</h2>
+                  <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                    Collection
+                  </h2>
                   <h3 class="text-5 font-display text-gray-900">{collection.title}</h3>
                   <p class="text-lg text-gray-500 max-w-xl">{collection.description}</p>
                 </div>
@@ -115,7 +120,10 @@ defmodule RouxLiveWeb.HomeLive do
             <%!-- Spotlight Section (White Background) --%>
             <section class="bg-white py-24 px-4">
               <div class="max-w-7xl mx-auto">
-                <.link navigate={~p"/recipes/#{@featured.slug}"} class="group block relative overflow-hidden rounded-[48px] border border-parchment bg-white shadow-2xl hover:shadow-coral/10 transition-all duration-500">
+                <.link
+                  navigate={~p"/recipes/#{@featured.slug}"}
+                  class="group block relative overflow-hidden rounded-[48px] border border-parchment bg-white shadow-2xl hover:shadow-coral/10 transition-all duration-500"
+                >
                   <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
                     <div class="p-8 sm:p-16 space-y-8 flex flex-col justify-center">
                       <div class="space-y-4">
@@ -129,22 +137,32 @@ defmodule RouxLiveWeb.HomeLive do
                           {@featured.summary}
                         </p>
                       </div>
-                      
+
                       <div class="flex gap-8 border-t border-parchment pt-8">
                         <div>
-                          <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Time</span>
-                          <span class="text-2xl font-display text-gray-900">{@featured.time.total_minutes}m</span>
+                          <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                            Time
+                          </span>
+                          <span class="text-2xl font-display text-gray-900">
+                            {@featured.time.total_minutes}m
+                          </span>
                         </div>
                         <div>
-                          <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Ingredients</span>
-                          <span class="text-2xl font-display text-gray-900">{length(@featured.ingredients)}</span>
+                          <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                            Ingredients
+                          </span>
+                          <span class="text-2xl font-display text-gray-900">
+                            {length(@featured.ingredients)}
+                          </span>
                         </div>
                       </div>
                     </div>
                     <div class="bg-coral h-full min-h-[300px] relative overflow-hidden flex items-center justify-center p-12">
                       <%!-- Abstract Visual --%>
-                      <div class="size-64 rounded-[64px] bg-white/20 rotate-12 group-hover:rotate-45 transition-transform duration-1000 scale-150"></div>
-                      <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black/10"></div>
+                      <div class="size-64 rounded-[64px] bg-white/20 rotate-12 group-hover:rotate-45 transition-transform duration-1000 scale-150">
+                      </div>
+                      <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black/10">
+                      </div>
                       <div class="relative z-10 text-white font-display text-9xl opacity-20 pointer-events-none">
                         {String.at(@featured.title, 0)}
                       </div>
@@ -197,17 +215,21 @@ defmodule RouxLiveWeb.HomeLive do
         </div>
       </.link>
 
-      <button 
-        phx-click="toggle_plan" 
+      <button
+        phx-click="toggle_plan"
         phx-value-slug={@recipe.slug}
         class={[
           "absolute top-4 right-4 z-40 size-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 cursor-pointer pointer-events-auto",
-          if(@recipe.slug in @plan, 
-            do: "bg-coral border-coral text-white shadow-lg", 
-            else: "bg-white border-parchment text-gray-900 hover:bg-linen shadow-sm")
+          if(@recipe.slug in @plan,
+            do: "bg-coral border-coral text-white shadow-lg",
+            else: "bg-white border-parchment text-gray-900 hover:bg-linen shadow-sm"
+          )
         ]}
       >
-        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-6 font-bold" />
+        <.icon
+          name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"}
+          class="size-6 font-bold"
+        />
       </button>
     </div>
     """

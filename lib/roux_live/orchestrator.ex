@@ -13,7 +13,10 @@ defmodule RouxLive.Orchestrator do
       :start_at_m,
       :recipe_slug,
       :is_utility,
-      :wait_details
+      :wait_details,
+      :uses,
+      # Map of recipe_title => details
+      :prep_breakdown
     ]
   end
 
@@ -27,6 +30,7 @@ defmodule RouxLive.Orchestrator do
     profile = Map.get(@kitchen_profiles, kitchen_type, @kitchen_profiles["standard"])
 
     # 1. Unified Mise en Place (Phase 1)
+    # Ensure even single recipes get their prep extracted if marked
     mise_en_place = aggregate_prep(recipes)
 
     # 2. Extract All Instruction Tasks
@@ -44,7 +48,9 @@ defmodule RouxLive.Orchestrator do
             type: step.type,
             phase: nil,
             is_utility: false,
-            wait_details: step.wait_details
+            wait_details: step.wait_details,
+            uses: step.uses || [],
+            prep_breakdown: nil
           }
         end)
       end)
@@ -77,6 +83,12 @@ defmodule RouxLive.Orchestrator do
     end)
     |> Enum.group_by(fn {ing, _} -> String.downcase(ing.name) end)
     |> Enum.map(fn {name, items} ->
+      # detailed breakdown for unified display
+      prep_breakdown =
+        Map.new(items, fn {ing, title} ->
+          {title, "#{ing.amount} #{ing.unit}"}
+        end)
+
       details =
         Enum.map_join(items, ", ", fn {ing, title} -> "#{ing.amount} #{ing.unit} for #{title}" end)
 
@@ -91,7 +103,9 @@ defmodule RouxLive.Orchestrator do
         type: "prep",
         resources: [],
         is_utility: false,
-        wait_details: nil
+        wait_details: nil,
+        uses: Enum.map(items, fn {ing, _} -> ing.id end),
+        prep_breakdown: prep_breakdown
       }
     end)
     |> Enum.sort_by(& &1.text)

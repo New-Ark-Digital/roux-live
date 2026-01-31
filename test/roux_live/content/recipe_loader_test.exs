@@ -15,7 +15,7 @@ defmodule RouxLive.Content.RecipeLoaderTest do
   test "validation fails on unknown ingredient ref" do
     slug = "invalid-ref"
     path = Path.join(@recipes_dir, "#{slug}.yml")
-    
+
     yaml = """
     schema: "recipe/simple-v1"
     id: "invalid-ref"
@@ -32,20 +32,20 @@ defmodule RouxLive.Content.RecipeLoaderTest do
         text: "Use sugar"
         uses: ["sugar"]
     """
-    
+
     File.write!(path, yaml)
-    
+
     assert_raise RuntimeError, ~r/references unknown ingredient ID: sugar/, fn ->
       RecipeLoader.load!(slug)
     end
-    
+
     File.rm!(path)
   end
 
   test "validation fails on duplicate ingredient IDs" do
     slug = "dup-ids"
     path = Path.join(@recipes_dir, "#{slug}.yml")
-    
+
     yaml = """
     schema: "recipe/simple-v1"
     id: "dup-ids"
@@ -64,13 +64,13 @@ defmodule RouxLive.Content.RecipeLoaderTest do
         note: null
     steps: []
     """
-    
+
     File.write!(path, yaml)
-    
+
     assert_raise RuntimeError, ~r/Ingredient IDs must be unique/, fn ->
       RecipeLoader.load!(slug)
     end
-    
+
     File.rm!(path)
   end
 end

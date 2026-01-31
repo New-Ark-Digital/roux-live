@@ -14,6 +14,11 @@ defmodule RouxLiveWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api", RouxLiveWeb do
+    pipe_through :api
+    post "/recipes/import", ImportController, :create
+  end
+
   live_session :default, on_mount: [RouxLiveWeb.PlanHelpers] do
     scope "/", RouxLiveWeb do
       pipe_through :browser
@@ -23,6 +28,14 @@ defmodule RouxLiveWeb.Router do
       live "/recipes/:slug", RecipeLive.Intro, :show
       live "/recipes/:slug/cook", RecipeLive.Show, :show
       live "/plan", PlanLive, :index
+
+      # New Cooking Modes
+      live "/cook", StandardLive, :index
+      live "/cook/:slug", StandardLive, :index
+      live "/cook/:slug/task/:task_id", StandardLive, :index
+      live "/run", FocusLive, :index
+      live "/run/:slug", FocusLive, :index
+      live "/run/:slug/task/:task_id", FocusLive, :index
     end
   end
 

@@ -30,6 +30,10 @@ defmodule RouxLiveWeb.Layouts do
   attr :active_step_index, :integer, default: nil, doc: "index of the active step"
   attr :plan_count, :integer, default: 0, doc: "number of recipes in the meal plan"
 
+  attr :simple_nav, :boolean,
+    default: false,
+    doc: "whether to show a simple navbar instead of the island"
+
   attr :current_scope, :map,
     default: nil,
     doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
@@ -39,49 +43,50 @@ defmodule RouxLiveWeb.Layouts do
   def app(assigns) do
     ~H"""
     <div class="fixed top-6 left-0 right-0 z-50 px-4 pointer-events-none">
-      <nav 
+      <%!-- Dynamic Island Nav --%>
+      <nav
+        :if={!@simple_nav}
         id="main-nav"
         class={[
-        "mx-auto w-[calc(100vw-2rem)] max-w-lg bg-white/80 backdrop-blur-xl border border-parchment shadow-2xl shadow-gray-200/50 flex flex-col items-center pointer-events-auto transition-all duration-500 dynamic-island-bezier overflow-hidden p-2",
-        if(@active_ingredients != [], do: "rounded-[32px]", else: "rounded-[100px]")
-      ]}>
+          "mx-auto w-[calc(100vw-2rem)] max-w-lg bg-white/80 backdrop-blur-xl border border-parchment shadow-2xl shadow-gray-200/50 flex flex-col items-center pointer-events-auto transition-all duration-500 dynamic-island-bezier overflow-hidden p-2",
+          if(@active_ingredients != [], do: "rounded-[32px]", else: "rounded-[100px]")
+        ]}
+      >
         <%!-- Top Row (Static) --%>
         <div class="flex items-center justify-between w-full pr-2">
           <div class="flex items-center gap-1">
-            <a href="/" class="pl-4 pr-4 py-2 text-2xl font-display font-bold text-gray-900 tracking-tight hover:text-coral transition-colors">
+            <a
+              href="/"
+              class="pl-4 pr-4 py-2 text-2xl font-display font-bold text-gray-900 tracking-tight hover:text-coral transition-colors"
+            >
               roux
             </a>
-            
-            <div class="hidden sm:flex items-center gap-1 border-l border-parchment pl-2">
-              <.link navigate={~p"/recipes"} class="px-4 py-2 rounded-full font-body font-bold text-gray-600 hover:bg-linen transition-colors">
-                Index
-              </.link>
-              <.link navigate={~p"/plan"} class="px-4 py-2 rounded-full font-body font-bold text-gray-600 hover:bg-linen transition-colors relative">
-                Plan
-                <span :if={@plan_count > 0} class="absolute -top-1 -right-1 size-5 bg-coral text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white animate-in zoom-in duration-300">
-                  {@plan_count}
-                </span>
-              </.link>
-            </div>
           </div>
 
           <div class="flex items-center gap-1">
-            <.link 
-              :if={@plan_count > 0}
-              navigate={~p"/plan"}
-              class="hidden md:flex px-6 py-2.5 bg-coral text-white font-body font-bold rounded-full hover:bg-red transition-all active:scale-95 text-sm items-center gap-2 mr-2 animate-pulse shadow-lg shadow-coral/20 cursor-pointer"
+            <.link
+              navigate={~p"/recipes"}
+              class="px-4 py-2 rounded-full font-body font-bold text-gray-600 hover:bg-linen transition-colors"
             >
-              <.icon name="hero-fire" class="size-4" />
-              Start Cooking
+              Index
             </.link>
-            <button class="px-6 py-2.5 bg-gray-900 text-white font-body font-bold rounded-full hover:bg-coral transition-all active:scale-95 text-sm">
-              Favorites
-            </button>
+            <.link
+              navigate={~p"/plan"}
+              class="px-4 py-2 rounded-full font-body font-bold text-gray-600 hover:bg-linen transition-colors relative"
+            >
+              Plan
+              <span
+                :if={@plan_count > 0}
+                class="absolute -top-1 -right-1 size-5 bg-coral text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white animate-in zoom-in duration-300"
+              >
+                {@plan_count}
+              </span>
+            </.link>
           </div>
         </div>
 
         <%!-- The "Belly" (Dynamic Island Expansion - Mobile Only) --%>
-        <div 
+        <div
           id="island-belly"
           phx-hook="DynamicIsland"
           class={[
@@ -91,7 +96,10 @@ defmodule RouxLiveWeb.Layouts do
         >
           <div class="pt-4 mt-2 border-t border-linen space-y-3">
             <div class="flex justify-between items-center">
-              <h3 :if={is_integer(@active_step_index)} class="text-[10px] font-bold text-coral uppercase tracking-widest transition-all animate-in fade-in delay-300 duration-500 fill-mode-both">
+              <h3
+                :if={is_integer(@active_step_index)}
+                class="text-[10px] font-bold text-coral uppercase tracking-widest transition-all animate-in fade-in delay-300 duration-500 fill-mode-both"
+              >
                 Step {@active_step_index + 1} Ingredients
               </h3>
             </div>
@@ -108,6 +116,27 @@ defmodule RouxLiveWeb.Layouts do
               <% end %>
             </div>
           </div>
+        </div>
+      </nav>
+
+      <%!-- Simple Nav --%>
+      <nav
+        :if={@simple_nav}
+        class="mx-auto w-full max-w-7xl flex items-center justify-between pointer-events-auto px-4"
+      >
+        <a
+          href="/"
+          class="py-2 text-2xl font-display font-bold text-gray-900 tracking-tight hover:text-coral transition-colors"
+        >
+          roux
+        </a>
+        <div class="flex items-center gap-4">
+          <.link
+            navigate={~p"/recipes"}
+            class="px-4 py-2 rounded-full font-body font-bold text-gray-600 hover:bg-linen transition-colors shadow-sm bg-white/50 backdrop-blur border border-parchment"
+          >
+            Index
+          </.link>
         </div>
       </nav>
     </div>
@@ -127,7 +156,7 @@ defmodule RouxLiveWeb.Layouts do
             Recipes that aren't annoying to use. Built for the modern chef who values clarity and speed.
           </p>
         </div>
-        
+
         <div class="flex flex-wrap justify-center gap-8 text-sm font-bold font-body text-gray-400 uppercase tracking-widest">
           <.link navigate={~p"/"} class="hover:text-coral transition-colors">Home</.link>
           <.link navigate={~p"/recipes"} class="hover:text-coral transition-colors">Recipes</.link>

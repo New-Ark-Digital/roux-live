@@ -3,9 +3,9 @@ defmodule RouxLiveWeb.PlanHelpers do
   import Phoenix.LiveView
 
   def on_mount(:default, _params, _session, socket) do
-    socket = 
-      socket 
-      |> assign(:plan, []) 
+    socket =
+      socket
+      |> assign(:plan, [])
       |> assign(:plan_count, 0)
       |> assign(:active_step_index, nil)
       |> assign(:active_ingredients, [])
@@ -16,9 +16,9 @@ defmodule RouxLiveWeb.PlanHelpers do
 
   def handle_event("load_plan", %{"plan" => plan}, socket) do
     socket =
-     socket 
-     |> assign(:plan, plan) 
-     |> assign(:plan_count, length(plan))
+      socket
+      |> assign(:plan, plan)
+      |> assign(:plan_count, length(plan))
 
     send(self(), {:plan_updated, plan})
 
@@ -26,7 +26,7 @@ defmodule RouxLiveWeb.PlanHelpers do
   end
 
   def handle_event("toggle_plan", %{"slug" => slug}, socket) do
-    new_plan = 
+    new_plan =
       if slug in socket.assigns.plan do
         List.delete(socket.assigns.plan, slug)
       else
@@ -34,10 +34,24 @@ defmodule RouxLiveWeb.PlanHelpers do
       end
 
     socket =
-     socket
-     |> assign(:plan, new_plan)
-     |> assign(:plan_count, length(new_plan))
-     |> push_event("save_plan", %{plan: new_plan})
+      socket
+      |> assign(:plan, new_plan)
+      |> assign(:plan_count, length(new_plan))
+      |> push_event("save_plan", %{plan: new_plan})
+
+    send(self(), {:plan_updated, new_plan})
+
+    {:halt, socket}
+  end
+
+  def handle_event("clear_plan", %{"slugs" => slugs}, socket) do
+    new_plan = Enum.reject(socket.assigns.plan, &(&1 in slugs))
+
+    socket =
+      socket
+      |> assign(:plan, new_plan)
+      |> assign(:plan_count, length(new_plan))
+      |> push_event("save_plan", %{plan: new_plan})
 
     send(self(), {:plan_updated, new_plan})
 

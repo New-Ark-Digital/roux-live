@@ -2,20 +2,46 @@ defmodule RouxLiveWeb.PlanLive do
   use RouxLiveWeb, :live_view
   alias RouxLive.Content.RecipeLoader
 
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     {:ok,
      socket
      |> assign(:plan_recipes, [])
      |> assign(:phases, nil)
-     |> assign(:kitchen_type, "standard")}
+     |> assign(:kitchen_type, "standard")
+     |> assign(:url_recipes, params["recipes"])
+     |> assign(:show_conflict_modal, false)}
   end
 
   def handle_params(_params, _url, socket) do
+    # recipes=slug1,slug2
     {:noreply, socket}
   end
 
   def handle_event("select_kitchen", %{"type" => type}, socket) do
     {:noreply, assign(socket, :kitchen_type, type)}
+  end
+
+  def handle_event("use_url_plan", _params, socket) do
+    slugs = String.split(socket.assigns.url_recipes, ",")
+    new_plan = slugs |> Enum.uniq()
+
+    socket =
+      socket
+      |> assign(:show_conflict_modal, false)
+      |> push_event("save_plan", %{plan: new_plan})
+
+    # Trigger a reload of plan_recipes
+    send(self(), {:plan_updated, new_plan})
+
+    {:noreply, socket}
+  end
+
+  def handle_event("keep_local_plan", _params, socket) do
+    # Just clear the modal and sync the URL to current plan
+    {:noreply,
+     socket
+     |> assign(:show_conflict_modal, false)
+     |> sync_url_plan(socket.assigns.plan)}
   end
 
   def handle_event("generate_flow", _params, socket) do
@@ -33,15 +59,78 @@ defmodule RouxLiveWeb.PlanLive do
       plan
       |> Enum.map(&RecipeLoader.load!/1)
 
-    {:noreply,
-     socket
-     |> assign(:plan_recipes, plan_recipes)
-     |> assign(:phases, nil)}
+    # Check for conflict if url_recipes is present
+    show_modal =
+      if socket.assigns.url_recipes do
+        url_slugs = socket.assigns.url_recipes |> String.split(",") |> Enum.sort()
+        local_slugs = plan |> Enum.sort()
+        url_slugs != local_slugs
+      else
+        false
+      end
+
+    socket =
+      socket
+      |> assign(:plan_recipes, plan_recipes)
+      |> assign(:phases, nil)
+      |> assign(:show_conflict_modal, show_modal)
+
+    # If no conflict, or after resolving, we should update the URL if plan changes
+    # but only if url_recipes was not just set.
+    socket =
+      if !show_modal do
+        sync_url_plan(socket, plan)
+      else
+        socket
+      end
+
+    {:noreply, socket}
+  end
+
+  defp sync_url_plan(socket, plan) do
+    if plan == [] do
+      push_patch(socket, to: ~p"/plan")
+    else
+      recipes_str = Enum.join(plan, ",")
+      push_patch(socket, to: ~p"/plan?recipes=#{recipes_str}")
+    end
   end
 
   def render(assigns) do
     ~H"""
     <RouxLiveWeb.Layouts.app flash={@flash} plan_count={@plan_count}>
+      <%!-- Conflict Modal --%>
+      <div
+        :if={@show_conflict_modal}
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+      >
+        <div class="bg-white rounded-[40px] p-10 max-w-lg w-full shadow-2xl space-y-8 animate-in zoom-in duration-300">
+          <div class="size-16 bg-coral/10 rounded-2xl flex items-center justify-center">
+            <.icon name="hero-arrows-right-left" class="size-8 text-coral" />
+          </div>
+          <div class="space-y-2">
+            <h3 class="text-3xl font-display text-gray-900 leading-tight">Plan Mismatch</h3>
+            <p class="text-gray-500 leading-relaxed">
+              The link you opened has different recipes than your current plan. Which one would you like to use?
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button
+              phx-click="use_url_plan"
+              class="flex-1 py-4 bg-gray-900 text-white font-bold rounded-2xl hover:bg-coral transition-all active:scale-95 shadow-lg"
+            >
+              Use Link Plan
+            </button>
+            <button
+              phx-click="keep_local_plan"
+              class="flex-1 py-4 bg-linen text-gray-600 font-bold rounded-2xl hover:bg-parchment transition-all active:scale-95"
+            >
+              Keep My Plan
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="font-body pt-32 pb-20">
         <header class="max-w-7xl mx-auto px-4 space-y-12">
           <div class="space-y-4">
@@ -185,6 +274,22 @@ defmodule RouxLiveWeb.PlanLive do
                   </div>
                 <% else %>
                   <div class="space-y-12 pb-24">
+                    <%!-- Start Cooking Call to Action --%>
+                    <div class="bg-gray-900 p-8 rounded-[40px] flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+                      <div class="space-y-1 text-center md:text-left">
+                        <h3 class="text-2xl font-display text-white">Ready to cook?</h3>
+                        <p class="text-gray-400 text-sm">
+                          Everything is orchestrated. Let's start the run.
+                        </p>
+                      </div>
+                      <.link
+                        navigate={~p"/cook"}
+                        class="px-12 py-4 bg-coral text-white font-bold rounded-full hover:bg-red hover:scale-105 transition-all active:scale-95 shadow-xl"
+                      >
+                        Start Meal Run &rarr;
+                      </.link>
+                    </div>
+
                     <%!-- Warnings Area --%>
                     <div
                       :if={@phases.warnings != []}
@@ -228,8 +333,8 @@ defmodule RouxLiveWeb.PlanLive do
                     <%!-- Phase 4: Action --%>
                     <.phase_section
                       :if={@phases.action != []}
-                      title="Phase 4: Active Interlock"
-                      subtitle="The interleaved cooking process. Follow the order for perfect timing."
+                      title="Phase 4: Action"
+                      subtitle="The cooking process. Follow the order for perfect timing."
                       tasks={@phases.action}
                       color="bg-pink"
                     />

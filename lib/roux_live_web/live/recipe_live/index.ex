@@ -4,15 +4,15 @@ defmodule RouxLiveWeb.RecipeLive.Index do
 
   def mount(params, _session, socket) do
     recipes = RecipeLoader.list_all()
-    
-    tags = 
-      recipes 
-      |> Enum.flat_map(& &1.tags) 
-      |> Enum.uniq() 
+
+    tags =
+      recipes
+      |> Enum.flat_map(& &1.tags)
+      |> Enum.uniq()
       |> Enum.sort()
 
-    {:ok, 
-     socket 
+    {:ok,
+     socket
      |> assign(:all_recipes, recipes)
      |> assign(:tags, tags)
      |> apply_filters(params)}
@@ -23,28 +23,29 @@ defmodule RouxLiveWeb.RecipeLive.Index do
   end
 
   def handle_event("search", %{"query" => query}, socket) do
-    {:noreply, push_patch(socket, to: ~p"/recipes?search=#{query}&tag=#{socket.assigns.selected_tag}")}
+    {:noreply,
+     push_patch(socket, to: ~p"/recipes?search=#{query}&tag=#{socket.assigns.selected_tag}")}
   end
 
   defp apply_filters(socket, params) do
     search = params["search"] || ""
     tag = params["tag"] || ""
-    
-    filtered_recipes = 
+
+    filtered_recipes =
       socket.assigns.all_recipes
       |> Enum.filter(fn r ->
-        matches_search = 
-          search == "" || 
-          String.contains?(String.downcase(r.title), String.downcase(search)) ||
-          String.contains?(String.downcase(r.summary || ""), String.downcase(search))
-          
+        matches_search =
+          search == "" ||
+            String.contains?(String.downcase(r.title), String.downcase(search)) ||
+            String.contains?(String.downcase(r.summary || ""), String.downcase(search))
+
         matches_tag = tag == "" || tag in r.tags
-        
+
         matches_search && matches_tag
       end)
       |> Enum.sort_by(& &1.title)
 
-    grouped_recipes = 
+    grouped_recipes =
       filtered_recipes
       |> Enum.group_by(fn r -> String.upcase(String.at(r.title, 0)) end)
       |> Enum.sort_by(fn {letter, _} -> letter end)
@@ -63,7 +64,10 @@ defmodule RouxLiveWeb.RecipeLive.Index do
         <header class="max-w-7xl mx-auto px-4 space-y-12">
           <div class="space-y-4">
             <h1 class="text-7xl sm:text-8xl font-display text-gray-900 leading-[0.9] tracking-tight">
-              Recipe <span class="text-coral italic underline decoration-parchment underline-offset-8">Index</span>
+              Recipe
+              <span class="text-coral italic underline decoration-parchment underline-offset-8">
+                Index
+              </span>
             </h1>
             <p class="text-xl text-gray-600 max-w-xl">
               Browse our collection of family favorites, from breakfast staples to decadent desserts.
@@ -86,13 +90,16 @@ defmodule RouxLiveWeb.RecipeLive.Index do
                 </div>
               </form>
             </div>
-            
+
             <div class="flex-1 flex gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto pb-2 min-w-0">
               <.link
                 patch={~p"/recipes?search=#{@search_query}"}
                 class={[
                   "px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap shadow-sm active:scale-95",
-                  if(@selected_tag == "", do: "bg-gray-900 text-white shadow-xl", else: "bg-white text-gray-600 border border-parchment hover:border-coral")
+                  if(@selected_tag == "",
+                    do: "bg-gray-900 text-white shadow-xl",
+                    else: "bg-white text-gray-600 border border-parchment hover:border-coral"
+                  )
                 ]}
               >
                 All
@@ -102,7 +109,10 @@ defmodule RouxLiveWeb.RecipeLive.Index do
                   patch={~p"/recipes?search=#{@search_query}&tag=#{tag}"}
                   class={[
                     "px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap shadow-sm active:scale-95",
-                    if(@selected_tag == tag, do: "bg-gray-900 text-white shadow-xl", else: "bg-white text-gray-600 border border-parchment hover:border-coral")
+                    if(@selected_tag == tag,
+                      do: "bg-gray-900 text-white shadow-xl",
+                      else: "bg-white text-gray-600 border border-parchment hover:border-coral"
+                    )
                   ]}
                 >
                   {tag}
@@ -118,7 +128,10 @@ defmodule RouxLiveWeb.RecipeLive.Index do
               <div class="text-6xl mb-6">🍳</div>
               <h3 class="text-3xl font-display text-gray-900">No recipes found</h3>
               <p class="text-gray-500 text-lg">Try adjusting your search or filters.</p>
-              <.link patch={~p"/recipes"} class="inline-block mt-8 px-8 py-4 bg-coral text-white font-bold rounded-full hover:scale-105 transition-transform active:scale-95">
+              <.link
+                patch={~p"/recipes"}
+                class="inline-block mt-8 px-8 py-4 bg-coral text-white font-bold rounded-full hover:scale-105 transition-transform active:scale-95"
+              >
                 Clear all filters
               </.link>
             </div>
@@ -127,15 +140,15 @@ defmodule RouxLiveWeb.RecipeLive.Index do
               <section class="space-y-10">
                 <div class="sticky top-24 z-10 bg-canvas/80 backdrop-blur-md py-4 border-b border-parchment flex items-baseline gap-6">
                   <h2 class="text-6xl font-display text-gray-900 leading-none">{letter}</h2>
-                  <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">{length(recipes)} recipes</span>
+                  <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                    {length(recipes)} recipes
+                  </span>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                   <%= for {recipe, index} <- Enum.with_index(recipes) do %>
-                    <% 
-                      colors = ["bg-pink", "bg-orange", "bg-blue", "bg-coral", "bg-red"]
-                      color = Enum.at(colors, rem(index, length(colors)))
-                    %>
+                    <% colors = ["bg-pink", "bg-orange", "bg-blue", "bg-coral", "bg-red"]
+                    color = Enum.at(colors, rem(index, length(colors))) %>
                     <.recipe_card recipe={recipe} accent_color={color} plan={@plan} />
                   <% end %>
                 </div>
@@ -182,26 +195,30 @@ defmodule RouxLiveWeb.RecipeLive.Index do
               </p>
             </div>
             <div class="pt-6 border-t border-linen flex items-center text-xs font-bold text-gray-400 uppercase tracking-widest group-hover:text-coral transition-colors">
-              View Recipe <span class="ml-2 group-hover:translate-x-2 transition-transform">&rarr;</span>
+              View Recipe
+              <span class="ml-2 group-hover:translate-x-2 transition-transform">&rarr;</span>
             </div>
           </div>
         </div>
       </.link>
 
-      <button 
-        phx-click="toggle_plan" 
+      <button
+        phx-click="toggle_plan"
         phx-value-slug={@recipe.slug}
         class={[
           "absolute top-6 right-6 z-40 size-14 rounded-full border-2 flex items-center justify-center transition-all duration-300 cursor-pointer pointer-events-auto",
-          if(@recipe.slug in @plan, 
-            do: "bg-coral border-coral text-white shadow-lg", 
-            else: "bg-white border-parchment text-gray-900 hover:bg-linen shadow-sm")
+          if(@recipe.slug in @plan,
+            do: "bg-coral border-coral text-white shadow-lg",
+            else: "bg-white border-parchment text-gray-900 hover:bg-linen shadow-sm"
+          )
         ]}
       >
-        <.icon name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"} class="size-8 font-bold" />
+        <.icon
+          name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"}
+          class="size-8 font-bold"
+        />
       </button>
     </div>
     """
   end
-
 end

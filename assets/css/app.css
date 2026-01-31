@@ -193,4 +193,8 @@
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session], [data-phx-teleported-src] { display: contents }
 
+.mask-fade-x {
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
 /* This file is for your main application CSS */
