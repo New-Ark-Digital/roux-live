@@ -15,6 +15,14 @@ equipment:
     name: "Baking dish"
   - id: whisk
     name: "Whisk"
+  - id: stovetop
+    name: "Stovetop"
+  - id: oven
+    name: "Oven"
+  - id: rolling-pin
+    name: "Rolling pin"
+  - id: biscuit-cutter
+    name: "Biscuit cutter"
 skills: ["Sautéing", "Roux-making", "Biscuit shaping", "Oven Management"]
 yield:
   quantity: 8
@@ -41,36 +49,42 @@ ingredients:
     amount: 1
     unit: "stick"
     requires_prep: true
+    prep: "Dice 1 stick cold butter"
     note: "diced or grated"
   - id: "f-garlic"
     name: "Garlic"
     amount: 4
     unit: "cloves"
     requires_prep: true
+    prep: "Mince 4 cloves garlic"
     note: "minced"
   - id: "f-onion"
     name: "Medium onion"
     amount: 1
     unit: null
     requires_prep: true
+    prep: "Dice 1 medium onion"
     note: "diced"
   - id: "f-potatoes"
     name: "Potatoes"
     amount: 3
     unit: "medium"
     requires_prep: true
+    prep: "Dice 3 medium potatoes"
     note: "diced"
   - id: "f-carrots"
     name: "Carrots"
     amount: 4
     unit: "medium"
     requires_prep: true
+    prep: "Dice 4 medium carrots"
     note: "diced"
   - id: "f-chicken"
     name: "Cooked chicken"
     amount: 4
     unit: "cups"
     requires_prep: true
+    prep: "Shred or chop 4 cups cooked chicken"
     note: "shredded or chopped"
   - id: "b-sugar"
     name: "Sugar"

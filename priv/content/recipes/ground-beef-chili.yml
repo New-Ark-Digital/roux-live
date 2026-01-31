@@ -50,24 +50,28 @@ ingredients:
     amount: 1
     unit: "large"
     requires_prep: true
+    prep: "Dice 1 large yellow onion"
     note: "diced"
   - id: "garlic"
     name: "Garlic"
     amount: 4
     unit: "cloves"
     requires_prep: true
+    prep: "Mince 4 cloves garlic"
     note: "minced"
   - id: "red-beans"
     name: "Red kidney beans"
     amount: 19
     unit: "oz can"
     requires_prep: true
+    prep: "Rinse and drain 19 oz can red kidney beans"
     note: "rinsed and drained"
   - id: "white-beans"
     name: "White kidney beans"
     amount: 19
     unit: "oz can"
     requires_prep: true
+    prep: "Rinse and drain 19 oz can white kidney beans"
     note: "rinsed and drained"
   - id: "tomatoes"
     name: "Crushed or diced tomatoes"

@@ -49,6 +49,7 @@ ingredients:
     amount: 3
     unit: "cloves"
     requires_prep: true
+    prep: "Mince 3 cloves garlic"
     note: "minced"
   - id: "butter"
     name: "Butter"

@@ -25,6 +25,7 @@ defmodule RouxLive.Content.Recipe do
       :optional,
       :lead_time_m,
       :requires_prep,
+      :prep,
       :canonical,
       :pantry_class,
       :normalized_amount

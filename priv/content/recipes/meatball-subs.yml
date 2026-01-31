@@ -50,6 +50,7 @@ ingredients:
     amount: "1/2"
     unit: "cup"
     requires_prep: true
+    prep: "Grate 1/2 cup parmesan cheese"
     note: "freshly grated"
   - id: "m-salt"
     name: "Salt"
@@ -61,6 +62,7 @@ ingredients:
     amount: "1/2"
     unit: null
     requires_prep: true
+    prep: "Finely dice 1/2 onion"
     note: "very finely diced"
   - id: "m-flour"
     name: "All-purpose flour"
@@ -90,6 +92,7 @@ ingredients:
     amount: "1.5"
     unit: "cups"
     requires_prep: true
+    prep: "Shred 1 1/2 cups mozzarella cheese"
     note: "shredded"
   - id: "a-oil"
     name: "Olive oil"

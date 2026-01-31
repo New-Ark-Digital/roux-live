@@ -112,6 +112,7 @@ defmodule RouxLive.Content.RecipeLoader do
             optional: i["optional"] || false,
             lead_time_m: i["lead_time_m"] || 0,
             requires_prep: Map.get(i, "requires_prep", false),
+            prep: i["prep"],
             canonical: i["canonical"],
             pantry_class: i["pantry_class"],
             normalized_amount: i["normalized_amount"]

@@ -1,10 +1,20 @@
-schema: "recipe/simple-v5"
+schema: "recipe/simple-v5.1"
 id: "scrambled-eggs"
 slug: "scrambled-eggs"
 title: "Scrambled Eggs"
 summary: "Soft, silky, and delicious scrambled eggs, perfect for a quick breakfast or a last-minute dinner."
 tags: ["Breakfast", "Eggs", "Quick", "Foundational", "Lent"]
-dishes: ["Frying pan", "Medium bowl", "Whisk", "Spatula"]
+equipment:
+  - id: frying-pan
+    name: "Frying pan"
+  - id: medium-bowl
+    name: "Medium bowl"
+  - id: whisk
+    name: "Whisk"
+  - id: spatula
+    name: "Spatula"
+  - id: stovetop
+    name: "Stovetop"
 skills: ["Whisking", "Scrambling", "Heat Management"]
 yield:
   quantity: 2
@@ -18,44 +28,39 @@ ingredients:
     name: "Eggs"
     amount: 4
     unit: null
-    note: "farm-fresh preferred"
-    optional: false
     requires_prep: false
+    note: "farm-fresh preferred"
   - id: "milk"
     name: "Milk"
     amount: "1.5"
     unit: "tablespoons"
-    note: "or water/heavy cream"
-    optional: false
     requires_prep: false
+    note: "or water/heavy cream"
   - id: "butter"
     name: "Butter"
     amount: 1
     unit: "tablespoon"
-    note: "or olive oil, tallow, or bacon grease"
-    optional: false
     requires_prep: false
+    note: "or olive oil, tallow, or bacon grease"
   - id: "salt"
     name: "Salt"
     amount: "pinch"
     unit: null
-    note: null
-    optional: false
     requires_prep: false
   - id: "pepper"
     name: "Pepper"
     amount: "to taste"
     unit: null
-    note: null
-    optional: true
     requires_prep: false
+    optional: true
   - id: "herbs"
     name: "Fresh herbs"
     amount: "to taste"
     unit: null
+    requires_prep: true
+    prep: "Chop fresh herbs (thyme or similar)"
     note: "thyme or similar"
     optional: true
-    requires_prep: true
 step_groups:
   - id: "prep"
     title: "Prep & Mix"
@@ -71,44 +76,47 @@ steps:
     text: "Preheat a skillet over medium-low heat."
     uses: []
     work_m: 1
-    wait_m: 2
-    resources: ["stovetop", "skillet"]
+    wait:
+      minutes: 2
+      kind: other
+      attention: none
     type: "setup"
+    resources: ["stovetop", "skillet"]
   - id: "whisk"
     text: "Crack eggs one by one into a medium-bowl. Add milk and a pinch of salt to the eggs, then whisk thoroughly until combined and just a little bit frothy on top."
     uses: ["eggs", "milk", "salt"]
     work_m: 3
     wait_m: 0
-    resources: ["bowl", "whisk"]
     type: "standard"
+    resources: ["bowl", "whisk"]
   - id: "melt-butter"
     text: "When pan is heated, add a tablespoon of butter to the skillet, and once melted, spread around evenly."
     uses: ["butter"]
     work_m: 1
     wait_m: 0
-    resources: ["stovetop", "skillet"]
     type: "standard"
+    resources: ["stovetop", "skillet"]
   - id: "pour-eggs"
     text: "Pour in the beaten eggs and let them sit for a few seconds before stirring gently."
     uses: ["eggs", "milk", "salt"]
     work_m: 1
     wait_m: 0
-    resources: ["stovetop", "skillet"]
     type: "standard"
+    resources: ["stovetop", "skillet"]
   - id: "scramble"
     text: "Stir constantly until the eggs are set, then remove from the heat. The top of the eggs may appear wet but will continue cooking once removed from the heat."
     uses: []
     work_m: 3
     wait_m: 0
-    resources: ["stovetop", "skillet", "spatula"]
     type: "standard"
+    resources: ["stovetop", "skillet", "spatula"]
   - id: "garnish"
     text: "Add pepper and fresh herbs if desired. Serve right away."
     uses: ["pepper", "herbs"]
     work_m: 1
     wait_m: 0
-    resources: []
     type: "terminal"
+    resources: []
 notes:
   - "I crack each egg into a small dish first to catch any bad eggs."
   - "High heat will make eggs tough, so stick with lower heat and gentle stirring."

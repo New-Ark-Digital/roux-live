@@ -86,16 +86,24 @@ defmodule RouxLive.Orchestrator do
       # detailed breakdown for unified display
       prep_breakdown =
         Map.new(items, fn {ing, title} ->
-          note_part = if ing.note, do: " (#{ing.note})", else: ""
-          unit_part = if ing.unit, do: " #{ing.unit}", else: ""
-          {title, "#{ing.amount}#{unit_part}#{note_part}"}
+          if ing.prep do
+            {title, ing.prep}
+          else
+            note_part = if ing.note, do: " (#{ing.note})", else: ""
+            unit_part = if ing.unit, do: " #{ing.unit}", else: ""
+            {title, "#{ing.amount}#{unit_part}#{note_part}"}
+          end
         end)
 
       details =
         Enum.map_join(items, ", ", fn {ing, title} ->
-          note_part = if ing.note, do: " #{ing.note}", else: ""
-          unit_part = if ing.unit, do: " #{ing.unit}", else: ""
-          "#{ing.amount}#{unit_part}#{note_part} for #{title}"
+          if ing.prep do
+            "#{ing.prep} for #{title}"
+          else
+            note_part = if ing.note, do: " #{ing.note}", else: ""
+            unit_part = if ing.unit, do: " #{ing.unit}", else: ""
+            "#{ing.amount}#{unit_part}#{note_part} for #{title}"
+          end
         end)
 
       %Task{
