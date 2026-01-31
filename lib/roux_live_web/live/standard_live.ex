@@ -63,7 +63,8 @@ defmodule RouxLiveWeb.StandardLive do
         |> Enum.group_by(& &1.id)
         |> Map.new(fn {id, ing_list} -> {id, List.first(ing_list)} end)
 
-      active_task_id = socket.assigns.active_task_id || List.first(all_tasks).id
+      active_task_id =
+        socket.assigns.active_task_id || (List.first(all_tasks) && List.first(all_tasks).id)
 
       {:noreply,
        socket
@@ -125,7 +126,7 @@ defmodule RouxLiveWeb.StandardLive do
         Enum.find_index(assigns.all_tasks, &(&1.id == assigns.active_task_id)) || 0
 
       progress =
-        if assigns.total_seconds > 0 do
+        if assigns.total_seconds > 0 && active_task do
           active_task.start_offset_s / assigns.total_seconds * 100
         else
           0
@@ -159,7 +160,7 @@ defmodule RouxLiveWeb.StandardLive do
           active_ingredients={@active_ingredients}
           progress={@progress}
           remaining_text={
-            if @total_seconds > 0 do
+            if @total_seconds > 0 && @active_task do
               remaining = @total_seconds - @active_task.start_offset_s
               h = div(remaining, 3600)
               m = div(rem(remaining, 3600), 60)

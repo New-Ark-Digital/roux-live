@@ -173,7 +173,7 @@ defmodule RouxLiveWeb.FocusLive do
             }
             mode="focus"
             slug={@slug}
-            active_task_id={@current_task.id}
+            active_task_id={@current_task && @current_task.id}
           />
 
           <div class="flex-1 max-w-2xl mx-auto w-full flex flex-col px-6 pb-12 overflow-y-auto custom-scrollbar">

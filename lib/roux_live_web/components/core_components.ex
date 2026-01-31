@@ -180,9 +180,9 @@ defmodule RouxLiveWeb.CoreComponents do
         </div>
       </div>
 
-      <%!-- Playbar Progress --%>
+      <%!-- Playbar Progress (Full Width, Shorter) --%>
       <div class="w-full shrink-0">
-        <div class="h-6 w-full bg-coral/10 relative overflow-hidden shadow-inner">
+        <div class="h-4 w-full bg-coral/10 relative overflow-hidden shadow-inner">
           <%!-- Progress Fill --%>
           <div
             id="global-progress-bar"
@@ -195,7 +195,7 @@ defmodule RouxLiveWeb.CoreComponents do
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div
               id="time-remaining-display"
-              class="text-[10px] font-bold tracking-[0.1em] uppercase text-gray-900"
+              class="text-[9px] font-bold tracking-[0.1em] uppercase text-gray-900"
             >
               {@remaining_text || "Starting..."}
             </div>

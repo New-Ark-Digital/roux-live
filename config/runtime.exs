@@ -42,6 +42,7 @@ if config_env() == :prod do
 
   config :roux_live, RouxLiveWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
+    check_origin: ["https://#{host}", "https://roux-live.fly.dev", "https://roux.rjpier.dev"],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
