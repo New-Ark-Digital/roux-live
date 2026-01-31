@@ -30,6 +30,8 @@ defmodule RouxLiveWeb.Layouts do
   attr :active_step_index, :integer, default: nil, doc: "index of the active step"
   attr :plan_count, :integer, default: 0, doc: "number of recipes in the meal plan"
 
+  attr :hide_nav, :boolean, default: false, doc: "whether to hide the main navigation completely"
+
   attr :simple_nav, :boolean,
     default: false,
     doc: "whether to show a simple navbar instead of the island"
@@ -42,7 +44,7 @@ defmodule RouxLiveWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <div class="fixed top-6 left-0 right-0 z-50 px-4 pointer-events-none">
+    <div :if={!@hide_nav} class="fixed top-6 left-0 right-0 z-50 px-4 pointer-events-none">
       <%!-- Dynamic Island Nav --%>
       <nav
         :if={!@simple_nav}

@@ -139,7 +139,7 @@ defmodule RouxLiveWeb.FocusLive do
       flash={@flash}
       active_ingredients={@active_ingredients}
       active_step_index={@current_task_index}
-      simple_nav={true}
+      hide_nav={true}
     >
       <%= if is_nil(@all_tasks) do %>
         <div class="h-screen bg-canvas flex flex-col items-center justify-center pt-24">
@@ -157,39 +157,24 @@ defmodule RouxLiveWeb.FocusLive do
           else
             0
           end %>
-        <div class="h-screen bg-canvas flex flex-col pt-24 overflow-hidden">
-          <%!-- Progress Bar --%>
-          <div class="fixed top-0 left-0 w-full h-1.5 bg-linen z-[60] flex justify-end items-center">
-            <div
-              id="global-progress-bar"
-              class="absolute top-0 left-0 h-full bg-coral transition-all duration-500 ease-out"
-              style={"width: #{progress}%"}
-            >
-            </div>
-            <span
-              id="time-remaining-display"
-              class="relative z-10 mr-4 mt-6 text-[10px] font-bold text-coral bg-white/80 backdrop-blur px-2 py-0.5 rounded shadow-sm border border-parchment"
-            >
-              <% remaining = @total_seconds - @current_task.start_offset_s
-              h = div(remaining, 3600)
-              m = div(rem(remaining, 3600), 60) %>
-              {if h > 0, do: "#{h}h ", else: ""} {m}m left
-            </span>
-          </div>
-
-          <%!-- Top Actions (Fixed) --%>
-          <div class="max-w-2xl mx-auto w-full px-6 flex justify-end mb-4 shrink-0">
-            <.link
-              navigate={
-                if @slug,
-                  do: ~p"/cook/#{@slug}/task/#{@current_task.id}",
-                  else: ~p"/cook/multi/task/#{@current_task.id}"
-              }
-              class="px-4 py-2 bg-white/80 backdrop-blur border border-parchment text-gray-600 font-bold rounded-full shadow-sm flex items-center gap-2 hover:bg-linen transition-all active:scale-95 text-xs pointer-events-auto"
-            >
-              <.icon name="hero-list-bullet" class="size-4" /> Standard Mode
-            </.link>
-          </div>
+        <div class="h-screen bg-canvas flex flex-col pt-52 sm:pt-60 overflow-hidden">
+          <.cooking_hero
+            title={if @slug, do: List.first(@recipes).title, else: "Unified Meal Plan"}
+            plan_count={@plan_count}
+            active_ingredients={@active_ingredients}
+            progress={progress}
+            remaining_text={
+              if @total_seconds > 0 do
+                remaining = @total_seconds - @current_task.start_offset_s
+                h = div(remaining, 3600)
+                m = div(rem(remaining, 3600), 60)
+                "#{if h > 0, do: "#{h}h ", else: ""}#{m}m left"
+              end
+            }
+            mode="focus"
+            slug={@slug}
+            active_task_id={@current_task.id}
+          />
 
           <div class="flex-1 max-w-2xl mx-auto w-full flex flex-col px-6 pb-12 overflow-y-auto custom-scrollbar">
             <%!-- Phase Indicator --%>

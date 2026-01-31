@@ -283,7 +283,7 @@ defmodule RouxLiveWeb.PlanLive do
                         </p>
                       </div>
                       <.link
-                        navigate={~p"/cook"}
+                        navigate={if(@preferred_mode == "standard", do: ~p"/cook", else: ~p"/run")}
                         class="px-12 py-4 bg-coral text-white font-bold rounded-full hover:bg-red hover:scale-105 transition-all active:scale-95 shadow-xl"
                       >
                         Start Meal Run &rarr;

@@ -1,9 +1,25 @@
-schema: "recipe/simple-v2"
+schema: "recipe/simple-v5.1"
 id: "meatball-subs"
 slug: "meatball-subs"
 title: "The Ultimate Homemade Meatball Subs"
-summary: "Flavorful meatballs on toasted rolls, smothered with rich marinara sauce and melty mozzarella cheese."
-tags: ["Dinner", "Sandwich", "Beef", "Italian"]
+summary: "Juicy homemade meatballs in a rich tomato sauce, topped with melty cheese, nestled in a fresh sandwich roll."
+tags: ["Dinner", "Sandwich", "Beef", "Italian", "Crowd Pleaser"]
+equipment:
+  - id: large-bowl
+    name: "Large mixing bowl"
+  - id: baking-sheet
+    name: "Baking sheet"
+  - id: parchment-paper
+    name: "Parchment paper"
+  - id: cast-iron-skillet
+    name: "Cast iron skillet"
+  - id: sharp-serrated-knife
+    name: "Sharp serrated knife"
+  - id: oven
+    name: "Oven"
+  - id: stovetop
+    name: "Stovetop"
+skills: ["Meatball rolling", "Cast iron searing", "Broiling", "Oven Management"]
 yield:
   quantity: 6
   unit: "sandwiches"
@@ -23,100 +39,154 @@ ingredients:
     name: "Extra lean ground beef"
     amount: 2
     unit: "pounds"
-    note: null
-    optional: false
+    requires_prep: false
   - id: "m-eggs"
     name: "Large eggs"
     amount: 2
     unit: null
-    note: null
-    optional: false
+    requires_prep: false
   - id: "m-parmesan"
     name: "Parmesan cheese"
     amount: "1/2"
     unit: "cup"
+    requires_prep: true
     note: "freshly grated"
-    optional: false
   - id: "m-salt"
     name: "Salt"
     amount: "1.5"
     unit: "teaspoons"
-    note: null
-    optional: false
+    requires_prep: false
   - id: "m-onion"
     name: "Onion"
     amount: "1/2"
     unit: null
+    requires_prep: true
     note: "very finely diced"
-    optional: false
   - id: "m-flour"
     name: "All-purpose flour"
     amount: "1/4"
     unit: "cup"
+    requires_prep: false
     note: "or 1/2 cup bread crumbs"
-    optional: false
   - id: "m-seasoning"
-    name: "Italian seasoning"
+    name: "Italian seasoning blend"
     amount: 1
     unit: "teaspoon"
-    note: null
-    optional: false
+    requires_prep: false
   - id: "a-hoagies"
-    name: "Hoagie rolls"
+    name: "Hoagies or rolls"
     amount: 6
     unit: null
+    requires_prep: false
     note: "sourdough rolls preferred"
-    optional: false
   - id: "a-sauce"
     name: "Pasta sauce"
     amount: 25
     unit: "ounces"
-    note: "marinara"
-    optional: false
+    requires_prep: false
+    note: "prepared or homemade"
   - id: "a-mozzarella"
     name: "Mozzarella cheese"
     amount: "1.5"
     unit: "cups"
+    requires_prep: true
     note: "shredded"
-    optional: false
   - id: "a-oil"
     name: "Olive oil"
     amount: "as needed"
     unit: null
-    note: "for toasting"
-    optional: false
+    requires_prep: false
+    note: "for brushing"
 step_groups:
-  - id: "meatballs"
-    title: "The Meatballs"
-    step_ids: ["mix-meat", "roll-balls", "bake-balls"]
-  - id: "sauce"
-    title: "Sauce & Simmer"
-    step_ids: ["simmer-sauce"]
-  - id: "assembly"
-    title: "Assemble & Broil"
-    step_ids: ["toast-buns", "assemble-subs", "broil-subs"]
+  - id: "prep"
+    title: "Meatball Preparation"
+    step_ids: ["preheat-oven", "mix-meat", "roll-balls", "bake-balls"]
+  - id: "cook"
+    title: "Sauce & Toasting"
+    step_ids: ["simmer-sauce", "toast-buns"]
+  - id: "assemble"
+    title: "Assembly & Broil"
+    step_ids: ["assemble-subs", "broil-subs", "finish"]
 steps:
+  - id: "preheat-oven"
+    text: "Preheat oven to 350°F (175°C)."
+    uses: []
+    work_m: 1
+    wait:
+      minutes: 15
+      kind: preheat
+      attention: none
+    type: "setup"
+    resources: ["oven"]
   - id: "mix-meat"
-    text: "In a large-bowl, combine ground beef, eggs, parmesan, salt, diced onion, Italian seasoning, and flour. Mix well with your hands."
+    text: "In a large mixing bowl, combine ground beef, eggs, parmesan, salt, diced onion, Italian seasoning, and flour. Mix well with your hands until completely combined."
     uses: ["m-beef", "m-eggs", "m-parmesan", "m-salt", "m-onion", "m-flour", "m-seasoning"]
+    work_m: 5
+    wait_m: 0
+    type: "standard"
+    resources: ["large-bowl"]
   - id: "roll-balls"
-    text: "Roll mixture into 1\" balls and place on a parchment-lined baking sheet."
+    text: "Roll the meat mixture into 1\" balls (about 33g each). Place them in a single layer on a baking sheet lined with parchment paper."
     uses: []
+    work_m: 10
+    wait_m: 0
+    type: "standard"
+    resources: ["baking-sheet", "parchment-paper"]
   - id: "bake-balls"
-    text: "Bake at 350°F for 20 minutes until browned and internal temperature is 165°F."
+    text: "Bake at 350°F for 20 minutes. The edges should start to turn brown and the internal temperature should reach 165°F."
     uses: []
+    work_m: 1
+    wait:
+      minutes: 20
+      kind: bake
+      attention: low
+    type: "standard"
+    resources: ["oven", "baking-sheet"]
   - id: "simmer-sauce"
-    text: "Add pasta sauce to meatballs in a cast iron skillet and simmer for 10 minutes."
+    text: "Add the pasta sauce to the meatballs in a cast iron skillet and simmer for about 10 minutes."
     uses: ["a-sauce"]
+    work_m: 2
+    wait:
+      minutes: 10
+      kind: simmer
+      attention: low
+    type: "standard"
+    resources: ["stovetop", "cast-iron-skillet"]
   - id: "toast-buns"
-    text: "Cut hoagies in half, brush with olive oil, and toast cut-side down in a hot skillet for 1 minute."
-    uses: ["a-oil", "a-hoagies"]
+    text: "Cut hoagies in half using a sharp serrated knife, brush them with olive oil, and toast them cut-side down on a hot cast iron skillet for about one minute."
+    uses: ["a-hoagies", "a-oil"]
+    work_m: 5
+    wait:
+      minutes: 1
+      kind: toast
+      attention: medium
+    type: "standard"
+    resources: ["stovetop", "cast-iron-skillet", "sharp-serrated-knife"]
   - id: "assemble-subs"
-    text: "Place hoagies on a baking sheet. Fill with saucy meatballs and top with mozzarella cheese."
+    text: "Add the hoagies to a parchment-lined baking sheet. Smother buns with some pasta sauce and top with meatballs and shredded mozzarella cheese."
     uses: ["a-mozzarella"]
+    work_m: 5
+    wait_m: 0
+    type: "standard"
+    resources: ["baking-sheet", "parchment-paper"]
   - id: "broil-subs"
-    text: "Broil for 2 minutes (top bun off) until cheese is melted. Replace top bun and serve."
+    text: "Broil for about 2 minutes with the top bun off. Keep an eye on them so they don't burn. Remove from oven once cheese melts."
     uses: []
+    work_m: 1
+    wait:
+      minutes: 2
+      kind: broil
+      attention: high
+    type: "standard"
+    resources: ["oven", "baking-sheet"]
+  - id: "finish"
+    text: "Place the top bun back on top and serve immediately."
+    uses: []
+    work_m: 1
+    wait_m: 0
+    type: "terminal"
+    resources: []
 notes:
-  - "Starting with wet hands helps prevent meatball mixture from sticking."
-  - "Watch carefully while broiling to prevent burning."
+  - "Starting with wet hands helps prevent the meat mixture from sticking to your hands while rolling."
+  - "Make sure to watch the sandwiches closely while broiling, as they can burn very quickly."
+  - "For best results, use fresh sourdough rolls."
