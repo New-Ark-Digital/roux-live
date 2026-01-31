@@ -86,11 +86,17 @@ defmodule RouxLive.Orchestrator do
       # detailed breakdown for unified display
       prep_breakdown =
         Map.new(items, fn {ing, title} ->
-          {title, "#{ing.amount} #{ing.unit}"}
+          note_part = if ing.note, do: " (#{ing.note})", else: ""
+          unit_part = if ing.unit, do: " #{ing.unit}", else: ""
+          {title, "#{ing.amount}#{unit_part}#{note_part}"}
         end)
 
       details =
-        Enum.map_join(items, ", ", fn {ing, title} -> "#{ing.amount} #{ing.unit} for #{title}" end)
+        Enum.map_join(items, ", ", fn {ing, title} ->
+          note_part = if ing.note, do: " #{ing.note}", else: ""
+          unit_part = if ing.unit, do: " #{ing.unit}", else: ""
+          "#{ing.amount}#{unit_part}#{note_part} for #{title}"
+        end)
 
       %Task{
         id: "agg-prep-#{name}",
