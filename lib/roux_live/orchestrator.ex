@@ -206,7 +206,7 @@ defmodule RouxLive.Orchestrator do
         # If existing is in a blocking wait, the chef is busy
         blocking_conflict =
           task.work_m > 0 and
-            existing.wait_details && existing.wait_details.blocking and
+            not is_nil(existing.wait_details) and existing.wait_details.blocking and
             overlap?(
               t_work_start,
               t_work_end,
