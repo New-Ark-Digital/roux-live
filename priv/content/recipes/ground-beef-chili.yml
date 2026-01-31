@@ -1,0 +1,206 @@
+schema: "recipe/simple-v5.1"
+id: "ground-beef-chili"
+slug: "ground-beef-chili"
+title: "Ground Beef Chili"
+summary: "A savory, family-friendly chili that's easy to make and packed with flavor. Perfect for cozy dinners."
+tags: ["Dinner", "Comfort Food", "Beef", "One-Pot", "Lisa Bass"]
+equipment:
+  - id: dutch-oven
+    name: "Dutch oven or large pot"
+  - id: stovetop
+    name: "Stovetop"
+  - id: wooden-spoon
+    name: "Wooden spoon"
+  - id: strainer
+    name: "Colander or strainer"
+skills: ["Browning meat", "Sautéing", "Simmering", "Flavor balancing"]
+yield:
+  quantity: 8
+  unit: "servings"
+time:
+  prep_minutes: 15
+  cook_minutes: 60
+  total_minutes: 75
+ingredient_groups:
+  - id: "base"
+    title: "Chili Base"
+    ingredient_ids: ["oil", "beef", "onion", "garlic"]
+  - id: "body"
+    title: "Beans & Tomatoes"
+    ingredient_ids: ["red-beans", "white-beans", "tomatoes", "tomato-sauce", "broth"]
+  - id: "spices"
+    title: "Seasoning"
+    ingredient_ids: ["chili-powder", "cumin", "paprika", "sugar", "salt", "pepper"]
+  - id: "serving"
+    title: "Optional Toppings"
+    ingredient_ids: ["lime", "sour-cream", "cheese"]
+ingredients:
+  - id: "oil"
+    name: "Olive oil"
+    amount: 1
+    unit: "tablespoon"
+    requires_prep: false
+  - id: "beef"
+    name: "Lean ground beef"
+    amount: 2
+    unit: "pounds"
+    requires_prep: false
+  - id: "onion"
+    name: "Yellow onion"
+    amount: 1
+    unit: "large"
+    requires_prep: true
+    note: "diced"
+  - id: "garlic"
+    name: "Garlic"
+    amount: 4
+    unit: "cloves"
+    requires_prep: true
+    note: "minced"
+  - id: "red-beans"
+    name: "Red kidney beans"
+    amount: 19
+    unit: "oz can"
+    requires_prep: true
+    note: "rinsed and drained"
+  - id: "white-beans"
+    name: "White kidney beans"
+    amount: 19
+    unit: "oz can"
+    requires_prep: true
+    note: "rinsed and drained"
+  - id: "tomatoes"
+    name: "Crushed or diced tomatoes"
+    amount: 20
+    unit: "oz can"
+    requires_prep: false
+  - id: "tomato-sauce"
+    name: "Tomato sauce"
+    amount: 398
+    unit: "ml can"
+    requires_prep: false
+  - id: "broth"
+    name: "Beef broth"
+    amount: 2
+    unit: "cups"
+    requires_prep: false
+  - id: "chili-powder"
+    name: "Chili powder"
+    amount: 2
+    unit: "tablespoons"
+    requires_prep: false
+  - id: "cumin"
+    name: "Ground cumin"
+    amount: 1
+    unit: "teaspoon"
+    requires_prep: false
+  - id: "paprika"
+    name: "Smoked paprika"
+    amount: 1
+    unit: "teaspoon"
+    requires_prep: false
+  - id: "sugar"
+    name: "Brown sugar"
+    amount: 1
+    unit: "tablespoon"
+    requires_prep: false
+  - id: "salt"
+    name: "Salt"
+    amount: "to taste"
+    unit: null
+    requires_prep: false
+  - id: "pepper"
+    name: "Black pepper"
+    amount: "to taste"
+    unit: null
+    requires_prep: false
+  - id: "lime"
+    name: "Lime juice"
+    amount: "as desired"
+    unit: null
+    requires_prep: false
+    optional: true
+  - id: "sour-cream"
+    name: "Sour cream"
+    amount: "as desired"
+    unit: null
+    requires_prep: false
+    optional: true
+  - id: "cheese"
+    name: "Shredded cheddar cheese"
+    amount: "as desired"
+    unit: null
+    requires_prep: false
+    optional: true
+step_groups:
+  - id: "meat"
+    title: "Brown the Beef"
+    step_ids: ["brown-beef", "drain-beef"]
+  - id: "aromatics"
+    title: "Sauté Aromatics"
+    step_ids: ["saute-veg"]
+  - id: "simmer"
+    title: "Combine & Simmer"
+    step_ids: ["combine-all", "simmer-chili"]
+  - id: "finish"
+    title: "Season & Serve"
+    step_ids: ["adjust-seasoning", "serve"]
+steps:
+  - id: "brown-beef"
+    text: "In a Dutch oven, cook the ground beef over medium-high heat until well browned."
+    uses: ["beef"]
+    work_m: 10
+    wait_m: 0
+    type: "standard"
+    resources: ["stovetop", "dutch-oven"]
+  - id: "drain-beef"
+    text: "Drain off any excess fat and set the browned beef aside."
+    uses: []
+    work_m: 2
+    wait_m: 0
+    type: "standard"
+    resources: ["strainer"]
+  - id: "saute-veg"
+    text: "If needed, add 1 tablespoon of oil to the pot. Add the diced onion and minced garlic, and cook for 2–3 minutes until softened and fragrant."
+    uses: ["oil", "onion", "garlic"]
+    work_m: 2
+    wait:
+      minutes: 3
+      kind: simmer
+      attention: low
+    type: "standard"
+    resources: ["stovetop", "dutch-oven"]
+  - id: "combine-all"
+    text: "Return the beef to the pot. Stir in the beans, crushed tomatoes, tomato sauce, beef broth, chili powder, cumin, smoked paprika, and brown sugar. Mix well."
+    uses: ["beef", "red-beans", "white-beans", "tomatoes", "tomato-sauce", "broth", "chili-powder", "cumin", "paprika", "sugar"]
+    work_m: 5
+    wait_m: 0
+    type: "standard"
+    resources: ["dutch-oven"]
+  - id: "simmer-chili"
+    text: "Bring the chili to a boil, then reduce to low heat. Cover partially and let simmer for 45 minutes to 1 hour, stirring occasionally."
+    uses: []
+    work_m: 1
+    wait:
+      minutes: 60
+      kind: simmer
+      attention: low
+    type: "standard"
+    resources: ["stovetop", "dutch-oven"]
+  - id: "adjust-seasoning"
+    text: "Taste the chili and adjust seasonings with salt and pepper as needed."
+    uses: ["salt", "pepper"]
+    work_m: 2
+    wait_m: 0
+    type: "standard"
+    resources: []
+  - id: "serve"
+    text: "Serve hot with lime juice, sour cream, and shredded cheddar cheese if desired."
+    uses: ["lime", "sour-cream", "cheese"]
+    work_m: 1
+    wait_m: 0
+    type: "terminal"
+    resources: []
+notes:
+  - "Partial covering during simmering helps the chili thicken without drying out."
+  - "Rinsing the beans thoroughly prevents the chili from becoming too salty or starchy."
