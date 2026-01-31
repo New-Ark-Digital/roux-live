@@ -7,6 +7,7 @@ defmodule RouxLiveWeb.PlanHelpers do
       socket
       |> assign(:plan, [])
       |> assign(:plan_count, 0)
+      |> assign(:preferred_mode, "standard")
       |> assign(:active_step_index, nil)
       |> assign(:active_ingredients, [])
       |> attach_hook(:plan_events, :handle_event, &handle_event/3)
@@ -23,6 +24,10 @@ defmodule RouxLiveWeb.PlanHelpers do
     send(self(), {:plan_updated, plan})
 
     {:halt, socket}
+  end
+
+  def handle_event("set_preferred_mode", %{"mode" => mode}, socket) do
+    {:halt, assign(socket, :preferred_mode, mode)}
   end
 
   def handle_event("toggle_plan", %{"slug" => slug}, socket) do
@@ -54,6 +59,15 @@ defmodule RouxLiveWeb.PlanHelpers do
       |> push_event("save_plan", %{plan: new_plan})
 
     send(self(), {:plan_updated, new_plan})
+
+    {:halt, socket}
+  end
+
+  def handle_event("change_preferred_mode", %{"mode" => mode}, socket) do
+    socket =
+      socket
+      |> assign(:preferred_mode, mode)
+      |> push_event("save_preferred_mode", %{mode: mode})
 
     {:halt, socket}
   end

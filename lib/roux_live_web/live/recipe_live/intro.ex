@@ -33,38 +33,67 @@ defmodule RouxLiveWeb.RecipeLive.Intro do
                 {@recipe.summary}
               </p>
 
-              <div class="flex flex-wrap gap-4 pt-4">
-                <button
-                  phx-click="toggle_plan"
-                  phx-value-slug={@recipe.slug}
-                  class={[
-                    "px-10 py-5 rounded-full font-bold text-lg shadow-2xl transition-all active:scale-95 flex items-center gap-3 cursor-pointer z-40 pointer-events-auto",
-                    if(@recipe.slug in @plan,
-                      do: "bg-white border-2 border-coral text-coral",
-                      else: "bg-coral text-white hover:bg-red"
-                    )
-                  ]}
-                >
-                  <.icon
-                    name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"}
-                    class={["size-6", if(@recipe.slug not in @plan, do: "text-gray-900")]}
-                  />
-                  {if @recipe.slug in @plan, do: "Added to Plan", else: "Add to Plan"}
-                </button>
+              <div class="flex items-center pt-4">
+                <div class="inline-flex items-center p-1 rounded-full bg-linen/50 border border-parchment shadow-sm leading-none">
+                  <%!-- 1. Plan Toggle --%>
+                  <button
+                    phx-click="toggle_plan"
+                    phx-value-slug={@recipe.slug}
+                    class={[
+                      "px-5 py-2 rounded-full flex items-center gap-2 transition-all active:scale-95",
+                      if(@recipe.slug in @plan,
+                        do: "bg-coral text-white shadow-md",
+                        else: "text-gray-500 hover:bg-white hover:text-gray-700"
+                      )
+                    ]}
+                  >
+                    <.icon
+                      name={if @recipe.slug in @plan, do: "hero-check", else: "hero-plus"}
+                      class="size-3.5"
+                    />
+                    <span class="text-[10px] font-bold uppercase tracking-wider">
+                      {if @recipe.slug in @plan, do: "Added", else: "Plan"}
+                    </span>
+                  </button>
 
-                <.link
-                  navigate={~p"/cook/#{@recipe.slug}"}
-                  class="px-8 py-5 bg-white border-2 border-gray-900 text-gray-900 rounded-full font-bold text-lg shadow-xl hover:bg-linen transition-all active:scale-95 flex items-center gap-3 cursor-pointer z-30"
-                >
-                  <.icon name="hero-list-bullet" class="size-6 text-gray-400" /> Standard Mode
-                </.link>
+                  <div class="w-px h-4 bg-parchment mx-1"></div>
 
-                <.link
-                  navigate={~p"/run/#{@recipe.slug}"}
-                  class="px-8 py-5 bg-gray-900 text-white rounded-full font-bold text-lg shadow-2xl hover:bg-gray-800 transition-all active:scale-95 flex items-center gap-3 cursor-pointer z-30"
-                >
-                  <.icon name="hero-eye" class="size-6 text-coral" /> Focus Mode
-                </.link>
+                  <%!-- 2. Start Standard --%>
+                  <.link
+                    navigate={~p"/cook/#{@recipe.slug}"}
+                    phx-click={JS.push("change_preferred_mode", value: %{mode: "standard"})}
+                    class={[
+                      "px-5 py-2 rounded-full flex flex-col items-start justify-center gap-0.5 transition-all active:scale-95",
+                      if(@preferred_mode == "standard",
+                        do: "bg-white text-gray-900 shadow-sm border border-parchment/50",
+                        else: "text-gray-400 hover:text-gray-600 hover:bg-white/50"
+                      )
+                    ]}
+                  >
+                    <span class="text-[7px] font-bold text-coral uppercase tracking-[0.2em]">
+                      Start
+                    </span>
+                    <span class="text-[10px] font-bold uppercase tracking-tight">Standard</span>
+                  </.link>
+
+                  <%!-- 3. Start Focus --%>
+                  <.link
+                    navigate={~p"/run/#{@recipe.slug}"}
+                    phx-click={JS.push("change_preferred_mode", value: %{mode: "focus"})}
+                    class={[
+                      "px-5 py-2 rounded-full flex flex-col items-start justify-center gap-0.5 transition-all active:scale-95",
+                      if(@preferred_mode == "focus",
+                        do: "bg-white text-gray-900 shadow-sm border border-parchment/50",
+                        else: "text-gray-400 hover:text-gray-600 hover:bg-white/50"
+                      )
+                    ]}
+                  >
+                    <span class="text-[7px] font-bold text-coral uppercase tracking-[0.2em]">
+                      Start
+                    </span>
+                    <span class="text-[10px] font-bold uppercase tracking-tight">Focus</span>
+                  </.link>
+                </div>
               </div>
             </div>
 

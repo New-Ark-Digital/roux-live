@@ -27,9 +27,184 @@ defmodule RouxLiveWeb.CoreComponents do
 
   """
   use Phoenix.Component
+
+  use Phoenix.VerifiedRoutes,
+    endpoint: RouxLiveWeb.Endpoint,
+    router: RouxLiveWeb.Router,
+    statics: RouxLiveWeb.static_paths()
+
   use Gettext, backend: RouxLiveWeb.Gettext
 
   alias Phoenix.LiveView.JS
+
+  @doc """
+  Renders the Sticky Cooking Hero for Standard and Focus modes.
+  """
+  attr :title, :string, required: true
+  attr :plan_count, :integer, default: 0
+  attr :active_ingredients, :list, default: []
+  attr :progress, :float, default: 0.0
+  attr :remaining_text, :string, default: nil
+  attr :mode, :string, values: ["standard", "focus"]
+  attr :slug, :string, default: nil
+  attr :active_task_id, :string, default: nil
+
+  def cooking_hero(assigns) do
+    ~H"""
+    <header class="fixed top-0 left-0 right-0 z-[100] bg-cream backdrop-blur-xl border-b border-parchment h-48 flex flex-col overflow-hidden">
+      <%!-- Floating Top Nav --%>
+      <div class="max-w-7xl mx-auto px-4 w-full mt-4 shrink-0">
+        <div class="max-w-xl mx-auto bg-white/40 border border-white/60 rounded-full h-12 flex items-center justify-between px-6 shadow-sm">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <a
+              href="/"
+              class="text-xl font-display font-bold text-gray-900 tracking-tight hover:text-coral transition-colors shrink-0"
+            >
+              roux
+            </a>
+            <span class="text-gray-300 font-light text-lg shrink-0">/</span>
+            <h1 class="font-display text-sm text-gray-500 truncate italic">
+              {@title}
+            </h1>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="hidden sm:flex items-center gap-1">
+              <.link
+                navigate={~p"/recipes"}
+                class="px-3 py-1 rounded-full font-body font-bold text-gray-500 hover:text-gray-900 transition-all text-[10px] uppercase tracking-wider"
+              >
+                Index
+              </.link>
+              <.link
+                navigate={~p"/plan"}
+                class="px-3 py-1 rounded-full font-body font-bold text-gray-500 hover:text-gray-900 transition-all text-[10px] uppercase tracking-wider relative"
+              >
+                Plan {@plan_count > 0 && "(#{@plan_count})"}
+              </.link>
+            </div>
+
+            <%!-- Settings Dropdown --%>
+            <div class="relative">
+              <button
+                phx-click={
+                  JS.toggle(
+                    to: "#hero-settings-menu",
+                    in:
+                      {"transition ease-out duration-200", "opacity-0 scale-95",
+                       "opacity-100 scale-100"},
+                    out:
+                      {"transition ease-in duration-150", "opacity-100 scale-100",
+                       "opacity-0 scale-95"}
+                  )
+                }
+                class="size-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-900 hover:bg-white/50 transition-all"
+              >
+                <.icon name="hero-cog-6-tooth" class="size-4" />
+              </button>
+              <div
+                id="hero-settings-menu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white border border-parchment rounded-2xl shadow-xl z-[110] p-2"
+                phx-click-away={
+                  JS.hide(
+                    to: "#hero-settings-menu",
+                    transition:
+                      {"transition ease-in duration-150", "opacity-100 scale-100",
+                       "opacity-0 scale-95"}
+                  )
+                }
+              >
+                <div class="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] px-3 py-2">
+                  Mode
+                </div>
+                <.link
+                  patch={
+                    if @slug,
+                      do: ~p"/cook/#{@slug}/task/#{@active_task_id}",
+                      else: ~p"/cook/multi/task/#{@active_task_id}"
+                  }
+                  class={[
+                    "flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-bold transition-colors",
+                    if(@mode == "standard",
+                      do: "bg-coral/10 text-coral",
+                      else: "text-gray-600 hover:bg-linen"
+                    )
+                  ]}
+                  phx-click={JS.hide(to: "#hero-settings-menu")}
+                >
+                  <.icon name="hero-list-bullet" class="size-3" /> Standard
+                </.link>
+                <.link
+                  patch={
+                    if @slug,
+                      do: ~p"/run/#{@slug}/task/#{@active_task_id}",
+                      else: ~p"/run/multi/task/#{@active_task_id}"
+                  }
+                  class={[
+                    "flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-bold transition-colors mt-1",
+                    if(@mode == "focus",
+                      do: "bg-coral/10 text-coral",
+                      else: "text-gray-600 hover:bg-linen"
+                    )
+                  ]}
+                  phx-click={JS.hide(to: "#hero-settings-menu")}
+                >
+                  <.icon name="hero-eye" class="size-3" /> Focus
+                </.link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%!-- Ingredients Area (Fixed Height) --%>
+      <div class="flex-1 flex items-center justify-center px-4 overflow-hidden py-4">
+        <div class="max-w-3xl w-full">
+          <div class="flex flex-wrap justify-center gap-2 max-h-[80px] overflow-y-auto no-scrollbar">
+            <div :if={@active_ingredients == []} class="flex items-center gap-2 text-gray-300">
+              <span class="text-[10px] font-bold uppercase tracking-widest italic">
+                Ready for the next step
+              </span>
+            </div>
+            <%= for ing <- @active_ingredients do %>
+              <div class="bg-white/60 border border-white/80 px-4 py-2 rounded-2xl flex items-center gap-3 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <span class="text-xs font-bold text-gray-900 uppercase tracking-tighter">
+                  {ing.name}
+                </span>
+                <span class="text-[11px] text-coral font-bold border-l border-parchment pl-3">
+                  {ing.amount} {ing.unit}
+                </span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%!-- Playbar Progress --%>
+      <div class="w-full shrink-0">
+        <div class="h-6 w-full bg-coral/10 relative overflow-hidden shadow-inner">
+          <%!-- Progress Fill --%>
+          <div
+            id="global-progress-bar"
+            class="absolute top-0 left-0 h-full bg-coral/90 transition-all duration-700 ease-out"
+            style={"width: #{@progress}%"}
+          >
+          </div>
+
+          <%!-- Centered Time --%>
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div
+              id="time-remaining-display"
+              class="text-[10px] font-bold tracking-[0.1em] uppercase text-gray-900"
+            >
+              {@remaining_text || "Starting..."}
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    """
+  end
 
   @doc """
   Renders flash notices.

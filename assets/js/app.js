@@ -70,6 +70,14 @@ const Hooks = {
       this.handleEvent("save_plan", ({plan}) => {
         localStorage.setItem("roux_meal_plan", JSON.stringify(plan))
       })
+
+      // Handle preferred cooking mode
+      const savedMode = localStorage.getItem("roux_preferred_mode") || "standard"
+      this.pushEvent("set_preferred_mode", {mode: savedMode})
+
+      this.handleEvent("save_preferred_mode", ({mode}) => {
+        localStorage.setItem("roux_preferred_mode", mode)
+      })
     }
   },
   CookingTimer: {

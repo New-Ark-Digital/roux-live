@@ -83,6 +83,7 @@ defmodule RouxLive.MixProject do
         "esbuild roux_live --minify",
         "phx.digest"
       ],
+      validate: ["roux.validate"],
       precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end

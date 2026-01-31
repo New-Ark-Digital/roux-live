@@ -151,48 +151,35 @@ defmodule RouxLiveWeb.StandardLive do
         flash={@flash}
         active_ingredients={@active_ingredients}
         active_step_index={@active_task_index}
+        hide_nav={true}
       >
-        <%!-- Progress Bar --%>
-        <div class="fixed top-0 left-0 w-full h-1.5 bg-linen z-[60] flex justify-end items-center">
-          <div
-            id="global-progress-bar"
-            class="absolute top-0 left-0 h-full bg-coral transition-all duration-500 ease-out"
-            style={"width: #{@progress}%"}
-          >
-          </div>
-          <span
-            id="time-remaining-display"
-            class="relative z-10 mr-4 mt-6 text-[10px] font-bold text-coral bg-white/80 backdrop-blur px-2 py-0.5 rounded shadow-sm border border-parchment"
-          >
-            <%= if @total_seconds > 0 do %>
-              <% remaining = @total_seconds - @active_task.start_offset_s
+        <.cooking_hero
+          title={if @slug, do: List.first(@recipes).title, else: "Unified Meal Plan"}
+          plan_count={@plan_count}
+          active_ingredients={@active_ingredients}
+          progress={@progress}
+          remaining_text={
+            if @total_seconds > 0 do
+              remaining = @total_seconds - @active_task.start_offset_s
               h = div(remaining, 3600)
-              m = div(rem(remaining, 3600), 60) %>
-              {if h > 0, do: "#{h}h ", else: ""} {m}m left
-            <% end %>
-          </span>
-        </div>
+              m = div(rem(remaining, 3600), 60)
+              "#{if h > 0, do: "#{h}h ", else: ""}#{m}m left"
+            end
+          }
+          mode="standard"
+          slug={@slug}
+          active_task_id={@active_task_id}
+        />
 
-        <div class="font-body pt-24 lg:pt-28 bg-canvas min-h-screen pb-32 lg:pb-0">
+        <div class="font-body pt-52 lg:pt-60 bg-canvas min-h-screen pb-32 lg:pb-0">
           <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
             <%!-- Sidebar: Ingredients --%>
-            <div class="hidden lg:flex lg:col-span-4 flex-col gap-6 h-[calc(100vh-140px)] sticky top-28">
+            <div class="hidden lg:flex lg:col-span-4 flex-col gap-6 h-[calc(100vh-260px)] sticky top-60">
               <div class="bg-white p-8 rounded-[48px] border border-parchment flex flex-col min-h-0 flex-1 shadow-sm overflow-hidden">
                 <div class="mb-6 flex justify-between items-center shrink-0">
                   <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">
                     Kitchen Context
                   </h3>
-
-                  <.link
-                    navigate={
-                      if @slug,
-                        do: ~p"/run/#{@slug}/task/#{@active_task_id}",
-                        else: ~p"/run/multi/task/#{@active_task_id}"
-                    }
-                    class="px-3 py-1.5 bg-linen text-gray-600 font-bold rounded-full shadow-sm flex items-center gap-2 hover:bg-parchment transition-all active:scale-95 text-[10px] border border-parchment"
-                  >
-                    <.icon name="hero-eye" class="size-3 text-coral" /> Focus Mode
-                  </.link>
                 </div>
 
                 <div
@@ -226,7 +213,7 @@ defmodule RouxLiveWeb.StandardLive do
               <%!-- Desktop Tab Navigation (Sticky) --%>
               <div
                 :if={length(@recipes) > 1}
-                class="hidden lg:flex sticky top-24 z-30 gap-2 p-1.5 bg-white/80 backdrop-blur rounded-[24px] border border-parchment shadow-lg"
+                class="hidden lg:flex sticky top-52 z-30 gap-2 p-1.5 bg-white/80 backdrop-blur rounded-[24px] border border-parchment shadow-lg"
               >
                 <.tab_button
                   active?={@active_tab == "all"}
@@ -303,57 +290,6 @@ defmodule RouxLiveWeb.StandardLive do
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <%!-- Mobile Bottom Navigation --%>
-        <div class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-parchment px-4 pb-10 pt-4 shadow-2xl">
-          <div class="max-w-md mx-auto space-y-4">
-            <div :if={length(@recipes) > 1} class="relative">
-              <%!-- Fade indicators --%>
-              <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none">
-              </div>
-              <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none">
-              </div>
-
-              <div class="flex gap-2 overflow-x-auto no-scrollbar px-4">
-                <.tab_button
-                  active?={@active_tab == "all"}
-                  label="All"
-                  phx-click="select_tab"
-                  phx-value-tab="all"
-                  compact
-                />
-                <%= for recipe <- @recipes do %>
-                  <.tab_button
-                    active?={@active_tab == recipe.slug}
-                    label={recipe.title}
-                    phx-click="select_tab"
-                    phx-value-tab={recipe.slug}
-                    compact
-                  />
-                <% end %>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between gap-4">
-              <div class="flex-1">
-                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">
-                  Current Focus
-                </span>
-                <p class="text-xs font-bold text-gray-900 truncate">{@active_task.text}</p>
-              </div>
-              <.link
-                navigate={
-                  if @slug,
-                    do: ~p"/run/#{@slug}/task/#{@active_task_id}",
-                    else: ~p"/run/multi/task/#{@active_task_id}"
-                }
-                class="px-6 py-3 bg-gray-900 text-white font-bold rounded-full shadow-lg flex items-center gap-2 text-xs active:scale-95 transition-all"
-              >
-                <.icon name="hero-eye" class="size-4 text-coral" /> Focus Mode
-              </.link>
             </div>
           </div>
         </div>
