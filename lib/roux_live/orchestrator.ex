@@ -128,18 +128,27 @@ defmodule RouxLive.Orchestrator do
     recipe_info = metrics[slug]
     preferred_start = max_duration - recipe_info.total
 
-    {_new_tasks, updated_schedule} =
+    {new_tasks, updated_schedule} =
       Enum.reduce(recipe_info.tasks, {[], schedule}, fn t, {acc, current_schedule} ->
-        earliest_possible =
+        # Calculate earliest start based on previous task in THIS recipe
+        earliest_in_recipe =
           case List.last(acc) do
             nil -> preferred_start
             prev -> prev.start_at_m + prev.work_m + prev.wait_m
           end
 
-        start_time = find_available_slot(t, earliest_possible, current_schedule, profile)
+        # 1. Check for needed cleanup and find slot for it
+        {cleanup_tasks, earliest_after_cleanup} =
+          maybe_prepare_cleanup(t, earliest_in_recipe, current_schedule, kitchen_type, profile)
 
-        {cleanup_tasks, _} =
-          check_and_inject_cleanup(t, start_time, current_schedule, kitchen_type)
+        # 2. Find slot for the actual task
+        start_time =
+          find_available_slot(
+            t,
+            earliest_after_cleanup,
+            current_schedule ++ cleanup_tasks,
+            profile
+          )
 
         task_with_time = %{t | start_at_m: start_time}
 
@@ -148,6 +157,55 @@ defmodule RouxLive.Orchestrator do
       end)
 
     schedule_recipes(rest, metrics, max_duration, profile, kitchen_type, updated_schedule)
+  end
+
+  defp maybe_prepare_cleanup(task, earliest_possible, schedule, kitchen_type, profile) do
+    if kitchen_type == "chef" do
+      {[], earliest_possible}
+    else
+      # Identify resources that were most recently used by a different recipe
+      resources_to_clean =
+        Enum.filter(task.resources || [], fn res ->
+          last_use =
+            schedule
+            |> Enum.filter(&(res in (&1.resources || [])))
+            |> Enum.max_by(& &1.start_at_m, fn -> nil end)
+
+          last_use != nil and last_use.recipe_slug != task.recipe_slug and not last_use.is_utility
+        end)
+
+      if resources_to_clean != [] do
+        # Find the end of active work for these resources
+        last_active_end =
+          schedule
+          |> Enum.filter(fn e -> Enum.any?(resources_to_clean, &(&1 in (e.resources || []))) end)
+          |> Enum.map(&(&1.start_at_m + &1.work_m))
+          |> Enum.max(fn -> 0 end)
+
+        cleanup_task_raw = %Task{
+          id: "cleanup-#{task.id}-#{Enum.join(resources_to_clean, "-")}",
+          text:
+            "Cleanup: #{Enum.join(resources_to_clean, ", ")} (Transition to #{task.recipe_title})",
+          recipe_title: "Kitchen Maintenance",
+          recipe_slug: "utility",
+          work_m: 3,
+          wait_m: 0,
+          phase: :action,
+          type: "utility",
+          resources: resources_to_clean,
+          is_utility: true
+        }
+
+        # Find a valid slot for the cleanup task starting from the moment it becomes dirty
+        cleanup_start = find_available_slot(cleanup_task_raw, last_active_end, schedule, profile)
+        cleanup_task = %{cleanup_task_raw | start_at_m: cleanup_start}
+
+        # The main task must start after cleanup + a 2-minute buffer
+        {[cleanup_task], max(earliest_possible, cleanup_start + cleanup_task.work_m + 2)}
+      else
+        {[], earliest_possible}
+      end
+    end
   end
 
   defp find_available_slot(task, start_at, schedule, profile) do
@@ -231,45 +289,6 @@ defmodule RouxLive.Orchestrator do
       _ -> :prep
     end)
     |> Enum.uniq()
-  end
-
-  defp check_and_inject_cleanup(task, start_time, schedule, kitchen_type) do
-    if kitchen_type == "chef" do
-      {[], schedule}
-    else
-      resources_to_clean =
-        Enum.filter(task.resources || [], fn res ->
-          # Find the most recent use of this specific resource
-          last_use =
-            schedule
-            |> Enum.filter(&(res in (&1.resources || [])))
-            |> Enum.max_by(& &1.start_at_m, fn -> nil end)
-
-          # Only clean if the last user was a different recipe AND it wasn't already a cleanup task
-          last_use != nil and last_use.recipe_slug != task.recipe_slug and not last_use.is_utility
-        end)
-
-      if resources_to_clean != [] do
-        cleanup_task = %Task{
-          id: "cleanup-#{task.id}-#{Enum.join(resources_to_clean, "-")}",
-          text:
-            "Cleanup: #{Enum.join(resources_to_clean, ", ")} (Transition to #{task.recipe_title})",
-          recipe_title: "Kitchen Maintenance",
-          recipe_slug: "utility",
-          work_m: 3,
-          wait_m: 0,
-          phase: :action,
-          type: "utility",
-          resources: resources_to_clean,
-          start_at_m: max(0, start_time - 3),
-          is_utility: true
-        }
-
-        {[cleanup_task], schedule}
-      else
-        {[], schedule}
-      end
-    end
   end
 
   defp overlap?(s1, e1, s2, e2) do
