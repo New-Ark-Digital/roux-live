@@ -1,0 +1,155 @@
+schema: "recipe/simple-v5.1"
+id: "yogurt-pancakes"
+slug: "yogurt-pancakes"
+title: "Yogurt-Based Thick & Fluffy Pancakes"
+summary: "Extra thick, scoopable batter made with yogurt for maximum fluff and a slight tang. These are substantial pancakes that hold their height."
+tags: ["Breakfast", "Vegetarian", "Quick", "Heirloom"]
+equipment:
+  - id: large-bowl
+    name: "Large mixing bowl"
+  - id: medium-bowl
+    name: "Medium mixing bowl"
+  - id: whisk
+    name: "Whisk"
+  - id: spatula
+    name: "Silicone spatula"
+  - id: skillet
+    name: "Non-stick skillet or griddle"
+  - id: scoop
+    name: "1/4 cup measuring cup or scoop"
+skills: ["Folding", "Heat Management", "Griddle work"]
+yield:
+  quantity: 4
+  unit: "servings"
+time:
+  prep_minutes: 10
+  cook_minutes: 15
+  total_minutes: 35
+ingredient_groups:
+  - id: "dry"
+    title: "Dry Ingredients"
+    ingredient_ids: ["flour", "baking-powder", "baking-soda", "sugar", "salt"]
+  - id: "wet"
+    title: "Wet Ingredients"
+    ingredient_ids: ["yogurt", "milk", "egg", "butter", "vanilla"]
+ingredients:
+  - id: "flour"
+    name: "All-purpose flour"
+    amount: "1.5"
+    unit: "cups"
+    requires_prep: false
+  - id: "baking-powder"
+    name: "Baking powder"
+    amount: "2.5"
+    unit: "teaspoons"
+    requires_prep: false
+  - id: "baking-soda"
+    name: "Baking soda"
+    amount: "0.25"
+    unit: "teaspoon"
+    requires_prep: false
+  - id: "sugar"
+    name: "Sugar"
+    amount: 1
+    unit: "tablespoon"
+    requires_prep: false
+  - id: "salt"
+    name: "Salt"
+    amount: "0.5"
+    unit: "teaspoon"
+    requires_prep: false
+  - id: "yogurt"
+    name: "Plain whole-milk yogurt"
+    amount: "0.5"
+    unit: "cup"
+    requires_prep: false
+  - id: "milk"
+    name: "Milk"
+    amount: "0.75"
+    unit: "cup"
+    requires_prep: false
+  - id: "egg"
+    name: "Large egg"
+    amount: 1
+    unit: null
+    requires_prep: false
+  - id: "butter"
+    name: "Butter"
+    amount: 3
+    unit: "tablespoons"
+    requires_prep: true
+    prep: "Melt 3 tablespoons of butter"
+    note: "melted"
+  - id: "vanilla"
+    name: "Vanilla extract"
+    amount: 1
+    unit: "teaspoon"
+    requires_prep: false
+    optional: true
+step_groups:
+  - id: "batter"
+    title: "Prepare the Batter"
+    step_ids: ["whisk-dry", "whisk-wet", "combine", "rest-batter"]
+  - id: "cook"
+    title: "Cook & Flip"
+    step_ids: ["heat-skillet", "cook-pancakes", "serve"]
+steps:
+  - id: "whisk-dry"
+    text: "In a large mixing bowl, whisk together the flour, baking powder, baking soda, sugar, and salt."
+    uses: ["flour", "baking-powder", "baking-soda", "sugar", "salt"]
+    work_m: 2
+    wait_m: 0
+    type: "standard"
+    resources: ["large-bowl", "whisk"]
+  - id: "whisk-wet"
+    text: "In a medium mixing bowl, whisk together the yogurt, milk, egg, melted butter, and vanilla until smooth."
+    uses: ["yogurt", "milk", "egg", "butter", "vanilla"]
+    work_m: 3
+    wait_m: 0
+    type: "standard"
+    resources: ["medium-bowl", "whisk"]
+  - id: "combine"
+    text: "Pour the wet ingredients into the dry ingredients. Use a spatula to fold gently just until combined. Lumps are okay; do not overmix."
+    uses: []
+    work_m: 2
+    wait_m: 0
+    type: "standard"
+    resources: ["large-bowl", "spatula"]
+  - id: "rest-batter"
+    text: "Let the batter rest for 10 minutes. This activates the leavening and hydrates the flour for maximum lift."
+    uses: []
+    work_m: 1
+    wait:
+      minutes: 10
+      kind: rest
+      attention: none
+    type: "standard"
+    resources: []
+  - id: "heat-skillet"
+    text: "Heat a non-stick skillet or griddle over medium-low heat. Lightly grease with butter or oil."
+    uses: []
+    work_m: 1
+    wait:
+      minutes: 3
+      kind: preheat
+      attention: low
+    type: "setup"
+    resources: ["skillet"]
+  - id: "cook-pancakes"
+    text: "Scoop ~1/4 cup batter per pancake onto the skillet. Cook until bubbles form on top and edges look set (2-3 min). Flip and cook 1-2 min more."
+    uses: []
+    work_m: 15
+    wait_m: 0
+    type: "standard"
+    resources: ["skillet", "scoop", "spatula"]
+  - id: "serve"
+    text: "Remove from skillet and serve immediately while hot and fluffy."
+    uses: []
+    work_m: 1
+    wait_m: 0
+    type: "terminal"
+    resources: []
+notes:
+  - "The batter should be very thick and scoopable—thicker than regular pancake batter."
+  - "Do not press the pancakes after flipping; this will deflate the air pockets."
+  - "If the batter spreads too much, add 1 tbsp of flour. If they brown too fast, lower the heat."
